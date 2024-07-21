@@ -1,8 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+import org.jlleitschuh.gradle.ktlint.tasks.GenerateReportsTask
 
 plugins {
     id("org.springframework.boot") version "3.3.2" apply false
     id("io.spring.dependency-management") version "1.1.6" apply false
+    id("org.jlleitschuh.gradle.ktlint").version("12.1.1")
     kotlin("jvm") version "1.9.24"
     kotlin("kapt") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24" apply false
@@ -31,6 +34,23 @@ allprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+    }
+
+    apply {
+        plugin("org.jlleitschuh.gradle.ktlint")
+    }
+
+    ktlint {
+        reporters {
+            reporter(ReporterType.PLAIN)
+            reporter(ReporterType.JSON)
+        }
+    }
+
+    tasks.withType<GenerateReportsTask> {
+        reportsOutputDirectory.set(
+            rootProject.layout.buildDirectory.dir("reports/ktlint/${project.name}")
+        )
     }
 }
 
