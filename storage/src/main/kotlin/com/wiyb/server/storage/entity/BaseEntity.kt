@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 abstract class BaseEntity {
     @Id
     @Tsid(TsidSupplier::class)
-    private var id: Long ?= null
+    private var id: Long? = null
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
