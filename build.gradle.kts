@@ -2,17 +2,24 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 import org.jlleitschuh.gradle.ktlint.tasks.GenerateReportsTask
 
+
 plugins {
-    id("org.springframework.boot") version "3.3.2" apply false
+    val kotlinVersion = "1.9.24"
+    val springBootVersion = "3.3.2"
+
+    id("org.springframework.boot") version springBootVersion apply false
     id("io.spring.dependency-management") version "1.1.6" apply false
     id("org.jlleitschuh.gradle.ktlint").version("12.1.1")
-    kotlin("jvm") version "1.9.24"
-    kotlin("kapt") version "1.9.24"
-    kotlin("plugin.spring") version "1.9.24" apply false
-    kotlin("plugin.jpa") version "1.9.24" apply false
+
+    kotlin("jvm") version kotlinVersion
+    kotlin("kapt") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion apply false
+    kotlin("plugin.jpa") version kotlinVersion apply false
 }
 
 allprojects {
+    val jdkVersion = "21"
+
     group = "com.wiyb"
     version = "0.0.1-SNAPSHOT"
 
@@ -21,14 +28,14 @@ allprojects {
     }
 
     tasks.withType<JavaCompile> {
-        sourceCompatibility = "21"
-        targetCompatibility = "21"
+        sourceCompatibility = jdkVersion
+        targetCompatibility = jdkVersion
     }
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "21"
+            jvmTarget = jdkVersion
         }
     }
 
