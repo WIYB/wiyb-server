@@ -27,6 +27,17 @@ allprojects {
         mavenCentral()
     }
 
+    apply {
+        plugin("org.jlleitschuh.gradle.ktlint")
+    }
+
+    ktlint {
+        reporters {
+            reporter(ReporterType.PLAIN)
+            reporter(ReporterType.JSON)
+        }
+    }
+
     tasks.withType<JavaCompile> {
         sourceCompatibility = jdkVersion
         targetCompatibility = jdkVersion
@@ -41,17 +52,6 @@ allprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
-    }
-
-    apply {
-        plugin("org.jlleitschuh.gradle.ktlint")
-    }
-
-    ktlint {
-        reporters {
-            reporter(ReporterType.PLAIN)
-            reporter(ReporterType.JSON)
-        }
     }
 
     tasks.withType<GenerateReportsTask> {
@@ -70,10 +70,11 @@ subprojects {
     apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
 
     dependencies {
-        // Common
+        // Implementation
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
-        annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+        // Kapt
         kapt("org.springframework.boot:spring-boot-configuration-processor")
 
         // Test
