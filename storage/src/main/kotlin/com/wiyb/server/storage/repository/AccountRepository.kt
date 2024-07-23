@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface AccountRepository :
     JpaRepository<Account, Long>,
-    AccountCustomRepository
+    AccountCustomRepository {
+    fun findByEmail(email: String): Account?
+}

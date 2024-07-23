@@ -5,6 +5,8 @@ spring:
   config:
     import:
       - storage.yml
+  profiles:
+    include: oauth
   web.resources.add-mappings: false
 
 server:
