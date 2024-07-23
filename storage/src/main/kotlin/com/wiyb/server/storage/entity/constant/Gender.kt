@@ -5,13 +5,13 @@ import com.wiyb.server.storage.converter.CodedEnum
 import jakarta.persistence.Converter
 
 enum class Gender(
-    private val type: String
+    private val code: String
 ) : CodedEnum<String> {
     MALE("male"),
     FEMALE("female"),
     OTHER("other");
 
-    override fun getCode(): String = type
+    override fun getCode(): String = code
 
     @Converter(autoApply = true)
     class GenderConverter : AbstractCodedEnumConverter<Gender, String>(Gender::class.java)
