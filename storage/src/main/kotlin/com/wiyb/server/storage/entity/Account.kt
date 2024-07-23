@@ -5,8 +5,8 @@ import com.wiyb.server.storage.entity.constant.SocialType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 
-@Entity
-class AccountEntity(
+@Entity(name = "accounts")
+class Account(
     socialId: String,
     socialType: SocialType,
     email: String
