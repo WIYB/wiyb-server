@@ -1,7 +1,7 @@
 package com.wiyb.server.storage.entity
 
-import com.wiyb.server.storage.constant.SocialType
 import com.wiyb.server.storage.entity.common.BaseEntity
+import com.wiyb.server.storage.entity.constant.SocialType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 

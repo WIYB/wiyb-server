@@ -1,4 +1,4 @@
-package com.wiyb.server.storage.constant
+package com.wiyb.server.storage.entity.constant
 
 enum class SocialType(
     val type: String
