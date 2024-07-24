@@ -16,6 +16,9 @@ server:
       max: 600
       min-spare: 100
 
+jwt:
+  key: ${JWT_KEY}
+
 ---
 spring.config.activate.on-profile: local
 
