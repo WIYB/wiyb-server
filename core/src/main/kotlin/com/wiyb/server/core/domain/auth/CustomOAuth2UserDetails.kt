@@ -2,8 +2,10 @@ package com.wiyb.server.core.domain.auth
 
 import com.wiyb.server.storage.entity.User
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.oauth2.core.user.OAuth2User
+import java.util.*
 
 data class CustomOAuth2UserDetails(
     val user: User,
@@ -14,12 +16,7 @@ data class CustomOAuth2UserDetails(
 
     override fun getName(): String = user.name
 
-    override fun getAuthorities(): Collection<GrantedAuthority?> {
-        val collection: Collection<GrantedAuthority> = ArrayList()
-        collection.plus(GrantedAuthority { user.role.getRole() })
-
-        return collection
-    }
+    override fun getAuthorities(): Collection<GrantedAuthority?> = Collections.singletonList(SimpleGrantedAuthority(user.role.getRole()))
 
     override fun getUsername(): String = user.nickname ?: "unknown"
 

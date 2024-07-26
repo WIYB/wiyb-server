@@ -1,73 +1,84 @@
 package com.wiyb.server.core.config.security
 
+import com.wiyb.server.core.filter.TokenAuthenticationFilter
+import com.wiyb.server.core.filter.TokenExceptionFilter
+import com.wiyb.server.core.handler.auth.CustomAccessDeniedHandler
+import com.wiyb.server.core.handler.auth.CustomAuthenticationFailureHandler
+import com.wiyb.server.core.handler.auth.CustomAuthenticationSuccessHandler
+import com.wiyb.server.core.handler.auth.CustomLogoutSuccessHandler
 import com.wiyb.server.core.service.CustomOAuth2UserService
+import com.wiyb.server.storage.entity.constant.Role
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
+import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 class SecurityConfig(
-    private val clientRegistrationRepository: ClientRegistrationRepository,
-    private val customOAuth2UserService: CustomOAuth2UserService
+    private val customOAuth2UserService: CustomOAuth2UserService,
+    private val tokenAuthenticationFilter: TokenAuthenticationFilter,
+    private val customAuthenticationSuccessHandler: CustomAuthenticationSuccessHandler
 ) {
-    @Bean
-    fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        val authorizationRequestResolver =
-            CustomAuthorizationRequestResolver(
-                clientRegistrationRepository,
-                "/v1/auth/sign"
+    companion object {
+        val WHITELIST_PATH: Array<String> =
+            arrayOf(
+                "/health",
+                "/favicon.ico",
+                "/h2-console/**",
+                "/auth/success",
+                "/login/**",
+                "/error"
             )
+    }
 
-        // todo: 나중에 어드민 구현할 때 requestMatcher 추가
-        http.csrf {
-            it
-                .disable()
-        }
-
-        http.headers {
-            it
-                .frameOptions { }
-                .disable()
-        }
+    @Bean
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http
+            .csrf { it.disable() }
+            .httpBasic { it.disable() }
+            .formLogin { it.disable() }
+            .logout { it.disable() }
+            .headers { it.frameOptions { f -> f.disable() }.disable() }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .cors(Customizer.withDefaults())
 
         http.authorizeHttpRequests {
             it
-                .requestMatchers(
-                    "/h2-console/**",
-                    "/v1/auth/sign",
-                    "/v1/auth/sign/success",
-                    "/v1/auth/sign/good",
-                    "/v1/auth/sign/failure"
-                ).permitAll()
+                .requestMatchers(*WHITELIST_PATH)
+                .permitAll()
+                .requestMatchers(HttpMethod.POST, "/user")
+                .hasRole(Role.GUEST.name)
                 .anyRequest()
-                .authenticated()
+                .hasAnyRole(Role.USER.name, Role.ADMIN.name)
         }
+
+        http
+            .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(TokenExceptionFilter(), tokenAuthenticationFilter::class.java)
 
         http.oauth2Login {
             it
-                .authorizationEndpoint { endpoint ->
-                    endpoint
-                        .baseUri("/v1/auth/sign")
-                        .authorizationRequestResolver(authorizationRequestResolver)
-                }.redirectionEndpoint { endpoint ->
-                    endpoint.baseUri("/v1/auth/sign/success")
-                }.userInfoEndpoint { endpoint ->
-                    endpoint.userService(customOAuth2UserService)
-                }.successHandler { _, response, authentication ->
-                    response.setHeader("hello", "world")
-                    response.sendRedirect("/v1/auth/sign/good")
-                }.failureHandler(CustomAuthenticationFailureHandler())
+                .userInfoEndpoint { u -> u.userService(customOAuth2UserService) }
+                .successHandler(customAuthenticationSuccessHandler)
+                .failureHandler(CustomAuthenticationFailureHandler())
         }
 
         http.logout {
             it
-                .logoutUrl("/v1/auth/sign/out")
-                .logoutSuccessUrl("/")
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(CustomLogoutSuccessHandler())
+                .deleteCookies("access", "refresh")
         }
+
+        http.exceptionHandling { it.accessDeniedHandler(CustomAccessDeniedHandler()) }
 
         return http.build()
     }

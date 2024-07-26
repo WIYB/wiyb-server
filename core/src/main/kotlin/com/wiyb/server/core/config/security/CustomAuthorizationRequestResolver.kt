@@ -12,20 +12,15 @@ class CustomAuthorizationRequestResolver(
 ) : OAuth2AuthorizationRequestResolver {
     private val defaultResolver = DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository, authorizationRequestBaseUri)
 
-    override fun resolve(request: HttpServletRequest?): OAuth2AuthorizationRequest? = resolveInternal(request)
+    override fun resolve(request: HttpServletRequest?): OAuth2AuthorizationRequest = resolveInternal(request)
 
     override fun resolve(
         request: HttpServletRequest?,
         clientRegistrationId: String?
     ): OAuth2AuthorizationRequest? = defaultResolver.resolve(request, clientRegistrationId)
 
-    private fun resolveInternal(request: HttpServletRequest?): OAuth2AuthorizationRequest? {
-        val provider = request?.getParameter("provider")
-
-        return if (provider != null) {
-            defaultResolver.resolve(request, provider.lowercase())
-        } else {
-            null
-        }
+    private fun resolveInternal(request: HttpServletRequest?): OAuth2AuthorizationRequest {
+        val provider = request?.getParameter("provider")?.lowercase() ?: "google"
+        return defaultResolver.resolve(request, provider)
     }
 }
