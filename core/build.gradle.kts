@@ -4,6 +4,8 @@ dependencies {
     implementation(project(":storage"))
     implementation(project(":support:logging"))
 
+    implementation("com.google.code.gson:gson:2.11.0")
+
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
