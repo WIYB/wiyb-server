@@ -1,27 +1,20 @@
 package com.wiyb.server.core.controller
 
-import org.springframework.web.bind.annotation.GetMapping
+import com.wiyb.server.core.domain.auth.TokenResponseWrapper
+import com.wiyb.server.core.facade.AuthFacade
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/v1/auth")
-class AuthController {
-    @GetMapping("/sign/success")
-    fun signSuccess(): String {
-        println("Gooooooooooooood")
-        return "sign success"
-    }
-
-    @GetMapping("/sign/good")
-    fun signGood(): String {
-        println("Gooooooooooooood123123")
-        return "sign good"
-    }
-
-    @GetMapping("/sign/failure")
-    fun signFailure(): String {
-        println("Faaaaaaaaaaaaail")
-        return "sign failure"
+@RequestMapping("/auth")
+class AuthController(
+    private val authFacade: AuthFacade
+) {
+    @PatchMapping("/token")
+    fun refreshToken(response: HttpServletResponse) {
+        val tokenDto = authFacade.refreshToken()
+        TokenResponseWrapper(response).send(tokenDto)
     }
 }
