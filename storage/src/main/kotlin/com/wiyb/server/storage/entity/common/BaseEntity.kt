@@ -7,7 +7,6 @@ import jakarta.persistence.MappedSuperclass
 import jakarta.persistence.PostLoad
 import jakarta.persistence.PostPersist
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.proxy.HibernateProxy
@@ -24,7 +23,6 @@ val tsidFactory: TSID.Factory =
 
 @MappedSuperclass
 @SQLRestriction("deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE ? SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 abstract class BaseEntity : Persistable<Long> {
     @Id
     private val id: Long =

@@ -2,14 +2,11 @@ package com.wiyb.server.storage.entity
 
 import com.wiyb.server.storage.entity.common.BaseEntity
 import com.wiyb.server.storage.entity.constant.SocialProvider
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
 
 @Entity(name = "accounts")
+@SQLDelete(sql = "UPDATE accounts SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 class Account(
     socialId: String,
     socialProvider: SocialProvider,

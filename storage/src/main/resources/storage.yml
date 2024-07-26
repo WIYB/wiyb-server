@@ -24,7 +24,7 @@ spring:
 storage:
   datasource:
     driver-class-name: org.h2.Driver
-    jdbc-url: jdbc:h2:mem://localhost/~/wiyb;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    jdbc-url: jdbc:h2:mem:wiyb;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     pool-name: storage-pool
     data-source-properties:
@@ -48,7 +48,7 @@ storage:
     driver-class-name: com.mysql.cj.jdbc.Driver
     jdbc-url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:wiyb}
     username: ${DATABASE_USERNAME:root}
-    password: ${DATABASE_PASSWORD}
+    password: ${DATABASE_PASSWORD:}
     maximum-pool-size: 5
     connection-timeout: 1100
     keepalive-time: 30000
