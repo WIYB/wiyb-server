@@ -1,3 +1,7 @@
 package com.wiyb.server.storage.repository.custom
 
-interface UserCustomRepository
+import com.wiyb.server.storage.entity.User
+
+interface UserCustomRepository {
+    fun findBySessionId(sessionId: String): User?
+}

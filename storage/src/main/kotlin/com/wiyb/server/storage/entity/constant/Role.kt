@@ -9,7 +9,8 @@ enum class Role(
     private val role: String
 ) : CodedEnum<String> {
     ADMIN("admin", "ROLE_ADMIN"),
-    USER("user", "ROLE_USER");
+    USER("user", "ROLE_USER"),
+    GUEST("guest", "ROLE_GUEST");
 
     override fun getCode(): String = code
 
