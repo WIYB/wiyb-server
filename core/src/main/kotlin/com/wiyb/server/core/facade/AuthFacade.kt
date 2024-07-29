@@ -8,7 +8,7 @@ import com.wiyb.server.core.service.AuthorizationService
 import jakarta.transaction.Transactional
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Optional
 
 @Component
 class AuthFacade(
