@@ -43,11 +43,11 @@ class User(
     var imageUrl: String? = imageUrl
         protected set
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.REMOVE])
     protected val mutableAccounts: MutableList<Account> = mutableListOf()
     val accounts: List<Account> get() = mutableAccounts.toList()
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.REMOVE])
     protected val mutableAuthorizations: MutableList<Authorization> = mutableListOf()
     val authorizations: List<Authorization> get() = mutableAuthorizations.toList()
 
