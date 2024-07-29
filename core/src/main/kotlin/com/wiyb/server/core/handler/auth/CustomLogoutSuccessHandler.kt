@@ -9,15 +9,15 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 
 class CustomLogoutSuccessHandler : LogoutSuccessHandler {
     override fun onLogoutSuccess(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        authentication: Authentication
+        request: HttpServletRequest?,
+        response: HttpServletResponse?,
+        authentication: Authentication?
     ) {
-        response.status = HttpStatus.OK.value()
-        response.contentType = MediaType.APPLICATION_JSON_VALUE
-        response.characterEncoding = "UTF-8"
+        response?.status = HttpStatus.OK.value()
+        response?.contentType = MediaType.APPLICATION_JSON_VALUE
+        response?.characterEncoding = "UTF-8"
 
-        response.writer.write("{}")
-        response.writer.flush()
+        response?.writer?.write("{}")
+        response?.writer?.flush()
     }
 }
