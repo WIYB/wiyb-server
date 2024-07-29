@@ -6,6 +6,7 @@ import com.wiyb.server.storage.entity.Account
 import com.wiyb.server.storage.entity.User
 import com.wiyb.server.storage.entity.constant.Role
 import com.wiyb.server.storage.repository.AccountRepository
+import com.wiyb.server.storage.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class CustomOAuth2UserService(
+    private val userRepository: UserRepository,
     private val accountRepository: AccountRepository
 ) : DefaultOAuth2UserService() {
     @Transactional
@@ -36,6 +38,7 @@ class CustomOAuth2UserService(
                     email = oauth2UserInfo.email,
                     user = newUser
                 )
+            userRepository.save(newUser)
             accountRepository.save(newAccount)
             account = newAccount
         }

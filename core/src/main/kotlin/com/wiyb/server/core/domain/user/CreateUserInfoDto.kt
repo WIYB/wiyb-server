@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Past
 import java.time.LocalDate
 
-data class CreateProfileDto(
+data class CreateUserInfoDto(
     @field:NotBlank(message = "nickname must not be blank")
     val nickname: String,
     @field:ValueOfEnum(enumClass = Gender::class, message = "gender value is invalid")
