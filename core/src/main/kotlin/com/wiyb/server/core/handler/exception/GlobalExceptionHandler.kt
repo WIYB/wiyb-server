@@ -8,6 +8,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.servlet.NoHandlerFoundException
 
 @ControllerAdvice
 class GlobalExceptionHandler {
@@ -28,6 +29,12 @@ class GlobalExceptionHandler {
                 ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(CommonException(ErrorCode.INVALID_INPUT, e.message).toJson())
+            }
+
+            is NoHandlerFoundException -> {
+                ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(CommonException(ErrorCode.API_NOT_FOUND, e.message).toJson())
             }
 
             else -> {
