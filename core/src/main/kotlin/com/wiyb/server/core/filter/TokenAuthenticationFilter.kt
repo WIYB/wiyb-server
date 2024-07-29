@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.cors.CorsUtils
 import org.springframework.web.filter.OncePerRequestFilter
 import java.util.Arrays
 import java.util.Collections
@@ -29,6 +30,11 @@ class TokenAuthenticationFilter(
         filterChain: FilterChain
     ) {
         when {
+            (CorsUtils.isPreFlightRequest(request)) -> {
+                response.status = HttpServletResponse.SC_OK
+                return
+            }
+
             (isPermittedURI(request.requestURI)) -> {
                 SecurityContextHolder.getContext().authentication = null
             }
