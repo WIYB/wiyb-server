@@ -7,8 +7,10 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 
 @Entity(name = "authorizations")
+@SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE authorizations SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 class Authorization(
     sessionId: String,

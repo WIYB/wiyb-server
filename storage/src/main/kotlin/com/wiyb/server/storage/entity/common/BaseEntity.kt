@@ -7,7 +7,6 @@ import jakarta.persistence.MappedSuperclass
 import jakarta.persistence.PostLoad
 import jakarta.persistence.PostPersist
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.SQLRestriction
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.proxy.HibernateProxy
 import org.springframework.data.domain.Persistable
@@ -22,7 +21,6 @@ val tsidFactory: TSID.Factory =
         .build()
 
 @MappedSuperclass
-@SQLRestriction("deleted_at IS NULL")
 abstract class BaseEntity : Persistable<Long> {
     @Id
     private val id: Long =
