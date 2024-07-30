@@ -26,11 +26,7 @@ class CustomOAuth2UserService(
         var account: Account? = accountRepository.findByEmailWithUser(oauth2UserInfo.email)
 
         if (account == null) {
-            val newUser =
-                User(
-                    role = Role.GUEST,
-                    name = oauth2UserInfo.name
-                )
+            val newUser = User(role = Role.GUEST)
             val newAccount =
                 Account(
                     socialProvider = oauth2UserInfo.socialProvider,

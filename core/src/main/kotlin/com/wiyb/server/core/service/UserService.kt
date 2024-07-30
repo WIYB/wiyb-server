@@ -10,8 +10,13 @@ import org.springframework.stereotype.Service
 class UserService(
     private val userRepository: UserRepository
 ) {
-    fun findUserBySessionId(sessionId: String): User =
+    fun findBySessionId(sessionId: String): User =
         userRepository.findBySessionId(sessionId) ?: throw CommonException(
+            ErrorCode.USER_NOT_FOUND
+        )
+
+    fun findWithUserProfileBySessionId(sessionId: String): User =
+        userRepository.findWithUserProfileBySessionId(sessionId) ?: throw CommonException(
             ErrorCode.USER_NOT_FOUND
         )
 

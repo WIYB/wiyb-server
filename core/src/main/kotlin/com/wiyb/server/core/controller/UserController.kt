@@ -1,8 +1,8 @@
 package com.wiyb.server.core.controller
 
 import com.wiyb.server.core.domain.common.CustomResponseCookie
-import com.wiyb.server.core.domain.user.CreateUserInfoDto
-import com.wiyb.server.core.domain.user.UserInfoDto
+import com.wiyb.server.core.domain.user.CreateUserProfileDto
+import com.wiyb.server.core.domain.user.UserProfileDto
 import com.wiyb.server.core.facade.AuthFacade
 import com.wiyb.server.core.facade.UserFacade
 import org.springframework.http.HttpHeaders
@@ -21,9 +21,9 @@ class UserController(
 ) {
     @PostMapping
     fun createUser(
-        @RequestBody createUserInfoDto: CreateUserInfoDto
-    ): ResponseEntity<UserInfoDto> {
-        val userInfoDto = userFacade.createProfile(createUserInfoDto)
+        @RequestBody createUserProfileDto: CreateUserProfileDto
+    ): ResponseEntity<UserProfileDto> {
+        val userInfoDto = userFacade.createProfile(createUserProfileDto)
         val tokenDto = authFacade.refreshToken()
 
         return ResponseEntity

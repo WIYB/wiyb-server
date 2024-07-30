@@ -2,8 +2,9 @@ package com.wiyb.server.core.facade
 
 import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
-import com.wiyb.server.core.domain.user.CreateUserInfoDto
-import com.wiyb.server.core.domain.user.UserInfoDto
+import com.wiyb.server.core.domain.user.CreateUserProfileDto
+import com.wiyb.server.core.domain.user.UserProfileDto
+import com.wiyb.server.core.service.UserProfileService
 import com.wiyb.server.core.service.UserService
 import com.wiyb.server.storage.entity.constant.Role
 import org.springframework.security.core.context.SecurityContextHolder
@@ -11,30 +12,29 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserFacade(
-    private val userService: UserService
+    private val userService: UserService,
+    private val userProfileService: UserProfileService
 ) {
-    fun createProfile(createUserInfoDto: CreateUserInfoDto): UserInfoDto {
+    fun createProfile(createUserProfileDto: CreateUserProfileDto): UserProfileDto {
         val sessionId = SecurityContextHolder.getContext().authentication.name
-        val user = userService.findUserBySessionId(sessionId)
+        val user = userService.findWithUserProfileBySessionId(sessionId)
 
-        if (user.nickname != null) {
+        if (user.userProfile != null) {
             throw CommonException(ErrorCode.INSUFFICIENT_AUTHORITY)
         }
 
-        user.update(
-            role = Role.USER,
-            nickname = createUserInfoDto.nickname,
-            gender = createUserInfoDto.gender,
-            birth = createUserInfoDto.birth
-        )
+        user.updateRole(Role.USER)
         userService.save(user)
 
-        return UserInfoDto.fromEntity(user)
+        val userProfile = createUserProfileDto.toEntity(user)
+        userProfileService.save(userProfile)
+
+        return UserProfileDto.fromEntity(user, userProfile)
     }
 
     fun deleteProfile() {
         val sessionId = SecurityContextHolder.getContext().authentication.name
-        val user = userService.findUserBySessionId(sessionId)
+        val user = userService.findBySessionId(sessionId)
 
         userService.delete(user)
     }

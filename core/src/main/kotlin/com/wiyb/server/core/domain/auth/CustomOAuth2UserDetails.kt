@@ -14,11 +14,11 @@ data class CustomOAuth2UserDetails(
     OAuth2User {
     override fun getAttributes(): Map<String, Any> = attributes
 
-    override fun getName(): String = user.name
+    override fun getName(): String = user.id.toString()
 
     override fun getAuthorities(): Collection<GrantedAuthority?> = Collections.singletonList(SimpleGrantedAuthority(user.role.getRole()))
 
-    override fun getUsername(): String = user.nickname ?: "unknown"
+    override fun getUsername(): String = "unknown"
 
     override fun getPassword(): String? = null
 

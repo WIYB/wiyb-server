@@ -3,45 +3,23 @@
 package com.wiyb.server.storage.entity
 
 import com.wiyb.server.storage.entity.common.BaseEntity
-import com.wiyb.server.storage.entity.constant.Gender
 import com.wiyb.server.storage.entity.constant.Role
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
-import java.time.LocalDate
+import org.hibernate.annotations.SQLRestriction
 
 @Entity(name = "users")
+@SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 class User(
-    role: Role,
-    name: String,
-    nickname: String? = null,
-    gender: Gender? = null,
-    birth: LocalDate? = null,
-    imageUrl: String? = null
+    role: Role
 ) : BaseEntity() {
     @Column(name = "role", nullable = false)
     var role: Role = role
         protected set
 
-    @Column(name = "name", nullable = false)
-    var name: String = name
-        protected set
-
-    @Column(name = "nickname")
-    var nickname: String? = nickname
-        protected set
-
-    @Column(name = "gender")
-    var gender: Gender? = gender
-        protected set
-
-    @Column(name = "birth", columnDefinition = "date")
-    var birth: LocalDate? = birth
-        protected set
-
-    @Column(name = "image_url")
-    var imageUrl: String? = imageUrl
-        protected set
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.REMOVE, CascadeType.PERSIST])
+    var userProfile: UserProfile? = null
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.REMOVE])
     protected val mutableAccounts: MutableList<Account> = mutableListOf()
@@ -51,27 +29,19 @@ class User(
     protected val mutableAuthorizations: MutableList<Authorization> = mutableListOf()
     val authorizations: List<Authorization> get() = mutableAuthorizations.toList()
 
+    fun addUserProfile(userProfile: UserProfile) {
+        this.userProfile = userProfile
+    }
+
     fun addAccount(account: Account) {
         mutableAccounts.add(account)
     }
 
-    fun addAuthorizations(authorizations: Authorization) {
+    fun addAuthorization(authorizations: Authorization) {
         mutableAuthorizations.add(authorizations)
     }
 
-    fun update(
-        role: Role? = null,
-        name: String? = null,
-        nickname: String? = null,
-        gender: Gender? = null,
-        birth: LocalDate? = null,
-        imageUrl: String? = null
-    ) {
-        role?.let { this.role = it }
-        name?.let { this.name = it }
-        nickname?.let { this.nickname = it }
-        gender?.let { this.gender = it }
-        birth?.let { this.birth = it }
-        imageUrl?.let { this.imageUrl = it }
+    fun updateRole(role: Role) {
+        this.role = role
     }
 }
