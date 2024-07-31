@@ -1,15 +1,8 @@
 package com.wiyb.server.storage.entity.common
 
-import com.wiyb.server.storage.entity.User
 import jakarta.persistence.Column
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import org.springframework.data.domain.Persistable
 
-abstract class ReviewBaseEntity<T : Persistable<Long>>(
-    user: User,
-    equipment: T,
+abstract class ReviewBaseEntity<T : BaseEntity>(
     evaluationMetric: Int,
     content: String,
     imageUrls: String? = null
@@ -24,15 +17,5 @@ abstract class ReviewBaseEntity<T : Persistable<Long>>(
 
     @Column(name = "image_urls", columnDefinition = "text")
     var imageUrls: String? = imageUrls
-        protected set
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    var user: User = user
-        protected set
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "equipment_id", nullable = false)
-    var equipment: T = equipment
         protected set
 }

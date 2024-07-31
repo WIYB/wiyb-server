@@ -85,7 +85,7 @@ class ClubHead(
     var putterNeckShape: String? = putterNeckShape
         protected set
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "club_heads", cascade = [CascadeType.REMOVE])
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
     protected val mutableClubHeadReviews: MutableList<ClubHeadReview> = mutableListOf()
     val clubHeadReviews: List<ClubHeadReview> get() = mutableClubHeadReviews.toList()
 }

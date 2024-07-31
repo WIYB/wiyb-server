@@ -23,7 +23,7 @@ class GolfOtherEquipment(
     var equipmentType: String = equipmentType
         protected set
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "golf_other_equipments", cascade = [CascadeType.REMOVE])
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
     protected val mutableGolfOtherEquipmentReviews: MutableList<GolfOtherEquipmentReview> = mutableListOf()
     val golfOtherEquipmentReviews: List<GolfOtherEquipmentReview> get() = mutableGolfOtherEquipmentReviews.toList()
 }

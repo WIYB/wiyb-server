@@ -34,7 +34,7 @@ class ClubGrip(
     var weight: Float = weight
         protected set
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "club_grips", cascade = [CascadeType.REMOVE])
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
     protected val mutableClubGripReviews: MutableList<ClubGripReview> = mutableListOf()
     val clubGripReviews: List<ClubGripReview> get() = mutableClubGripReviews.toList()
 }

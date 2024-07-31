@@ -43,7 +43,7 @@ class ClubShaft(
     var texture: String = texture
         protected set
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "club_shafts", cascade = [CascadeType.REMOVE])
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
     protected val mutableClubShaftReviews: MutableList<ClubShaftReview> = mutableListOf()
     val clubShaftReviews: List<ClubShaftReview> get() = mutableClubShaftReviews.toList()
 }

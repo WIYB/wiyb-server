@@ -28,7 +28,7 @@ class GolfBall(
     var cover: String = cover
         protected set
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "golf_balls", cascade = [CascadeType.REMOVE])
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
     protected val mutableGolfBallReviews: MutableList<GolfBallReview> = mutableListOf()
     val golfBallReviews: List<GolfBallReview> get() = mutableGolfBallReviews.toList()
 }

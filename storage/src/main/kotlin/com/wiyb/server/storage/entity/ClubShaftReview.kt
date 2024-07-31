@@ -2,6 +2,9 @@ package com.wiyb.server.storage.entity
 
 import com.wiyb.server.storage.entity.common.ReviewBaseEntity
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -14,4 +17,14 @@ class ClubShaftReview(
     evaluationMetric: Int,
     content: String,
     imageUrls: String?
-) : ReviewBaseEntity<ClubShaft>(user, clubShaft, evaluationMetric, content, imageUrls)
+) : ReviewBaseEntity<ClubShaft>(evaluationMetric, content, imageUrls) {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    var user: User = user
+        protected set
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "equipment_id", nullable = false)
+    var equipment: ClubShaft = clubShaft
+        protected set
+}
