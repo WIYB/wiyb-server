@@ -13,5 +13,5 @@ enum class Grip(
     override fun getCode(): String = code
 
     @Converter(autoApply = true)
-    class DifficultyConverter : AbstractCodedEnumConverter<Difficulty, String>(Difficulty::class.java)
+    class GripConverter : AbstractCodedEnumConverter<Grip, String>(Grip::class.java)
 }
