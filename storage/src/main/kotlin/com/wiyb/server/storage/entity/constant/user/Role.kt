@@ -1,4 +1,4 @@
-package com.wiyb.server.storage.entity.constant
+package com.wiyb.server.storage.entity.constant.user
 
 import com.wiyb.server.storage.converter.AbstractCodedEnumConverter
 import com.wiyb.server.storage.converter.CodedEnum

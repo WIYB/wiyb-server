@@ -2,7 +2,7 @@ package com.wiyb.server.core.domain.user
 
 import com.wiyb.server.core.config.annotation.ValueOfEnum
 import com.wiyb.server.storage.entity.UserProfile
-import com.wiyb.server.storage.entity.constant.Gender
+import com.wiyb.server.storage.entity.constant.user.Gender
 import jakarta.validation.constraints.Past
 import jakarta.validation.constraints.Positive
 import org.hibernate.validator.constraints.Range
