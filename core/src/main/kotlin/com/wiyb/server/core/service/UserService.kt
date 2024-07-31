@@ -15,6 +15,11 @@ class UserService(
             ErrorCode.USER_NOT_FOUND
         )
 
+    fun findWithUserProfileById(userId: String): User =
+        userRepository.findWithUserProfileById(userId.toLong()) ?: throw CommonException(
+            ErrorCode.USER_NOT_FOUND
+        )
+
     fun findWithUserProfileBySessionId(sessionId: String): User =
         userRepository.findWithUserProfileBySessionId(sessionId) ?: throw CommonException(
             ErrorCode.USER_NOT_FOUND

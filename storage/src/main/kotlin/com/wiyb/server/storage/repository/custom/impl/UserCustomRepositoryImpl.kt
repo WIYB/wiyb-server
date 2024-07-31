@@ -20,6 +20,15 @@ class UserCustomRepositoryImpl(
             .where(QAuthorization.authorization.sessionId.eq(sessionId))
             .fetchOne()
 
+    override fun findWithUserProfileById(userId: Long): User? =
+        queryFactory
+            .select(QUser.user)
+            .from(QUser.user)
+            .leftJoin(QUser.user.userProfile, QUserProfile.userProfile)
+            .fetchJoin()
+            .where(QUser.user.id.eq(userId))
+            .fetchOne()
+
     override fun findWithUserProfileBySessionId(sessionId: String): User? =
         queryFactory
             .select(QUser.user)
