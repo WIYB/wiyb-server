@@ -5,6 +5,8 @@ import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
@@ -13,7 +15,7 @@ import org.hibernate.annotations.SQLRestriction
 @SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE club_shafts SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 class ClubShaft(
-    brand: String,
+    brand: Brand,
     name: String,
     strength: String,
     weight: Float,
@@ -22,7 +24,7 @@ class ClubShaft(
     texture: String,
     releasedYear: String,
     imageUrls: String? = null
-) : GolfBaseEntity(brand, name, releasedYear, imageUrls) {
+) : GolfBaseEntity(name, releasedYear, imageUrls) {
     @Column(name = "strength", nullable = false)
     var strength: String = strength
         protected set
@@ -44,6 +46,11 @@ class ClubShaft(
         protected set
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
-    protected val mutableClubShaftReviews: MutableList<ClubShaftReview> = mutableListOf()
-    val clubShaftReviews: List<ClubShaftReview> get() = mutableClubShaftReviews.toList()
+    protected val mutableReviews: MutableList<ClubShaftReview> = mutableListOf()
+    val reviews: List<ClubShaftReview> get() = mutableReviews.toList()
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "brand_id", nullable = false)
+    var brand: Brand = brand
+        protected set
 }

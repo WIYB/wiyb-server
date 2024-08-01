@@ -6,6 +6,7 @@ import com.wiyb.server.storage.entity.constant.user.Gender
 import jakarta.validation.constraints.Past
 import jakarta.validation.constraints.Positive
 import org.hibernate.validator.constraints.Range
+import org.hibernate.validator.constraints.URL
 import java.time.LocalDate
 
 data class UpdateUserProfileDto(
@@ -21,6 +22,7 @@ data class UpdateUserProfileDto(
     val height: Int? = null,
     @field:Positive(message = "weight must be positive")
     val weight: Int? = null,
+    @field:URL(message = "imageUrl must be url")
     val imageUrl: String? = null
 ) {
     fun updateEntity(entity: UserProfile): UserProfile {

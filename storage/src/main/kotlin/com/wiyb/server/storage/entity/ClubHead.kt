@@ -7,6 +7,8 @@ import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
@@ -15,11 +17,12 @@ import org.hibernate.annotations.SQLRestriction
 @SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE club_heads SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 class ClubHead(
-    brand: String,
+    brand: Brand,
     name: String,
     headType: Head,
     produceType: String,
     designType: String,
+    headNumber: Int,
     headShape: String,
     color: String,
     weight: Float,
@@ -28,11 +31,10 @@ class ClubHead(
     releasedYear: String,
     imageUrls: String?,
     driverVolume: Float? = null,
-    ironNumber: Int? = null,
     iron7LoftDegree: String? = null,
     ironPLoftDegree: String? = null,
     putterNeckShape: String? = null
-) : GolfBaseEntity(brand, name, releasedYear, imageUrls) {
+) : GolfBaseEntity(name, releasedYear, imageUrls) {
     @Column(name = "head_type", nullable = false)
     var headType: Head = headType
         protected set
@@ -43,6 +45,10 @@ class ClubHead(
 
     @Column(name = "design_type", nullable = false)
     var designType: String = designType
+        protected set
+
+    @Column(name = "head_number", nullable = false)
+    var headNumber: Int = headNumber
         protected set
 
     @Column(name = "head_shape", nullable = false)
@@ -69,10 +75,6 @@ class ClubHead(
     var driverVolume: Float? = driverVolume
         protected set
 
-    @Column(name = "iron_number")
-    var ironNumber: Int? = ironNumber
-        protected set
-
     @Column(name = "iron_7_loft_degree")
     var iron7LoftDegree: String? = iron7LoftDegree
         protected set
@@ -86,6 +88,11 @@ class ClubHead(
         protected set
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
-    protected val mutableClubHeadReviews: MutableList<ClubHeadReview> = mutableListOf()
-    val clubHeadReviews: List<ClubHeadReview> get() = mutableClubHeadReviews.toList()
+    protected val mutableReviews: MutableList<ClubHeadReview> = mutableListOf()
+    val reviews: List<ClubHeadReview> get() = mutableReviews.toList()
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "brand_id", nullable = false)
+    var brand: Brand = brand
+        protected set
 }

@@ -3,15 +3,10 @@ package com.wiyb.server.storage.entity.common
 import jakarta.persistence.Column
 
 abstract class GolfBaseEntity(
-    brand: String,
     name: String,
     releasedYear: String,
     imageUrls: String? = null
 ) : BaseEntity() {
-    @Column(name = "brand", nullable = false)
-    var brand: String = brand
-        protected set
-
     @Column(name = "name", nullable = false)
     var name: String = name
         protected set
