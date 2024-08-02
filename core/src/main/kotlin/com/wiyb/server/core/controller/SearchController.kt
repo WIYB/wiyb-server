@@ -11,7 +11,7 @@ class SearchController(
     private val searchFacade: SearchFacade
 ) {
     @GetMapping
-    fun integrationSearch() {
-//        searchFacade.integrationSearch()
+    fun integrateSearch() {
+//        searchFacade.integrateSearch()
     }
 }
