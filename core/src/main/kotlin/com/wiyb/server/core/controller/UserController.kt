@@ -1,12 +1,11 @@
 package com.wiyb.server.core.controller
 
-import com.wiyb.server.core.domain.common.CustomResponseCookie
+import com.wiyb.server.core.domain.auth.TokenResponseWrapper
 import com.wiyb.server.core.domain.user.CreateUserProfileDto
 import com.wiyb.server.core.domain.user.UpdateUserProfileDto
 import com.wiyb.server.core.domain.user.UserProfileDto
 import com.wiyb.server.core.facade.AuthFacade
 import com.wiyb.server.core.facade.UserFacade
-import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,11 +29,7 @@ class UserController(
         val userProfileDto = userFacade.createProfile(createUserProfileDto)
         val tokenDto = authFacade.refreshToken()
 
-        return ResponseEntity
-            .ok()
-            .header(HttpHeaders.SET_COOKIE, CustomResponseCookie.makeForAccessToken(tokenDto.accessToken).toString())
-            .header(HttpHeaders.SET_COOKIE, CustomResponseCookie.makeForRefreshToken(tokenDto.refreshToken).toString())
-            .body(userProfileDto)
+        return TokenResponseWrapper.send(tokenDto, userProfileDto)
     }
 
     @GetMapping("/profile/{userId}", "/profile")

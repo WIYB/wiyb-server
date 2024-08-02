@@ -1,7 +1,7 @@
 package com.wiyb.server.core.handler.auth
 
 import com.wiyb.server.core.domain.auth.CustomOAuth2UserDetails
-import com.wiyb.server.core.domain.common.CustomCookie
+import com.wiyb.server.core.domain.auth.TokenResponseWrapper
 import com.wiyb.server.core.provider.TokenProvider
 import com.wiyb.server.storage.entity.user.User
 import com.wiyb.server.storage.entity.user.constant.Role
@@ -27,8 +27,7 @@ class CustomAuthenticationSuccessHandler(
         val sessionId: String = UUID.randomUUID().toString()
         val tokenDto = tokenProvider.generatePair(user, sessionId)
 
-        response.addCookie(CustomCookie.makeForAccessToken(tokenDto.accessToken))
-        response.addCookie(CustomCookie.makeForRefreshToken(tokenDto.refreshToken))
+        TokenResponseWrapper.addCookie(response, tokenDto)
 
         when (user.role) {
             Role.GUEST -> response.sendRedirect("$referer/sign")

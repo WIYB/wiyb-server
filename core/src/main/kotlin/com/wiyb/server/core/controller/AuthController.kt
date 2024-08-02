@@ -15,6 +15,6 @@ class AuthController(
     @PatchMapping("/token")
     fun refreshToken(response: HttpServletResponse) {
         val tokenDto = authFacade.refreshToken()
-        TokenResponseWrapper(response).send(tokenDto)
+        TokenResponseWrapper.send(response, tokenDto)
     }
 }
