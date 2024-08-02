@@ -1,23 +1,26 @@
-package com.wiyb.server.storage.entity.review.common
+package com.wiyb.server.storage.entity.golf
 
+import com.wiyb.server.storage.converter.StringListConverter
 import com.wiyb.server.storage.entity.common.BaseEntity
 import com.wiyb.server.storage.entity.user.User
 import jakarta.persistence.Column
+import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
-import jakarta.persistence.Inheritance
-import jakarta.persistence.InheritanceType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-abstract class ReviewBaseEntity<T : BaseEntity>(
+@Entity(name = "equipment_reviews")
+@SQLRestriction("deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE equipment_reviews SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+class EquipmentReview(
     user: User,
-    equipment: T,
+    equipment: Equipment,
     evaluationMetric: Int,
     content: String,
-    imageUrls: String? = null
+    imageUrls: List<String>?
 ) : BaseEntity() {
     @Column(name = "evaluation_metric", nullable = false)
     var evaluationMetric: Int = evaluationMetric
@@ -27,8 +30,9 @@ abstract class ReviewBaseEntity<T : BaseEntity>(
     var content: String = content
         protected set
 
+    @Convert(converter = StringListConverter::class)
     @Column(name = "image_urls", columnDefinition = "text")
-    var imageUrls: String? = imageUrls
+    var imageUrls: List<String>? = imageUrls
         protected set
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -38,6 +42,6 @@ abstract class ReviewBaseEntity<T : BaseEntity>(
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "equipment_id", nullable = false)
-    var equipment: T = equipment
+    var equipment: Equipment = equipment
         protected set
 }

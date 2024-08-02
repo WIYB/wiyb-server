@@ -25,22 +25,6 @@ class Brand(
         protected set
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand", cascade = [CascadeType.REMOVE])
-    protected val mutableClubHeads: MutableList<ClubHead> = mutableListOf()
-    val clubHeads: List<ClubHead> get() = mutableClubHeads.toList()
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand", cascade = [CascadeType.REMOVE])
-    protected val mutableClubShafts: MutableList<ClubShaft> = mutableListOf()
-    val clubShafts: List<ClubShaft> get() = mutableClubShafts.toList()
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand", targetEntity = ClubGrip::class, cascade = [CascadeType.REMOVE])
-    protected val mutableClubGrips: MutableList<ClubGrip> = mutableListOf()
-    val clubGrips: List<ClubGrip> get() = mutableClubGrips.toList()
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand", cascade = [CascadeType.REMOVE])
-    protected val mutableGolfBalls: MutableList<GolfBall> = mutableListOf()
-    val golfBall: List<GolfBall> get() = mutableGolfBalls.toList()
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand", cascade = [CascadeType.REMOVE])
-    protected val mutableGolfOtherEquipments: MutableList<GolfOtherEquipment> = mutableListOf()
-    val golfOtherEquipment: List<GolfOtherEquipment> get() = mutableGolfOtherEquipments.toList()
+    protected val mutableEquipments: MutableList<Equipment> = mutableListOf()
+    val equipments: List<Equipment> get() = mutableEquipments.toList()
 }
