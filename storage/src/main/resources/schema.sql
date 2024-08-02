@@ -1,10 +1,6 @@
-##############################
-#  User
-##############################
-
-drop database if exists wiyb;
-create database if not exists wiyb;
-use wiyb;
+-- ##############################
+-- #  Auth
+-- ##############################
 
 create table if not exists users
 (
@@ -32,14 +28,14 @@ create table if not exists user_profiles
     weight     int          null,
     user_id    bigint       not null,
 
-    # User (1:1, uk, fk)
+    -- User (1:1, uk, fk)
     constraint uk_user_profiles_user_id unique (user_id),
     constraint fk_user_profiles_users_user_id foreign key (user_id) references users (id)
 );
 
-##############################
-#  Auth
-##############################
+-- ##############################
+-- #  Auth
+-- ##############################
 
 create table if not exists accounts
 (
@@ -53,7 +49,7 @@ create table if not exists accounts
     social_provider varchar(255) not null,
     user_id         bigint       not null,
 
-    # User fk
+    -- User fk
     constraint fk_accounts_users_user_id foreign key (user_id) references users (id)
 );
 
@@ -67,14 +63,14 @@ create table if not exists authorizations
     session_id varchar(255) not null,
     user_id    bigint       not null,
 
-    # User fk
+    -- User fk
     constraint fk_authorizations_users_user_id foreign key (user_id) references users (id)
 );
 
 
-##############################
-#  Golf
-##############################
+-- ##############################
+-- #  Golf
+-- ##############################
 
 create table if not exists brands
 (
@@ -112,7 +108,7 @@ create table if not exists club_heads
     putter_neck_shape  varchar(255) null,
     weight             float        not null,
 
-    # Brand fk
+    -- Brand fk
     constraint fk_club_heads_brands_brand_id foreign key (brand_id) references brands (id)
 );
 
@@ -133,7 +129,7 @@ create table if not exists club_shafts
     torque        float        not null,
     weight        float        not null,
 
-    # Brand fk
+    -- Brand fk
     constraint fk_club_shafts_brands_brand_id foreign key (brand_id) references brands (id)
 );
 
@@ -152,7 +148,7 @@ create table if not exists club_grips
     round         float        not null,
     weight        float        not null,
 
-    # Brand fk
+    -- Brand fk
     constraint fk_club_grips_brands_brand_id foreign key (brand_id) references brands (id)
 );
 
@@ -170,7 +166,7 @@ create table if not exists golf_balls
     cover         varchar(255) not null,
     piece         int          not null,
 
-    # Brand fk
+    -- Brand fk
     constraint fk_golf_balls_brands_brand_id foreign key (brand_id) references brands (id)
 );
 
@@ -187,14 +183,14 @@ create table if not exists golf_other_equipments
     brand_id       bigint       not null,
     equipment_type varchar(255) not null,
 
-    # Brand fk
+    -- Brand fk
     constraint fk_golf_other_equipments_brands_brand_id foreign key (brand_id) references brands (id)
 );
 
 
-##############################
-#  Review
-##############################
+-- ##############################
+-- #  Review
+-- ##############################
 
 create table if not exists club_head_reviews
 (
@@ -209,10 +205,10 @@ create table if not exists club_head_reviews
     equipment_id      bigint       not null,
     user_id           bigint       not null,
 
-    # User fk
+    -- User fk
     constraint fk_club_head_reviews_users_user_id foreign key (user_id) references users (id),
 
-    # Club grip fk
+    -- Club grip fk
     constraint fk_club_head_reviews_club_heads_equipment_id foreign key (equipment_id) references club_heads (id)
 );
 
@@ -230,10 +226,10 @@ create table if not exists club_shaft_reviews
     equipment_id      bigint       not null,
     user_id           bigint       not null,
 
-    # User fk
+    -- User fk
     constraint fk_club_shaft_reviews_users_user_id foreign key (user_id) references users (id),
 
-    # Club grip fk
+    -- Club grip fk
     constraint fk_club_shaft_reviews_club_shafts_equipment_id foreign key (equipment_id) references club_shafts (id)
 );
 
@@ -250,10 +246,10 @@ create table if not exists club_grip_reviews
     equipment_id      bigint       not null,
     user_id           bigint       not null,
 
-    # User fk
+    -- User fk
     constraint fk_club_grip_reviews_users_user_id foreign key (user_id) references users (id),
 
-    # Club grip fk
+    -- Club grip fk
     constraint fk_club_grip_reviews_club_grips_equipment_id foreign key (equipment_id) references club_grips (id)
 );
 
@@ -271,10 +267,10 @@ create table if not exists golf_ball_reviews
     equipment_id      bigint       not null,
     user_id           bigint       not null,
 
-    # User fk
+    -- User fk
     constraint fk_golf_ball_reviews_users_user_id foreign key (user_id) references users (id),
 
-    # Club grip fk
+    -- Club grip fk
     constraint fk_gold_ball_reviews_golf_balls_equipment_id foreign key (equipment_id) references golf_balls (id)
 );
 
@@ -291,10 +287,10 @@ create table if not exists golf_other_equipment_reviews
     equipment_id      bigint       not null,
     user_id           bigint       not null,
 
-    # User fk
+    -- User fk
     constraint fk_golf_other_equipment_reviews_users_user_id foreign key (user_id) references users (id),
 
-    # Club grip fk
+    -- Club grip fk
     constraint fk_golf_other_equipment_reviews_goes_equipment_id foreign key (equipment_id) references golf_other_equipments (id)
 );
 
@@ -323,34 +319,34 @@ create table if not exists user_equipments
     wood_head_id    bigint      not null,
     wood_shaft_id   bigint      not null,
 
-    # User fk
+    -- User fk
     constraint fk_user_equipments_users_user_id foreign key (user_id) references users (id),
 
-    # Driver fk
+    -- Driver fk
     constraint fk_user_equipments_club_heads_driver_head_id foreign key (driver_head_id) references club_heads (id),
     constraint fk_user_equipments_club_shafts_driver_shaft_id foreign key (driver_shaft_id) references club_shafts (id),
     constraint fk_user_equipments_club_grips_driver_grip_id foreign key (driver_grip_id) references club_grips (id),
 
-    # Wood fk
+    -- Wood fk
     constraint fk_user_equipments_club_heads_wood_head_id foreign key (wood_head_id) references club_heads (id),
     constraint fk_user_equipments_club_shafts_wood_shaft_id foreign key (wood_shaft_id) references club_shafts (id),
     constraint fk_user_equipments_club_grips_wood_grip_id foreign key (wood_grip_id) references club_grips (id),
 
-    # Iron fk
+    -- Iron fk
     constraint fk_user_equipments_club_heads_iron_head_id foreign key (iron_head_id) references club_heads (id),
     constraint fk_user_equipments_club_shafts_iron_shaft_id foreign key (iron_shaft_id) references club_shafts (id),
     constraint fk_user_equipments_club_grips_iron_grip_id foreign key (iron_grip_id) references club_grips (id),
 
-    # Wedge fk
+    -- Wedge fk
     constraint fk_user_equipments_club_heads_wedge_head_id foreign key (wedge_head_id) references club_heads (id),
     constraint fk_user_equipments_club_shafts_wedge_shaft_id foreign key (wedge_shaft_id) references club_shafts (id),
     constraint fk_user_equipments_club_grips_wedge_grip_id foreign key (wedge_grip_id) references club_grips (id),
 
-    # Putter fk
+    -- Putter fk
     constraint fk_user_equipments_club_heads_putter_head_id foreign key (putter_head_id) references club_heads (id),
     constraint fk_user_equipments_club_shafts_putter_shaft_id foreign key (putter_shaft_id) references club_shafts (id),
     constraint fk_user_equipments_club_grips_putter_grip_id foreign key (putter_grip_id) references club_grips (id),
 
-    # Ball fk
+    -- Ball fk
     constraint fk_user_equipments_golf_balls_ball_id foreign key (ball_id) references golf_balls (id)
 );
