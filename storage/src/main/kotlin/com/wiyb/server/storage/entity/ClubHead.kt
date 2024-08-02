@@ -3,13 +3,8 @@ package com.wiyb.server.storage.entity
 import com.wiyb.server.storage.entity.common.GolfBaseEntity
 import com.wiyb.server.storage.entity.constant.golf.Difficulty
 import com.wiyb.server.storage.entity.constant.golf.Head
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -34,7 +29,7 @@ class ClubHead(
     iron7LoftDegree: String? = null,
     ironPLoftDegree: String? = null,
     putterNeckShape: String? = null
-) : GolfBaseEntity(name, releasedYear, imageUrls) {
+) : GolfBaseEntity<ClubHeadReview>(brand, name, releasedYear, imageUrls) {
     @Column(name = "head_type", nullable = false)
     var headType: Head = headType
         protected set
@@ -85,14 +80,5 @@ class ClubHead(
 
     @Column(name = "putter_neck_shape")
     var putterNeckShape: String? = putterNeckShape
-        protected set
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
-    protected val mutableReviews: MutableList<ClubHeadReview> = mutableListOf()
-    val reviews: List<ClubHeadReview> get() = mutableReviews.toList()
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "brand_id", nullable = false)
-    var brand: Brand = brand
         protected set
 }

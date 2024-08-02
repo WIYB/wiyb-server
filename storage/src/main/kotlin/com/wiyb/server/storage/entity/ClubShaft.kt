@@ -1,13 +1,8 @@
 package com.wiyb.server.storage.entity
 
 import com.wiyb.server.storage.entity.common.GolfBaseEntity
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -24,7 +19,7 @@ class ClubShaft(
     texture: String,
     releasedYear: String,
     imageUrls: String? = null
-) : GolfBaseEntity(name, releasedYear, imageUrls) {
+) : GolfBaseEntity<ClubShaftReview>(brand, name, releasedYear, imageUrls) {
     @Column(name = "strength", nullable = false)
     var strength: String = strength
         protected set
@@ -43,14 +38,5 @@ class ClubShaft(
 
     @Column(name = "texture", nullable = false)
     var texture: String = texture
-        protected set
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
-    protected val mutableReviews: MutableList<ClubShaftReview> = mutableListOf()
-    val reviews: List<ClubShaftReview> get() = mutableReviews.toList()
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "brand_id", nullable = false)
-    var brand: Brand = brand
         protected set
 }
