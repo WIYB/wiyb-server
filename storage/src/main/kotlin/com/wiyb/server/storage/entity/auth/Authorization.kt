@@ -1,6 +1,7 @@
-package com.wiyb.server.storage.entity
+package com.wiyb.server.storage.entity.auth
 
 import com.wiyb.server.storage.entity.common.BaseEntity
+import com.wiyb.server.storage.entity.user.User
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType

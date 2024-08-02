@@ -1,8 +1,9 @@
-package com.wiyb.server.storage.entity
+package com.wiyb.server.storage.entity.golf
 
-import com.wiyb.server.storage.entity.common.GolfBaseEntity
-import com.wiyb.server.storage.entity.constant.golf.Difficulty
-import com.wiyb.server.storage.entity.constant.golf.Head
+import com.wiyb.server.storage.entity.golf.common.GolfBaseEntity
+import com.wiyb.server.storage.entity.golf.constant.Difficulty
+import com.wiyb.server.storage.entity.golf.constant.Head
+import com.wiyb.server.storage.entity.review.ClubHeadReview
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import org.hibernate.annotations.SQLDelete

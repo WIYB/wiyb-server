@@ -1,18 +1,18 @@
-package com.wiyb.server.storage.entity.constant.user
+package com.wiyb.server.storage.entity.auth.constant
 
 import com.wiyb.server.storage.converter.AbstractCodedEnumConverter
 import com.wiyb.server.storage.converter.CodedEnum
 import jakarta.persistence.Converter
 
-enum class Gender(
+enum class SocialProvider(
     private val code: String
 ) : CodedEnum<String> {
-    MALE("male"),
-    FEMALE("female"),
-    OTHER("other");
+    GOOGLE("google"),
+    NAVER("naver"),
+    KAKAO("kakao");
 
     override fun getCode(): String = code
 
     @Converter(autoApply = true)
-    class GenderConverter : AbstractCodedEnumConverter<Gender, String>(Gender::class.java)
+    class SocialTypeConverter : AbstractCodedEnumConverter<SocialProvider, String>(SocialProvider::class.java)
 }

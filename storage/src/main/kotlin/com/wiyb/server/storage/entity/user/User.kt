@@ -1,9 +1,14 @@
-@file:Suppress("ktlint:standard:no-wildcard-imports")
+package com.wiyb.server.storage.entity.user
 
-package com.wiyb.server.storage.entity
-
+import com.wiyb.server.storage.entity.auth.Account
+import com.wiyb.server.storage.entity.auth.Authorization
 import com.wiyb.server.storage.entity.common.BaseEntity
-import com.wiyb.server.storage.entity.constant.user.Role
+import com.wiyb.server.storage.entity.review.ClubGripReview
+import com.wiyb.server.storage.entity.review.ClubHeadReview
+import com.wiyb.server.storage.entity.review.ClubShaftReview
+import com.wiyb.server.storage.entity.review.GolfBallReview
+import com.wiyb.server.storage.entity.review.GolfOtherEquipmentReview
+import com.wiyb.server.storage.entity.user.constant.Role
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction

@@ -1,7 +1,8 @@
-package com.wiyb.server.storage.entity
+package com.wiyb.server.storage.entity.golf
 
-import com.wiyb.server.storage.entity.common.GolfBaseEntity
-import com.wiyb.server.storage.entity.constant.golf.Grip
+import com.wiyb.server.storage.entity.golf.common.GolfBaseEntity
+import com.wiyb.server.storage.entity.golf.constant.Grip
+import com.wiyb.server.storage.entity.review.ClubGripReview
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import org.hibernate.annotations.SQLDelete

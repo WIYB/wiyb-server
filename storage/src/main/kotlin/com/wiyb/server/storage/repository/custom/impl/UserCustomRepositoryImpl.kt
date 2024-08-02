@@ -1,10 +1,10 @@
 package com.wiyb.server.storage.repository.custom.impl
 
 import com.querydsl.jpa.impl.JPAQueryFactory
-import com.wiyb.server.storage.entity.QAuthorization
-import com.wiyb.server.storage.entity.QUser
-import com.wiyb.server.storage.entity.QUserProfile
-import com.wiyb.server.storage.entity.User
+import com.wiyb.server.storage.entity.auth.QAuthorization
+import com.wiyb.server.storage.entity.user.QUser
+import com.wiyb.server.storage.entity.user.QUserProfile
+import com.wiyb.server.storage.entity.user.User
 import com.wiyb.server.storage.repository.custom.UserCustomRepository
 import org.springframework.stereotype.Repository
 

@@ -2,9 +2,9 @@ package com.wiyb.server.core.service
 
 import com.wiyb.server.core.domain.auth.CustomOAuth2UserDetails
 import com.wiyb.server.core.domain.auth.OAuth2UserInfo
-import com.wiyb.server.storage.entity.Account
-import com.wiyb.server.storage.entity.User
-import com.wiyb.server.storage.entity.constant.user.Role
+import com.wiyb.server.storage.entity.auth.Account
+import com.wiyb.server.storage.entity.user.User
+import com.wiyb.server.storage.entity.user.constant.Role
 import com.wiyb.server.storage.repository.AccountRepository
 import com.wiyb.server.storage.repository.UserRepository
 import jakarta.transaction.Transactional

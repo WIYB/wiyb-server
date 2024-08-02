@@ -4,7 +4,7 @@ import com.wiyb.server.core.domain.auth.IssueTokenDto
 import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
 import com.wiyb.server.core.service.AuthorizationService
-import com.wiyb.server.storage.entity.User
+import com.wiyb.server.storage.entity.user.User
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts

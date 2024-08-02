@@ -1,4 +1,4 @@
-package com.wiyb.server.storage.entity
+package com.wiyb.server.storage.entity.golf
 
 import com.wiyb.server.storage.entity.common.BaseEntity
 import jakarta.persistence.CascadeType

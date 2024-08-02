@@ -1,6 +1,6 @@
 package com.wiyb.server.core.domain.auth
 
-import com.wiyb.server.storage.entity.User
+import com.wiyb.server.storage.entity.user.User
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

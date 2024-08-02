@@ -1,7 +1,7 @@
 package com.wiyb.server.core.domain.user
 
-import com.wiyb.server.storage.entity.User
-import com.wiyb.server.storage.entity.UserProfile
+import com.wiyb.server.storage.entity.user.User
+import com.wiyb.server.storage.entity.user.UserProfile
 import java.time.LocalDate
 import java.time.LocalDateTime
 

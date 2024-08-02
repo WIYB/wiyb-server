@@ -1,6 +1,10 @@
-package com.wiyb.server.storage.entity
+package com.wiyb.server.storage.entity.user
 
 import com.wiyb.server.storage.entity.common.BaseEntity
+import com.wiyb.server.storage.entity.golf.ClubGrip
+import com.wiyb.server.storage.entity.golf.ClubHead
+import com.wiyb.server.storage.entity.golf.ClubShaft
+import com.wiyb.server.storage.entity.golf.GolfBall
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn

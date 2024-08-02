@@ -1,6 +1,6 @@
 package com.wiyb.server.storage.repository
 
-import com.wiyb.server.storage.entity.GolfBall
+import com.wiyb.server.storage.entity.golf.GolfBall
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

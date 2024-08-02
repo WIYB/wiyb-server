@@ -1,6 +1,7 @@
-package com.wiyb.server.storage.entity.common
+package com.wiyb.server.storage.entity.golf.common
 
-import com.wiyb.server.storage.entity.Brand
+import com.wiyb.server.storage.entity.common.BaseEntity
+import com.wiyb.server.storage.entity.golf.Brand
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

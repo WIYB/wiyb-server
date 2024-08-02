@@ -1,6 +1,8 @@
-package com.wiyb.server.storage.entity
+package com.wiyb.server.storage.entity.review
 
-import com.wiyb.server.storage.entity.common.ReviewBaseEntity
+import com.wiyb.server.storage.entity.golf.ClubShaft
+import com.wiyb.server.storage.entity.review.common.ReviewBaseEntity
+import com.wiyb.server.storage.entity.user.User
 import jakarta.persistence.Entity
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
