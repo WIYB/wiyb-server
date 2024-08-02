@@ -4,10 +4,10 @@ import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
 import com.wiyb.server.core.domain.user.CreateUserProfileDto
 import com.wiyb.server.core.domain.user.UpdateUserProfileDto
-import com.wiyb.server.core.domain.user.UserProfileDto
 import com.wiyb.server.core.service.UserProfileService
 import com.wiyb.server.core.service.UserService
 import com.wiyb.server.storage.entity.user.constant.Role
+import com.wiyb.server.storage.entity.user.dto.UserProfileDto
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 
@@ -30,20 +30,16 @@ class UserFacade(
         val userProfile = createUserProfileDto.toEntity(user)
         userProfileService.save(userProfile)
 
-        return UserProfileDto.fromEntity(user, userProfile)
+        return UserProfileDto(user, userProfile)
     }
 
-    fun getProfile(userId: String?): UserProfileDto {
-        val user =
-            if (userId != null) {
-                userService.findWithUserProfileById(userId)
-            } else {
-                val sessionId = SecurityContextHolder.getContext().authentication.name
-                userService.findWithUserProfileBySessionId(sessionId)
-            }
-
-        return UserProfileDto.fromEntity(user, user.userProfile!!)
-    }
+    fun getProfile(userId: String?): UserProfileDto =
+        if (userId != null) {
+            userService.findUserProfileDtoById(userId)
+        } else {
+            val sessionId = SecurityContextHolder.getContext().authentication.name
+            userService.findUserProfileDtoBySessionId(sessionId)
+        }
 
     fun updateProfile(updateUserProfileDto: UpdateUserProfileDto): UserProfileDto {
         val sessionId = SecurityContextHolder.getContext().authentication.name
@@ -52,7 +48,7 @@ class UserFacade(
 
         userProfileService.save(userProfile)
 
-        return UserProfileDto.fromEntity(user, userProfile)
+        return UserProfileDto(user, userProfile)
     }
 
     fun deleteProfile() {

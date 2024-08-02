@@ -3,9 +3,9 @@ package com.wiyb.server.core.controller
 import com.wiyb.server.core.domain.auth.TokenResponseWrapper
 import com.wiyb.server.core.domain.user.CreateUserProfileDto
 import com.wiyb.server.core.domain.user.UpdateUserProfileDto
-import com.wiyb.server.core.domain.user.UserProfileDto
 import com.wiyb.server.core.facade.AuthFacade
 import com.wiyb.server.core.facade.UserFacade
+import com.wiyb.server.storage.entity.user.dto.UserProfileDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping

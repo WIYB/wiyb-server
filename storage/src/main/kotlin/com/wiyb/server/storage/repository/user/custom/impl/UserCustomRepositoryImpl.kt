@@ -1,10 +1,12 @@
 package com.wiyb.server.storage.repository.user.custom.impl
 
 import com.querydsl.jpa.impl.JPAQueryFactory
-import com.wiyb.server.storage.entity.auth.QAuthorization
-import com.wiyb.server.storage.entity.user.QUser
-import com.wiyb.server.storage.entity.user.QUserProfile
+import com.wiyb.server.storage.entity.auth.QAuthorization.authorization
+import com.wiyb.server.storage.entity.user.QUser.user
+import com.wiyb.server.storage.entity.user.QUserProfile.userProfile
 import com.wiyb.server.storage.entity.user.User
+import com.wiyb.server.storage.entity.user.dto.QUserProfileDto
+import com.wiyb.server.storage.entity.user.dto.UserProfileDto
 import com.wiyb.server.storage.repository.user.custom.UserCustomRepository
 import org.springframework.stereotype.Repository
 
@@ -14,28 +16,38 @@ class UserCustomRepositoryImpl(
 ) : UserCustomRepository {
     override fun findBySessionId(sessionId: String): User? =
         queryFactory
-            .select(QUser.user)
-            .from(QUser.user)
-            .leftJoin(QUser.user.mutableAuthorizations, QAuthorization.authorization)
-            .where(QAuthorization.authorization.sessionId.eq(sessionId))
+            .select(user)
+            .from(user)
+            .leftJoin(user.mutableAuthorizations, authorization)
+            .where(authorization.sessionId.eq(sessionId))
             .fetchOne()
 
-    override fun findWithUserProfileById(userId: Long): User? =
+    override fun findUserProfileDtoById(userId: Long): UserProfileDto? =
         queryFactory
-            .select(QUser.user)
-            .from(QUser.user)
-            .leftJoin(QUser.user.userProfile, QUserProfile.userProfile)
+            .select(QUserProfileDto(user, userProfile))
+            .from(user)
+            .leftJoin(user.userProfile, userProfile)
             .fetchJoin()
-            .where(QUser.user.id.eq(userId))
+            .where(user.id.eq(userId))
+            .fetchOne()
+
+    override fun findUserProfileDtoBySessionId(sessionId: String): UserProfileDto? =
+        queryFactory
+            .select(QUserProfileDto(user, userProfile))
+            .from(user)
+            .leftJoin(user.mutableAuthorizations, authorization)
+            .leftJoin(user.userProfile, userProfile)
+            .fetchJoin()
+            .where(authorization.sessionId.eq(sessionId))
             .fetchOne()
 
     override fun findWithUserProfileBySessionId(sessionId: String): User? =
         queryFactory
-            .select(QUser.user)
-            .from(QUser.user)
-            .leftJoin(QUser.user.mutableAuthorizations, QAuthorization.authorization)
-            .leftJoin(QUser.user.userProfile, QUserProfile.userProfile)
+            .select(user)
+            .from(user)
+            .leftJoin(user.mutableAuthorizations, authorization)
+            .leftJoin(user.userProfile, userProfile)
             .fetchJoin()
-            .where(QAuthorization.authorization.sessionId.eq(sessionId))
+            .where(authorization.sessionId.eq(sessionId))
             .fetchOne()
 }

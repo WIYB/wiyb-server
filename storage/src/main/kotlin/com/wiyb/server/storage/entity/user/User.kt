@@ -3,13 +3,14 @@ package com.wiyb.server.storage.entity.user
 import com.wiyb.server.storage.entity.auth.Account
 import com.wiyb.server.storage.entity.auth.Authorization
 import com.wiyb.server.storage.entity.common.BaseEntity
-import com.wiyb.server.storage.entity.review.ClubGripReview
-import com.wiyb.server.storage.entity.review.ClubHeadReview
-import com.wiyb.server.storage.entity.review.ClubShaftReview
-import com.wiyb.server.storage.entity.review.GolfBallReview
-import com.wiyb.server.storage.entity.review.GolfOtherEquipmentReview
+import com.wiyb.server.storage.entity.golf.EquipmentReview
 import com.wiyb.server.storage.entity.user.constant.Role
-import jakarta.persistence.*
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OneToOne
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -39,24 +40,8 @@ class User(
     val userEquipments: List<UserEquipment> get() = mutableUserEquipments.toList()
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.REMOVE])
-    protected val mutableClubHeadReviews: MutableList<ClubHeadReview> = mutableListOf()
-    val clubHeadReviews: List<ClubHeadReview> get() = mutableClubHeadReviews.toList()
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.REMOVE])
-    protected val mutableClubShaftReviews: MutableList<ClubShaftReview> = mutableListOf()
-    val clubShaftReviews: List<ClubShaftReview> get() = mutableClubShaftReviews.toList()
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.REMOVE])
-    protected val mutableClubGripReviews: MutableList<ClubGripReview> = mutableListOf()
-    val clubGripReviews: List<ClubGripReview> get() = mutableClubGripReviews.toList()
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.REMOVE])
-    protected val mutableGolfBallReviews: MutableList<GolfBallReview> = mutableListOf()
-    val golfBallReviews: List<GolfBallReview> get() = mutableGolfBallReviews.toList()
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.REMOVE])
-    protected val mutableGolfOtherEquipmentReviews: MutableList<GolfOtherEquipmentReview> = mutableListOf()
-    val golfOtherEquipmentReviews: List<GolfOtherEquipmentReview> get() = mutableGolfOtherEquipmentReviews.toList()
+    protected val mutableEquipmentReviews: MutableList<EquipmentReview> = mutableListOf()
+    val equipmentReview: List<EquipmentReview> get() = mutableEquipmentReviews.toList()
 
     fun updateRole(role: Role) {
         this.role = role
