@@ -1,11 +1,11 @@
 package com.wiyb.server.core.service
 
-import com.wiyb.server.storage.repository.ClubGripRepository
-import com.wiyb.server.storage.repository.ClubHeadRepository
-import com.wiyb.server.storage.repository.ClubShaftRepository
-import com.wiyb.server.storage.repository.GolfBallRepository
-import com.wiyb.server.storage.repository.GolfOtherEquipmentRepository
-import com.wiyb.server.storage.repository.UserProfileRepository
+import com.wiyb.server.storage.repository.golf.ClubGripRepository
+import com.wiyb.server.storage.repository.golf.ClubHeadRepository
+import com.wiyb.server.storage.repository.golf.ClubShaftRepository
+import com.wiyb.server.storage.repository.golf.GolfBallRepository
+import com.wiyb.server.storage.repository.golf.GolfOtherEquipmentRepository
+import com.wiyb.server.storage.repository.user.UserProfileRepository
 import org.springframework.stereotype.Service
 
 @Service

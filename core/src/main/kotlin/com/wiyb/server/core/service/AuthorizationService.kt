@@ -2,7 +2,7 @@ package com.wiyb.server.core.service
 
 import com.wiyb.server.storage.entity.auth.Authorization
 import com.wiyb.server.storage.entity.user.User
-import com.wiyb.server.storage.repository.AuthorizationRepository
+import com.wiyb.server.storage.repository.auth.AuthorizationRepository
 import org.springframework.stereotype.Service
 
 @Service

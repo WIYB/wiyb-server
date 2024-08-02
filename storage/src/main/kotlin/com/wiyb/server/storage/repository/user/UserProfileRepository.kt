@@ -1,4 +1,4 @@
-package com.wiyb.server.storage.repository
+package com.wiyb.server.storage.repository.user
 
 import com.wiyb.server.storage.entity.user.UserProfile
 import org.springframework.data.jpa.repository.JpaRepository

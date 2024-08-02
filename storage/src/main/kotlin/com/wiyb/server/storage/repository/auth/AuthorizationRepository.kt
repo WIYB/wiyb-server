@@ -1,4 +1,4 @@
-package com.wiyb.server.storage.repository
+package com.wiyb.server.storage.repository.auth
 
 import com.wiyb.server.storage.entity.auth.Authorization
 import org.springframework.data.jpa.repository.EntityGraph

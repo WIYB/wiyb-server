@@ -1,7 +1,7 @@
-package com.wiyb.server.storage.repository
+package com.wiyb.server.storage.repository.auth
 
 import com.wiyb.server.storage.entity.auth.Account
-import com.wiyb.server.storage.repository.custom.AccountCustomRepository
+import com.wiyb.server.storage.repository.auth.custom.AccountCustomRepository
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository

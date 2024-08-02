@@ -1,4 +1,4 @@
-package com.wiyb.server.storage.repository.custom.impl
+package com.wiyb.server.storage.repository.golf.custom.impl
 
 import com.wiyb.server.storage.entity.golf.Brand
 import com.wiyb.server.storage.entity.golf.QBrand.brand
@@ -7,7 +7,7 @@ import com.wiyb.server.storage.entity.golf.QClubHead.clubHead
 import com.wiyb.server.storage.entity.golf.QClubShaft.clubShaft
 import com.wiyb.server.storage.entity.golf.QGolfBall.golfBall
 import com.wiyb.server.storage.entity.golf.QGolfOtherEquipment.golfOtherEquipment
-import com.wiyb.server.storage.repository.custom.BrandCustomRepository
+import com.wiyb.server.storage.repository.golf.custom.BrandCustomRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository
 

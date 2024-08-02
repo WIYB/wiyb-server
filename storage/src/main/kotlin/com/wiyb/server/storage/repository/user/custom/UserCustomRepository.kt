@@ -1,4 +1,4 @@
-package com.wiyb.server.storage.repository.custom
+package com.wiyb.server.storage.repository.user.custom
 
 import com.wiyb.server.storage.entity.user.User
 
