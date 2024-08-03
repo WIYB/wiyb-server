@@ -1,7 +1,9 @@
 package com.wiyb.server.core.domain.auth
 
 import com.wiyb.server.core.domain.common.CustomCookie
+import com.wiyb.server.core.domain.common.CustomResponseCookie
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -36,8 +38,8 @@ class TokenResponseWrapper {
         ): ResponseEntity<T> =
             ResponseEntity
                 .ok()
-                .header("Set-Cookie", CustomCookie.makeForAccessToken(issueTokenDto.accessToken).toString())
-                .header("Set-Cookie", CustomCookie.makeForRefreshToken(issueTokenDto.refreshToken).toString())
+                .header(HttpHeaders.SET_COOKIE, CustomResponseCookie.makeForAccessToken(issueTokenDto.accessToken).toString())
+                .header(HttpHeaders.SET_COOKIE, CustomResponseCookie.makeForRefreshToken(issueTokenDto.refreshToken).toString())
                 .body(body)
     }
 }
