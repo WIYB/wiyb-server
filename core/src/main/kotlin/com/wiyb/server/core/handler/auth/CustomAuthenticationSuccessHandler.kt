@@ -3,8 +3,8 @@ package com.wiyb.server.core.handler.auth
 import com.wiyb.server.core.domain.auth.CustomOAuth2UserDetails
 import com.wiyb.server.core.domain.auth.TokenResponseWrapper
 import com.wiyb.server.core.provider.TokenProvider
-import com.wiyb.server.storage.entity.user.User
-import com.wiyb.server.storage.entity.user.constant.Role
+import com.wiyb.server.storage.database.entity.user.User
+import com.wiyb.server.storage.database.entity.user.constant.Role
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication

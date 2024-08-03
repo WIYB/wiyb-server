@@ -6,8 +6,8 @@ import com.wiyb.server.core.domain.user.CreateUserProfileDto
 import com.wiyb.server.core.domain.user.UpdateUserProfileDto
 import com.wiyb.server.core.service.UserProfileService
 import com.wiyb.server.core.service.UserService
-import com.wiyb.server.storage.entity.user.constant.Role
-import com.wiyb.server.storage.entity.user.dto.UserProfileDto
+import com.wiyb.server.storage.database.entity.user.constant.Role
+import com.wiyb.server.storage.database.entity.user.dto.UserProfileDto
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 

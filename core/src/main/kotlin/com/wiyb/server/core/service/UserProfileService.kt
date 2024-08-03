@@ -1,7 +1,7 @@
 package com.wiyb.server.core.service
 
-import com.wiyb.server.storage.entity.user.UserProfile
-import com.wiyb.server.storage.repository.user.UserProfileRepository
+import com.wiyb.server.storage.database.entity.user.UserProfile
+import com.wiyb.server.storage.database.repository.user.UserProfileRepository
 import org.springframework.stereotype.Service
 
 @Service

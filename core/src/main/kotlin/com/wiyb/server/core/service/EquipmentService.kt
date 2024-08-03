@@ -1,7 +1,7 @@
 package com.wiyb.server.core.service
 
-import com.wiyb.server.storage.entity.golf.dto.EquipmentSimpleInfoDto
-import com.wiyb.server.storage.repository.golf.EquipmentRepository
+import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleInfoDto
+import com.wiyb.server.storage.database.repository.golf.EquipmentRepository
 import org.springframework.stereotype.Service
 
 @Service

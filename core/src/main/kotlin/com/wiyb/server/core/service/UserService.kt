@@ -2,10 +2,10 @@ package com.wiyb.server.core.service
 
 import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
-import com.wiyb.server.storage.entity.user.User
-import com.wiyb.server.storage.entity.user.dto.UserProfileDto
-import com.wiyb.server.storage.entity.user.dto.UserSimpleProfileDto
-import com.wiyb.server.storage.repository.user.UserRepository
+import com.wiyb.server.storage.database.entity.user.User
+import com.wiyb.server.storage.database.entity.user.dto.UserProfileDto
+import com.wiyb.server.storage.database.entity.user.dto.UserSimpleProfileDto
+import com.wiyb.server.storage.database.repository.user.UserRepository
 import org.springframework.stereotype.Service
 
 @Service

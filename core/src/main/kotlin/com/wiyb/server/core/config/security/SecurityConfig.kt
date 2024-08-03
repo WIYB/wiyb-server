@@ -7,7 +7,7 @@ import com.wiyb.server.core.handler.auth.CustomAuthenticationFailureHandler
 import com.wiyb.server.core.handler.auth.CustomAuthenticationSuccessHandler
 import com.wiyb.server.core.handler.auth.CustomLogoutSuccessHandler
 import com.wiyb.server.core.service.CustomOAuth2UserService
-import com.wiyb.server.storage.entity.user.constant.Role
+import com.wiyb.server.storage.database.entity.user.constant.Role
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod

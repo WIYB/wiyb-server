@@ -1,6 +1,6 @@
 package com.wiyb.server.core.domain.auth
 
-import com.wiyb.server.storage.entity.auth.constant.SocialProvider
+import com.wiyb.server.storage.database.entity.auth.constant.SocialProvider
 import jakarta.security.auth.message.AuthException
 
 data class OAuth2UserInfo(

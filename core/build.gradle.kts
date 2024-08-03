@@ -1,7 +1,7 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 dependencies {
-    implementation(project(":storage"))
+    implementation(project(":storage:database"))
     implementation(project(":support:logging"))
 
     implementation("com.google.code.gson:gson:2.11.0")

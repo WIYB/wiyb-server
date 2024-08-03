@@ -2,11 +2,11 @@ package com.wiyb.server.core.service
 
 import com.wiyb.server.core.domain.auth.CustomOAuth2UserDetails
 import com.wiyb.server.core.domain.auth.OAuth2UserInfo
-import com.wiyb.server.storage.entity.auth.Account
-import com.wiyb.server.storage.entity.user.User
-import com.wiyb.server.storage.entity.user.constant.Role
-import com.wiyb.server.storage.repository.auth.AccountRepository
-import com.wiyb.server.storage.repository.user.UserRepository
+import com.wiyb.server.storage.database.entity.auth.Account
+import com.wiyb.server.storage.database.entity.user.User
+import com.wiyb.server.storage.database.entity.user.constant.Role
+import com.wiyb.server.storage.database.repository.auth.AccountRepository
+import com.wiyb.server.storage.database.repository.user.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest

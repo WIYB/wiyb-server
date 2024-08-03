@@ -1,9 +1,9 @@
 package com.wiyb.server.core.domain.user
 
 import com.wiyb.server.core.config.annotation.ValueOfEnum
-import com.wiyb.server.storage.entity.user.User
-import com.wiyb.server.storage.entity.user.UserProfile
-import com.wiyb.server.storage.entity.user.constant.Gender
+import com.wiyb.server.storage.database.entity.user.User
+import com.wiyb.server.storage.database.entity.user.UserProfile
+import com.wiyb.server.storage.database.entity.user.constant.Gender
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Past
