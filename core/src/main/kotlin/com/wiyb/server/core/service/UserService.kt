@@ -4,6 +4,7 @@ import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
 import com.wiyb.server.storage.entity.user.User
 import com.wiyb.server.storage.entity.user.dto.UserProfileDto
+import com.wiyb.server.storage.entity.user.dto.UserSimpleProfileDto
 import com.wiyb.server.storage.repository.user.UserRepository
 import org.springframework.stereotype.Service
 
@@ -25,6 +26,9 @@ class UserService(
         userRepository.findUserProfileDtoBySessionId(sessionId) ?: throw CommonException(
             ErrorCode.USER_NOT_FOUND
         )
+
+    fun findUserSimpleProfileDtoByNameKeyword(keyword: String): List<UserSimpleProfileDto> =
+        userRepository.findUserSimpleProfileDtoByNameKeyword(keyword)
 
     fun findWithUserProfileBySessionId(sessionId: String): User =
         userRepository.findWithUserProfileBySessionId(sessionId) ?: throw CommonException(

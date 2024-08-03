@@ -1,5 +1,7 @@
 package com.wiyb.server.storage.repository.golf.custom.impl
 
+import com.querydsl.core.types.dsl.Expressions
+import com.querydsl.core.types.dsl.NumberPath
 import com.wiyb.server.storage.entity.golf.Equipment
 import com.wiyb.server.storage.entity.golf.QBrand.brand
 import com.wiyb.server.storage.entity.golf.QEquipment.equipment
@@ -14,13 +16,27 @@ import org.springframework.stereotype.Repository
 class EquipmentCustomRepositoryImpl :
     QuerydslRepositorySupport(Equipment::class.java),
     EquipmentCustomRepository {
-    override fun findByNameKeyword(keyword: String): List<EquipmentSimpleInfoDto> =
-        from(equipment)
-            .select(QEquipmentSimpleInfoDto(equipment, brand.name, equipmentReview.countDistinct()))
-            .leftJoin(equipment.brand, brand)
+    override fun findByNameKeyword(keyword: String): List<EquipmentSimpleInfoDto> {
+        val reviewCount: NumberPath<Long> = Expressions.numberPath(Long::class.java, "reviewCount")
+
+        return from(equipment)
+            .select(
+                QEquipmentSimpleInfoDto(
+                    brand.id.stringValue(),
+                    equipment.type,
+                    equipment.name,
+                    equipment.releasedYear,
+                    equipmentReview.count().`as`(reviewCount),
+                    equipment.imageUrls
+                )
+            ).leftJoin(equipment.brand, brand)
             .fetchJoin()
             .leftJoin(equipment.mutableEquipmentReviews, equipmentReview)
-            .on(equipmentReview.deletedAt.isNull)
             .where(equipment.name.containsIgnoreCase(keyword))
-            .fetch()
+            .groupBy(equipment.type, equipment.id)
+            .orderBy(
+                equipment.type.count().desc(),
+                reviewCount.desc()
+            ).fetch()
+    }
 }
