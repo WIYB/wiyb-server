@@ -90,6 +90,7 @@ create table if not exists equipments
     brand_id      bigint       not null,
     name          varchar(255) not null,
     type          varchar(255) not null,
+    view_count    bigint       not null,
     released_year varchar(255) not null,
     image_urls    text         null,
     created_at    datetime(6)  not null,

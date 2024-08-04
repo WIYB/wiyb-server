@@ -3,7 +3,7 @@ package com.wiyb.server.storage.database.entity.golf.dto
 import com.querydsl.core.annotations.QueryProjection
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 
-data class EquipmentSimpleInfoDto
+data class EquipmentSimpleDto
     @QueryProjection
     constructor(
         val id: String,

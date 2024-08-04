@@ -11,6 +11,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
+import jakarta.persistence.OneToOne
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -32,6 +33,10 @@ class Equipment(
     var name: String = name
         protected set
 
+    @Column(name = "view_count", nullable = false)
+    var viewCount: Long = 0
+        protected set
+
     @Column(name = "released_year", nullable = false)
     var releasedYear: String = releasedYear
         protected set
@@ -41,9 +46,8 @@ class Equipment(
     var imageUrls: List<String>? = imageUrls
         protected set
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
-    protected val mutableEquipmentDetails: MutableList<EquipmentDetail> = mutableListOf()
-    val equipmentDetails: List<EquipmentDetail> get() = mutableEquipmentDetails.toList()
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
+    var equipmentDetail: EquipmentDetail? = null
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
     protected val mutableEquipmentReviews: MutableList<EquipmentReview> = mutableListOf()
@@ -53,4 +57,8 @@ class Equipment(
     @JoinColumn(name = "brand_id", nullable = false)
     var brand: Brand = brand
         protected set
+
+    fun increase(count: Long) {
+        viewCount += count
+    }
 }
