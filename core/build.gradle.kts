@@ -1,6 +1,7 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 dependencies {
+    implementation(project(":storage:cache"))
     implementation(project(":storage:database"))
     implementation(project(":support:logging"))
 

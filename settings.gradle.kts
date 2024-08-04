@@ -2,6 +2,7 @@ rootProject.name = "server"
 
 include(
     "core",
+    "storage:cache",
     "storage:database",
     "support:logging"
 )

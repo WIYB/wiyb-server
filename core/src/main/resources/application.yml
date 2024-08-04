@@ -4,7 +4,8 @@ spring.profiles.active: local
 spring:
   config:
     import:
-      - storage.yml
+      - storage-cache.yml
+      - storage-database.yml
   profiles:
     include: oauth
   web.resources.add-mappings: false

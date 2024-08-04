@@ -52,6 +52,11 @@ allprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+        jvmArgs(
+            "-Xshare:off",
+            "-XX:+EnableDynamicAgentLoading",
+            "-Dspring.profiles.active=test"
+        )
     }
 
     tasks.withType<GenerateReportsTask> {
@@ -78,8 +83,12 @@ subprojects {
         kapt("org.springframework.boot:spring-boot-configuration-processor")
 
         // Test
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation("org.springframework.boot:spring-boot-starter-test") {
+            exclude(group = "com.vaadin.external.google", module = "android-json")
+        }
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+        testImplementation("org.mockito:mockito-core:5.12.0")
+
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 }

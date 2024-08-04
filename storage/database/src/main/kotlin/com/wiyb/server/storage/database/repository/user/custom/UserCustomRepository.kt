@@ -5,6 +5,8 @@ import com.wiyb.server.storage.database.entity.user.dto.UserProfileDto
 import com.wiyb.server.storage.database.entity.user.dto.UserSimpleProfileDto
 
 interface UserCustomRepository {
+    fun findIdBySessionId(sessionId: String): Long?
+
     fun findBySessionId(sessionId: String): User?
 
     fun findUserProfileDtoById(userId: Long): UserProfileDto?

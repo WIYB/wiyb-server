@@ -16,6 +16,13 @@ import org.springframework.stereotype.Repository
 class UserCustomRepositoryImpl :
     QuerydslRepositorySupport(User::class.java),
     UserCustomRepository {
+    override fun findIdBySessionId(sessionId: String): Long? =
+        from(user)
+            .select(user.id)
+            .leftJoin(user.mutableAuthorizations, authorization)
+            .where(authorization.sessionId.eq(sessionId))
+            .fetchOne()
+
     override fun findBySessionId(sessionId: String): User? =
         from(user)
             .select(user)
