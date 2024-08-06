@@ -40,6 +40,16 @@ class UserController(
         return ResponseEntity.ok().body(userProfileDto)
     }
 
+    @GetMapping("/similar/handy/simple")
+    fun getSimilarHandySimpleUsers(): ResponseEntity<List<UserProfileDto>> {
+        TODO("나와 비슷한 핸디의 플레이어")
+    }
+
+    @GetMapping("/similar/body/simple")
+    fun getSimilarBodySimpleUsers(): ResponseEntity<List<UserProfileDto>> {
+        TODO("나와 비슷한 핸디의 플레이어")
+    }
+
     @PutMapping("/profile")
     fun updateUserProfile(
         @RequestBody updateUserProfileDto: UpdateUserProfileDto
