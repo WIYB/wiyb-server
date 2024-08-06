@@ -124,10 +124,12 @@ class ProductController(
             }
         }
 
-        brandRepository.saveAll(brands)
-        equipmentRepository.saveAll(equipments)
-        equipmentDetailRepository.saveAll(equipmentDetails)
-        equipmentReviewRepository.saveAll(equipmentReviews)
+        brandRepository.saveAllAndFlush(brands)
+        equipmentRepository.saveAllAndFlush(equipments)
+        equipmentDetailRepository.saveAllAndFlush(equipmentDetails)
+        equipmentReviewRepository.saveAllAndFlush(equipmentReviews)
+
+        productViewFacade.init()
     }
 
     private fun createEquipmentDetail(equipment: Equipment): EquipmentDetail =

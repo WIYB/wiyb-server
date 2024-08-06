@@ -19,6 +19,7 @@ class ProductViewFacade(
     @Profile("local", "local-dev")
     @PostConstruct
     fun init() {
+        productService.deleteAllMostViewedProduct()
         val equipments = equipmentService.findByNameKeyword("123").take(5)
         val mostViewedProducts =
             equipments
@@ -35,7 +36,6 @@ class ProductViewFacade(
                     )
                 }.sortedBy { it.viewCount }
                 .reversed()
-
         productService.saveAllMostViewedProducts(mostViewedProducts)
     }
 
