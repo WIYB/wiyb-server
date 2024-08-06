@@ -11,6 +11,7 @@ enum class ErrorCode(
     INVALID_INPUT(HttpStatus.BAD_REQUEST, 400, "invalid input"),
     FORBIDDEN(HttpStatus.FORBIDDEN, 403, "forbidden"),
     API_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "not found"),
+    FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, 413, "file size exceeded"),
     UNKNOWN_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "unknown server error"),
 
     // Auth - Common
@@ -28,5 +29,8 @@ enum class ErrorCode(
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT, 2001, "USER_ALREADY_EXISTS"),
 
     // Product
-    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, 3000, "PRODUCT_NOT_FOUND")
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, 3000, "PRODUCT_NOT_FOUND"),
+
+    // Product Review
+    ALREADY_REVIEWED(HttpStatus.BAD_REQUEST, 3100, "이미 리뷰를 작성하셨습니다.")
 }
