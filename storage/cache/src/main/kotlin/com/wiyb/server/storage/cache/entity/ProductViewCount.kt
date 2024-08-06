@@ -8,9 +8,15 @@ import java.io.Serializable
 data class ProductViewCount(
     @Id
     val id: Long,
+    var dailyCount: Long = 0,
     var count: Long = 0
 ) : Serializable {
     fun increase() {
         count++
+    }
+
+    fun clearCount() {
+        dailyCount += count
+        count = 0
     }
 }

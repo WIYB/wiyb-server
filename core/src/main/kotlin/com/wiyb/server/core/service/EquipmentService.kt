@@ -19,6 +19,8 @@ class EquipmentService(
             CommonException(ErrorCode.PRODUCT_NOT_FOUND)
         }
 
+    fun findById(idList: List<Long>): List<EquipmentSimpleDto> = equipmentRepository.findByIdList(idList)
+
     fun findByNameKeyword(keyword: String): List<EquipmentSimpleDto> = equipmentRepository.findByNameKeyword(keyword)
 
     fun findOneWithDetailById(id: Long) =

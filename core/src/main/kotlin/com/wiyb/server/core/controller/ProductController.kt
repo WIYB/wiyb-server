@@ -2,7 +2,9 @@ package com.wiyb.server.core.controller
 
 import com.wiyb.server.core.domain.product.PostProductReviewDto
 import com.wiyb.server.core.facade.ProductFacade
+import com.wiyb.server.core.facade.ProductViewFacade
 import com.wiyb.server.core.service.UserService
+import com.wiyb.server.storage.cache.entity.MostViewedProduct
 import com.wiyb.server.storage.database.entity.golf.Brand
 import com.wiyb.server.storage.database.entity.golf.Equipment
 import com.wiyb.server.storage.database.entity.golf.EquipmentDetail
@@ -30,12 +32,17 @@ import kotlin.random.Random
 @RequestMapping("/product")
 class ProductController(
     private val productFacade: ProductFacade,
+    private val productViewFacade: ProductViewFacade,
+    // todo: delete
     private val brandRepository: BrandRepository,
     private val equipmentRepository: EquipmentRepository,
     private val equipmentDetailRepository: EquipmentDetailRepository,
     private val equipmentReviewRepository: EquipmentReviewRepository,
     private val userService: UserService
 ) {
+    @GetMapping("/most/view/simple")
+    fun getMostViewed(): ResponseEntity<List<MostViewedProduct>> = ResponseEntity.ok().body(productViewFacade.getMostViewedProduct())
+
     @GetMapping("/{productId}/review")
     fun getProductReviews(
         @PathVariable("productId") productId: Long
@@ -127,7 +134,8 @@ class ProductController(
         EquipmentDetail(
             equipment = equipment,
             color = listOf("Red", "Black", "White", "Silver", "Blue").random(),
-            weight = Random.nextFloat() * 300 + 200, // 200g ~ 500g,
+            // 200g ~ 500g,
+            weight = Random.nextFloat() * 300 + 200,
             headProduceType = if (isHead(equipment.type)) listOf("Forged", "Casted").random() else null,
             headDesignType = if (isHead(equipment.type)) listOf("Modern", "Classic", "Aerodynamic").random() else null,
             headNumber = if (isHead(equipment.type)) Random.nextInt(1, 12) else null,

@@ -19,6 +19,24 @@ import org.springframework.stereotype.Repository
 class EquipmentCustomRepositoryImpl :
     QuerydslRepositorySupport(Equipment::class.java),
     EquipmentCustomRepository {
+    override fun findByIdList(idList: List<Long>): List<EquipmentSimpleDto> =
+        from(equipment)
+            .select(
+                QEquipmentSimpleDto(
+                    equipment.id.stringValue(),
+                    brand.name,
+                    equipment.type,
+                    equipment.name,
+                    equipment.releasedYear,
+                    equipmentReview.count(),
+                    equipment.imageUrls
+                )
+            ).leftJoin(equipment.brand, brand)
+            .leftJoin(equipment.mutableEquipmentReviews, equipmentReview)
+            .where(equipment.id.`in`(idList))
+            .groupBy(equipment.id)
+            .fetch()
+
     override fun findByNameKeyword(keyword: String): List<EquipmentSimpleDto> {
         val reviewCount: NumberPath<Long> = Expressions.numberPath(Long::class.java, "reviewCount")
         val query =

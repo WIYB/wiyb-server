@@ -1,22 +1,22 @@
 package com.wiyb.server.core.handler.product
 
-import com.wiyb.server.core.service.ProductService
+import com.wiyb.server.core.facade.ProductViewFacade
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
 class ProductViewScheduler(
-    private val productService: ProductService
+    private val productViewFacade: ProductViewFacade
 ) {
-    // 매 시간 0분 0초에 실행
-    @Scheduled(cron = "0 0 * * * *")
+    // 5분 간격으로 실행
+    @Scheduled(cron = "0 */5 * * * *")
     fun atTimeSharp() {
-        TODO("todo: product view count 저장 로직")
+        productViewFacade.increaseAllProductViewCount()
     }
 
     // 매일 자정에 실행
     @Scheduled(cron = "0 0 0 * * *")
     fun atMidnight() {
-        TODO("todo: user visit log 저장, 인기 장비 업데이트")
+        productViewFacade.clearAllProductViewCount()
     }
 }

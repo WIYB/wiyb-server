@@ -23,6 +23,9 @@ class RedisRepositoryConfig(
     fun redisTemplate(): RedisTemplate<ByteArray, ByteArray> {
         val template = RedisTemplate<ByteArray, ByteArray>()
         template.connectionFactory = redisConnectionFactory()
+        // todo: redis transaction 설정
+        // https://sabarada.tistory.com/178
+//        template.setEnableTransactionSupport(true)
         return template
     }
 }
