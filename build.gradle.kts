@@ -78,6 +78,7 @@ subprojects {
         // Implementation
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
+        implementation("com.github.f4b6a3:tsid-creator:5.2.6")
 
         // Kapt
         kapt("org.springframework.boot:spring-boot-configuration-processor")
