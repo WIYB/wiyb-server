@@ -1,4 +1,4 @@
-package com.wiyb.server.core.domain.golf
+package com.wiyb.server.core.domain.product
 
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank

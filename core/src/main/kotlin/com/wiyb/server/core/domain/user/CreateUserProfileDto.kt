@@ -7,11 +7,11 @@ import com.wiyb.server.storage.database.entity.user.constant.Gender
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Past
-import org.hibernate.validator.constraints.Range
+import org.hibernate.validator.constraints.Length
 import java.time.LocalDate
 
 data class CreateUserProfileDto(
-    @field:Range(min = 2, max = 10, message = "nickname must be at least 2 characters and at most 10 characters")
+    @field:Length(min = 2, max = 10, message = "nickname must be at least 2 characters and at most 10 characters")
     @field:NotBlank(message = "nickname must not be blank")
     val nickname: String,
     @field:ValueOfEnum(enumClass = Gender::class, message = "gender value is invalid")

@@ -5,12 +5,12 @@ import com.wiyb.server.storage.database.entity.user.UserProfile
 import com.wiyb.server.storage.database.entity.user.constant.Gender
 import jakarta.validation.constraints.Past
 import jakarta.validation.constraints.Positive
-import org.hibernate.validator.constraints.Range
+import org.hibernate.validator.constraints.Length
 import org.hibernate.validator.constraints.URL
 import java.time.LocalDate
 
 data class UpdateUserProfileDto(
-    @field:Range(min = 2, max = 10, message = "nickname must be at least 2 characters and at most 10 characters")
+    @field:Length(min = 2, max = 10, message = "nickname must be at least 2 characters and at most 10 characters")
     val nickname: String? = null,
     @field:ValueOfEnum(enumClass = Gender::class, message = "gender value is invalid")
     val gender: String? = null,

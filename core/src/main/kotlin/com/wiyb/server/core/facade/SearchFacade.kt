@@ -1,6 +1,6 @@
 package com.wiyb.server.core.facade
 
-import com.wiyb.server.core.domain.golf.IntegrateSearchDto
+import com.wiyb.server.core.domain.product.IntegrateSearchDto
 import com.wiyb.server.core.service.EquipmentService
 import com.wiyb.server.core.service.UserService
 import org.springframework.stereotype.Component
