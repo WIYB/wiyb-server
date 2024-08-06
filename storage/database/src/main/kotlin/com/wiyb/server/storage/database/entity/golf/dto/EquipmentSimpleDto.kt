@@ -7,6 +7,7 @@ data class EquipmentSimpleDto
     @QueryProjection
     constructor(
         val id: String,
+        val brand: String,
         val type: EquipmentType,
         val name: String,
         val releasedYear: String,

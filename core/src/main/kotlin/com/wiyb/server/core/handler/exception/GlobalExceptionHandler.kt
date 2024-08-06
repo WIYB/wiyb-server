@@ -8,6 +8,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.multipart.MaxUploadSizeExceededException
 import org.springframework.web.servlet.NoHandlerFoundException
 
 @ControllerAdvice
@@ -37,7 +38,14 @@ class GlobalExceptionHandler {
                     .body(CommonException(ErrorCode.API_NOT_FOUND, e.message).toJson())
             }
 
+            is MaxUploadSizeExceededException -> {
+                ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(CommonException(ErrorCode.FILE_SIZE_EXCEEDED).toJson())
+            }
+
             else -> {
+                println(e.printStackTrace())
                 ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(CommonException(ErrorCode.UNKNOWN_SERVER_ERROR).toJson())

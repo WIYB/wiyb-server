@@ -85,17 +85,19 @@ create table if not exists brands
 
 create table if not exists equipments
 (
-    id            bigint       not null
+    id                      bigint       not null
         primary key,
-    brand_id      bigint       not null,
-    name          varchar(255) not null,
-    type          varchar(255) not null,
-    view_count    bigint       not null,
-    released_year varchar(255) not null,
-    image_urls    text         null,
-    created_at    datetime(6)  not null,
-    updated_at    datetime(6)  not null,
-    deleted_at    datetime(6)  null,
+    brand_id                bigint       not null,
+    name                    varchar(255) not null,
+    type                    varchar(255) not null,
+    view_count              bigint       not null,
+    evaluated_count         bigint       not null,
+    evaluation_metric_total varchar(255) not null,
+    released_year           varchar(255) not null,
+    image_urls              text         null,
+    created_at              datetime(6)  not null,
+    updated_at              datetime(6)  not null,
+    deleted_at              datetime(6)  null,
 
     -- Brand fk
     constraint fk_equipments_brands_brand_id foreign key (brand_id) references brands (id)
@@ -140,12 +142,15 @@ create table if not exists equipment_reviews
         primary key,
     user_id           bigint       not null,
     equipment_id      bigint       not null,
-    evaluation_metric int          not null,
-    content           varchar(255) not null,
+    content           text         not null,
+    evaluation_metric varchar(255) null,
     image_urls        text         null,
     created_at        datetime(6)  not null,
     updated_at        datetime(6)  not null,
     deleted_at        datetime(6)  null,
+
+    -- Unique
+    constraint uk_equipment_reviews_user_id_equipment_id_deleted_at unique (user_id, equipment_id, deleted_at),
 
     -- User fk
     constraint fk_equipment_reviews_users_user_id foreign key (user_id) references users (id),

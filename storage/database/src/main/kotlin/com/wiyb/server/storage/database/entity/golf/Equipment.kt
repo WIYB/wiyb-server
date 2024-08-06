@@ -1,5 +1,6 @@
 package com.wiyb.server.storage.database.entity.golf
 
+import com.wiyb.server.storage.database.converter.FloatListConverter
 import com.wiyb.server.storage.database.converter.StringListConverter
 import com.wiyb.server.storage.database.entity.common.BaseEntity
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
@@ -37,6 +38,15 @@ class Equipment(
     var viewCount: Long = 0
         protected set
 
+    @Column(name = "evaluated_count", nullable = false)
+    var evaluatedCount: Long = 0
+        protected set
+
+    @Convert(converter = FloatListConverter::class)
+    @Column(name = "evaluation_metric_total", nullable = false)
+    var evaluationMetricTotal: List<Float> = listOf(0f, 0f, 0f, 0f, 0f, 0f)
+        protected set
+
     @Column(name = "released_year", nullable = false)
     var releasedYear: String = releasedYear
         protected set
@@ -60,5 +70,10 @@ class Equipment(
 
     fun increase(count: Long) {
         viewCount += count
+    }
+
+    fun addEvaluationMetric(evaluationMetric: List<Float>) {
+        evaluatedCount++
+        evaluationMetricTotal = evaluationMetricTotal.zip(evaluationMetric).map { (a, b) -> a + b }
     }
 }
