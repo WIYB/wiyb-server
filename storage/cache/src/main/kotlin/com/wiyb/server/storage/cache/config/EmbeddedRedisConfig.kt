@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Profile
 import redis.embedded.RedisServer
 
 @Profile("local", "local-dev", "test")
-@Configuration
+// todo: delete embeddedRedisConfig
+@Configuration("embeddedRedisConfig")
 class EmbeddedRedisConfig(
     @Value("\${spring.redis.port}")
     private val port: Int
@@ -16,7 +17,7 @@ class EmbeddedRedisConfig(
     private val server: RedisServer = RedisServer(port)
 
     @PostConstruct
-    private fun startRedis() {
+    fun startRedis() {
         server.start()
     }
 
