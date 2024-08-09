@@ -8,12 +8,16 @@ import com.wiyb.server.core.handler.auth.CustomAuthenticationSuccessHandler
 import com.wiyb.server.core.handler.auth.CustomLogoutSuccessHandler
 import com.wiyb.server.core.service.CustomOAuth2UserService
 import com.wiyb.server.storage.database.entity.user.constant.Role
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -57,6 +61,8 @@ class SecurityConfig(
 
         http.authorizeHttpRequests {
             it
+                .requestMatchers(PathRequest.toH2Console())
+                .permitAll()
                 .requestMatchers(*WHITELIST_PATH)
                 .permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest)
@@ -89,6 +95,15 @@ class SecurityConfig(
 
         return http.build()
     }
+
+    @Bean
+    @ConditionalOnProperty(name = ["spring.h2.console.enabled"], havingValue = "true")
+    fun configureH2ConsoleEnable(): WebSecurityCustomizer =
+        WebSecurityCustomizer { web: WebSecurity ->
+            web
+                .ignoring()
+                .requestMatchers(PathRequest.toH2Console())
+        }
 
     private fun corsConfigurationSource(): CorsConfigurationSource {
         val config = CorsConfiguration()
