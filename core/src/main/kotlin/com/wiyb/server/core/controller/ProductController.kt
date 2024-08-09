@@ -3,7 +3,6 @@ package com.wiyb.server.core.controller
 import com.wiyb.server.core.domain.product.PostProductReviewDto
 import com.wiyb.server.core.facade.ProductFacade
 import com.wiyb.server.core.facade.ProductViewFacade
-import com.wiyb.server.core.service.UserService
 import com.wiyb.server.storage.cache.entity.MostViewedProduct
 import com.wiyb.server.storage.database.entity.golf.Brand
 import com.wiyb.server.storage.database.entity.golf.Equipment
@@ -14,18 +13,24 @@ import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.constant.Grip
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
+import com.wiyb.server.storage.database.entity.user.User
+import com.wiyb.server.storage.database.entity.user.UserProfile
+import com.wiyb.server.storage.database.entity.user.constant.Gender
+import com.wiyb.server.storage.database.entity.user.constant.Role
 import com.wiyb.server.storage.database.repository.golf.BrandRepository
 import com.wiyb.server.storage.database.repository.golf.EquipmentDetailRepository
 import com.wiyb.server.storage.database.repository.golf.EquipmentRepository
 import com.wiyb.server.storage.database.repository.golf.EquipmentReviewRepository
+import com.wiyb.server.storage.database.repository.user.UserProfileRepository
+import com.wiyb.server.storage.database.repository.user.UserRepository
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 import kotlin.random.Random
 
 @RestController
@@ -34,11 +39,12 @@ class ProductController(
     private val productFacade: ProductFacade,
     private val productViewFacade: ProductViewFacade,
     // todo: delete
+    private val userRepository: UserRepository,
     private val brandRepository: BrandRepository,
     private val equipmentRepository: EquipmentRepository,
     private val equipmentDetailRepository: EquipmentDetailRepository,
     private val equipmentReviewRepository: EquipmentReviewRepository,
-    private val userService: UserService
+    private val userProfileRepository: UserProfileRepository
 ) {
     @GetMapping("/most/view/simple")
     fun getMostViewed(): ResponseEntity<List<MostViewedProduct>> = ResponseEntity.ok().body(productViewFacade.getMostViewedProduct())
@@ -71,8 +77,17 @@ class ProductController(
     // todo: delete
     @GetMapping("/test")
     fun test() {
-        val sessionId = SecurityContextHolder.getContext().authentication.name
-        val user = userService.findBySessionId(sessionId)
+        val user = User(Role.USER)
+        val userProfile =
+            UserProfile(
+                user = user,
+                nickname = "test",
+                birth = LocalDate.of(1997, 12, 23),
+                gender = Gender.MALE
+            )
+        userRepository.saveAndFlush(user)
+        userProfileRepository.saveAndFlush(userProfile)
+
         val brands = mutableListOf<Brand>()
         val equipments = mutableListOf<Equipment>()
         val equipmentDetails = mutableListOf<EquipmentDetail>()
