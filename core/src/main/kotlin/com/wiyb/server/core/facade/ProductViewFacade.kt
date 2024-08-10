@@ -3,42 +3,13 @@ package com.wiyb.server.core.facade
 import com.wiyb.server.core.service.EquipmentService
 import com.wiyb.server.core.service.ProductService
 import com.wiyb.server.storage.cache.entity.MostViewedProduct
-import jakarta.annotation.PostConstruct
-import org.springframework.context.annotation.DependsOn
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
-import kotlin.random.Random
 
-// todo: delete
-@DependsOn("embeddedRedisConfig")
 @Component
 class ProductViewFacade(
     private val productService: ProductService,
     private val equipmentService: EquipmentService
 ) {
-    @Profile("local", "local-dev")
-    @PostConstruct
-    fun init() {
-        productService.deleteAllMostViewedProduct()
-        val equipments = equipmentService.findByNameKeyword("123").take(5)
-        val mostViewedProducts =
-            equipments
-                .mapIndexed { index, product ->
-                    MostViewedProduct(
-                        product.id,
-                        equipments[index].brand,
-                        equipments[index].type.getCode(),
-                        equipments[index].name,
-                        equipments[index].releasedYear,
-                        equipments[index].reviewCount,
-                        equipments[index].imageUrls,
-                        (100 + Random.nextLong(900))
-                    )
-                }.sortedBy { it.viewCount }
-                .reversed()
-        productService.saveAllMostViewedProducts(mostViewedProducts)
-    }
-
     fun getPopularProductNames(): List<String> {
         val products = productService.findAllMostViewedProduct()
         return products.map { it.name }
@@ -71,8 +42,8 @@ class ProductViewFacade(
                     equipments[index].brand,
                     equipments[index].type.getCode(),
                     equipments[index].name,
-                    equipments[index].releasedYear,
                     equipments[index].reviewCount,
+                    equipments[index].releasedYear,
                     equipments[index].imageUrls,
                     product.dailyCount
                 )
