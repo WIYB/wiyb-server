@@ -4,6 +4,8 @@ import org.springframework.http.ResponseCookie
 
 class CustomResponseCookie {
     companion object {
+        lateinit var rootDomain: String
+
         fun make(
             name: String,
             value: String,
@@ -17,6 +19,7 @@ class CustomResponseCookie {
             .httpOnly(httpOnly)
             .secure(secure)
             .sameSite(sameSite)
+            .domain(rootDomain)
             .build()
 
         fun makeForAccessToken(value: String): ResponseCookie = make("access", value)

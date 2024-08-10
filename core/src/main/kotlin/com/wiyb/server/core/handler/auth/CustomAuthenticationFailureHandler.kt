@@ -4,15 +4,14 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.AuthenticationFailureHandler
 
-class CustomAuthenticationFailureHandler : AuthenticationFailureHandler {
+class CustomAuthenticationFailureHandler(
+    private val clientOrigin: String
+) : AuthenticationFailureHandler {
     override fun onAuthenticationFailure(
         request: HttpServletRequest,
         response: HttpServletResponse,
         authenticationException: AuthenticationException
     ) {
-        val referer: String =
-            request.getHeader("Referer") ?: "${request.scheme}://${request.serverName}:${request.serverPort}"
-
-        response.sendRedirect("$referer/sign/failure")
+        response.sendRedirect("$clientOrigin/sign/failure")
     }
 }

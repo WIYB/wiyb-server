@@ -4,21 +4,22 @@ import jakarta.servlet.http.Cookie
 
 class CustomCookie {
     companion object {
+        lateinit var rootDomain: String
+
         fun make(
             name: String,
             value: String,
             path: String = "/",
             httpOnly: Boolean = true,
             secure: Boolean = true,
-            sameSite: String = "None",
-            domain: String? = null
+            sameSite: String = "None"
         ): Cookie {
             val cookie = Cookie(name, value)
             cookie.path = path
             cookie.isHttpOnly = httpOnly
             cookie.secure = secure
             cookie.setAttribute("SameSite", sameSite)
-            domain?.let { cookie.domain = it }
+            cookie.domain = rootDomain
             return cookie
         }
 

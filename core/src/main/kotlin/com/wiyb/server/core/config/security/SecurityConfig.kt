@@ -8,6 +8,7 @@ import com.wiyb.server.core.handler.auth.CustomAuthenticationSuccessHandler
 import com.wiyb.server.core.handler.auth.CustomLogoutSuccessHandler
 import com.wiyb.server.core.service.CustomOAuth2UserService
 import com.wiyb.server.storage.database.entity.user.constant.Role
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Bean
@@ -32,7 +33,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class SecurityConfig(
     private val customOAuth2UserService: CustomOAuth2UserService,
     private val tokenAuthenticationFilter: TokenAuthenticationFilter,
-    private val customAuthenticationSuccessHandler: CustomAuthenticationSuccessHandler
+    private val customAuthenticationSuccessHandler: CustomAuthenticationSuccessHandler,
+    @Value("\${spring.config.origin.client}")
+    private val clientOrigin: String
 ) {
     companion object {
         val WHITELIST_PATH: Array<String> =
@@ -61,8 +64,6 @@ class SecurityConfig(
 
         http.authorizeHttpRequests {
             it
-                .requestMatchers(PathRequest.toH2Console())
-                .permitAll()
                 .requestMatchers(*WHITELIST_PATH)
                 .permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest)
@@ -81,7 +82,7 @@ class SecurityConfig(
             it
                 .userInfoEndpoint { u -> u.userService(customOAuth2UserService) }
                 .successHandler(customAuthenticationSuccessHandler)
-                .failureHandler(CustomAuthenticationFailureHandler())
+                .failureHandler(CustomAuthenticationFailureHandler(clientOrigin))
         }
 
         http.logout {
@@ -109,9 +110,9 @@ class SecurityConfig(
         val config = CorsConfiguration()
         val source = UrlBasedCorsConfigurationSource()
 
-        config.addAllowedOrigin("http://localhost:3000")
         config.addAllowedHeader("*")
         config.addAllowedMethod("*")
+        config.allowedOrigins = listOf(clientOrigin)
         config.allowCredentials = true
         source.registerCorsConfiguration("/**", config)
 
