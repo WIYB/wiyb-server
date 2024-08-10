@@ -3,6 +3,7 @@ package com.wiyb.server.storage.database.entity.golf
 import com.wiyb.server.storage.database.entity.common.BaseEntity
 import com.wiyb.server.storage.database.entity.golf.constant.Difficulty
 import com.wiyb.server.storage.database.entity.golf.constant.Grip
+import com.wiyb.server.storage.database.entity.user.constant.Gender
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -16,13 +17,17 @@ import org.hibernate.annotations.SQLRestriction
 @SQLDelete(sql = "UPDATE equipment_details SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 class EquipmentDetail(
     equipment: Equipment,
-    // common
     color: String? = null,
-    weight: Float? = null,
+    weight: String? = null,
+    launch: String? = null,
+    spin: String? = null,
+    gender: Gender? = null,
+    bounce: String? = null,
+    grind: String? = null,
     // head
     headProduceType: String? = null,
     headDesignType: String? = null,
-    headNumber: Int? = null,
+    headNumber: String? = null,
     headShape: String? = null,
     headDifficulty: Difficulty? = null,
     headLoftDegree: String? = null,
@@ -33,21 +38,46 @@ class EquipmentDetail(
     // shaft
     shaftStrength: String? = null,
     shaftKickPoint: String? = null,
-    shaftTorque: Float? = null,
+    shaftTorque: String? = null,
     shaftTexture: String? = null,
+    shaftTipDiameter: String? = null,
+    shaftButtDiameter: String? = null,
+    shaftBend: String? = null,
     // grip
     gripType: Grip? = null,
     gripRound: Float? = null,
     // ball
     ballPiece: Int? = null,
-    ballCover: String? = null
+    ballCover: String? = null,
+    ballFeel: String? = null,
+    ballDimple: String? = null
 ) : BaseEntity() {
     @Column(name = "color")
     var color: String? = color
         protected set
 
     @Column(name = "weight")
-    var weight: Float? = weight
+    var weight: String? = weight
+        protected set
+
+    @Column(name = "launch")
+    var launch: String? = launch
+        protected set
+
+    @Column(name = "spin")
+    var spin: String? = spin
+        protected set
+
+    @Column(name = "gender")
+    var gender: Gender? = gender
+        protected set
+
+    @Column(name = "bounce")
+    var bounce: String? = bounce
+        protected set
+
+    @Column(name = "grind")
+    var grind: String? = grind
         protected set
 
     @Column(name = "head_produce_type")
@@ -59,7 +89,7 @@ class EquipmentDetail(
         protected set
 
     @Column(name = "head_number")
-    var headNumber: Int? = headNumber
+    var headNumber: String? = headNumber
         protected set
 
     @Column(name = "head_shape")
@@ -99,11 +129,23 @@ class EquipmentDetail(
         protected set
 
     @Column(name = "shaft_torque")
-    var shaftTorque: Float? = shaftTorque
+    var shaftTorque: String? = shaftTorque
         protected set
 
     @Column(name = "shaft_texture")
     var shaftTexture: String? = shaftTexture
+        protected set
+
+    @Column(name = "shaft_tip_diameter")
+    var shaftTipDiameter: String? = shaftTipDiameter
+        protected set
+
+    @Column(name = "shaft_butt_diameter")
+    var shaftButtDiameter: String? = shaftButtDiameter
+        protected set
+
+    @Column(name = "shaft_bend")
+    var shaftBend: String? = shaftBend
         protected set
 
     @Column(name = "grip_type")
@@ -120,6 +162,14 @@ class EquipmentDetail(
 
     @Column(name = "ball_cover")
     var ballCover: String? = ballCover
+        protected set
+
+    @Column(name = "ball_feel")
+    var ballFeel: String? = ballFeel
+        protected set
+
+    @Column(name = "ball_dimple")
+    var ballDimple: String? = ballDimple
         protected set
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)

@@ -11,7 +11,7 @@ data class EquipmentDto
         val brand: String,
         val type: EquipmentType,
         val name: String,
-        val releasedYear: String,
+        val releasedYear: String?,
         val viewCount: Long,
         val evaluatedCount: Long,
         private val evaluationMetricTotal: List<Float>,

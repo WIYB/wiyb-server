@@ -23,8 +23,8 @@ class Equipment(
     brand: Brand,
     type: EquipmentType,
     name: String,
-    releasedYear: String,
-    imageUrls: List<String>?
+    releasedYear: String? = null,
+    imageUrls: List<String>? = null
 ) : BaseEntity() {
     @Column(name = "type", nullable = false)
     var type: EquipmentType = type
@@ -47,8 +47,8 @@ class Equipment(
     var evaluationMetricTotal: List<Float> = listOf(0f, 0f, 0f, 0f, 0f, 0f)
         protected set
 
-    @Column(name = "released_year", nullable = false)
-    var releasedYear: String = releasedYear
+    @Column(name = "released_year")
+    var releasedYear: String? = releasedYear
         protected set
 
     @Convert(converter = StringListConverter::class)

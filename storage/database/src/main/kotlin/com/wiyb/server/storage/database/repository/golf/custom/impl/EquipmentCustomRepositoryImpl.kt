@@ -27,8 +27,8 @@ class EquipmentCustomRepositoryImpl :
                     brand.name,
                     equipment.type,
                     equipment.name,
-                    equipment.releasedYear,
                     equipmentReview.count(),
+                    equipment.releasedYear,
                     equipment.imageUrls
                 )
             ).leftJoin(equipment.brand, brand)
@@ -47,8 +47,8 @@ class EquipmentCustomRepositoryImpl :
                         brand.name,
                         equipment.type,
                         equipment.name,
-                        equipment.releasedYear,
                         equipmentReview.count().`as`(reviewCount),
+                        equipment.releasedYear,
                         equipment.imageUrls
                     )
                 ).leftJoin(equipment.brand, brand)

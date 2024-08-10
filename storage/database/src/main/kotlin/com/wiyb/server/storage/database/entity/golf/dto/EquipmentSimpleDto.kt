@@ -10,7 +10,7 @@ data class EquipmentSimpleDto
         val brand: String,
         val type: EquipmentType,
         val name: String,
-        val releasedYear: String,
         val reviewCount: Long,
+        val releasedYear: String?,
         val imageUrls: List<String>?
     )

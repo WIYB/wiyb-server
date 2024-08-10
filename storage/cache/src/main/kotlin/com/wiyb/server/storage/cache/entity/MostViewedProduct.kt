@@ -10,8 +10,8 @@ data class MostViewedProduct(
     val brand: String,
     val type: String,
     val name: String,
-    val releasedYear: String,
     val reviewCount: Long,
+    val releasedYear: String?,
     val imageUrls: List<String>?,
     val viewCount: Long
 )
