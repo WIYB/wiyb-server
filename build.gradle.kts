@@ -92,4 +92,31 @@ subprojects {
 
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
+
+    tasks.test {
+        useJUnitPlatform {
+            excludeTags("develop")
+        }
+    }
+
+    tasks.register<Test>("unitTest") {
+        group = "verification"
+        useJUnitPlatform {
+            excludeTags("develop", "context")
+        }
+    }
+
+    tasks.register<Test>("contextTest") {
+        group = "verification"
+        useJUnitPlatform {
+            includeTags("context")
+        }
+    }
+
+    tasks.register<Test>("developTest") {
+        group = "verification"
+        useJUnitPlatform {
+            includeTags("develop")
+        }
+    }
 }

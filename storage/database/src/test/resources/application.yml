@@ -1,0 +1,6 @@
+spring.application.name: storage-database-test
+
+spring:
+  config:
+    import:
+      - storage-database.yml

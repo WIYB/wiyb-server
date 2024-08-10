@@ -1,0 +1,6 @@
+spring.application.name: storage-cache-test
+
+spring:
+  config:
+    import:
+      - storage-cache.yml
