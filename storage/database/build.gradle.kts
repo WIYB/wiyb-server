@@ -23,6 +23,14 @@ dependencies {
 
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("com.h2database:h2")
+
+    // SpreadSheet API
+    implementation("com.google.api-client:google-api-client:1.31.3")
+    implementation("com.google.apis:google-api-services-drive:v3-rev197-1.25.0")
+    implementation("com.google.apis:google-api-services-sheets:v4-rev612-1.25.0")
+    implementation("com.google.auth:google-auth-library-oauth2-http:0.25.2")
+    implementation("com.google.http-client:google-http-client-jackson2:1.39.1")
+    implementation("org.apache.poi:poi:5.0.0")
 }
 
 tasks.named<BootJar>("bootJar") {
