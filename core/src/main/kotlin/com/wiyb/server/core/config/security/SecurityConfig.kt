@@ -26,7 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(jsr250Enabled = true)
+@EnableMethodSecurity(securedEnabled = true)
 class SecurityConfig(
     private val customOAuth2UserService: CustomOAuth2UserService,
     private val tokenAuthenticationFilter: TokenAuthenticationFilter,
@@ -44,9 +44,7 @@ class SecurityConfig(
                 "/login/**",
                 "/error",
                 "/main",
-                "/sign/**",
-                "/product/**",
-                "/search/**"
+                "/sign/**"
             )
     }
 

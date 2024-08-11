@@ -35,10 +35,6 @@ class TokenAuthenticationFilter(
                 return
             }
 
-            (isPermittedURI(request.requestURI)) -> {
-                SecurityContextHolder.getContext().authentication = null
-            }
-
             (isRefreshURI(request)) -> {
                 val accessToken = resolveToken(request, "access")
                 val refreshToken = resolveToken(request, "refresh")
@@ -52,10 +48,14 @@ class TokenAuthenticationFilter(
             }
 
             else -> {
-                val accessToken = resolveToken(request, "access") ?: throw CommonException(ErrorCode.INVALID_TOKEN)
+                val accessToken = resolveToken(request, "access")
 
-                tokenProvider.validateToken(accessToken)
-                SecurityContextHolder.getContext().authentication = getAuthentication(accessToken)
+                if (accessToken == null || isPermittedURI(request.requestURI)) {
+                    SecurityContextHolder.getContext().authentication = null
+                } else {
+                    tokenProvider.validateToken(accessToken)
+                    SecurityContextHolder.getContext().authentication = getAuthentication(accessToken)
+                }
             }
         }
 
