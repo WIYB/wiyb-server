@@ -19,7 +19,16 @@ data class EquipmentDto
         private val equipmentDetail: EquipmentDetail,
         val reviewCount: Long
     ) {
-        val evaluationMetricAverage: List<Float> = evaluationMetricTotal.map { it / evaluatedCount }
+        val evaluationMetricAverage: List<Float> =
+            evaluatedCount.let {
+                if (it == 0L) {
+                    listOf(0f, 0f, 0f, 0f, 0f, 0f)
+                } else {
+                    evaluationMetricTotal.map { elem ->
+                        elem / evaluatedCount
+                    }
+                }
+            }
         val detail: EquipmentDetailDto = EquipmentDetailDto(equipmentDetail)
         var reviews: List<EquipmentReviewDto> = emptyList()
     }
