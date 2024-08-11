@@ -6,6 +6,7 @@ import com.wiyb.server.core.facade.ProductViewFacade
 import com.wiyb.server.storage.cache.entity.MostViewedProduct
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
+import jakarta.annotation.security.RolesAllowed
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -31,6 +32,7 @@ class ProductController(
         return ResponseEntity.ok().body(reviews)
     }
 
+    @RolesAllowed("ROLE_USER", "ROLE_ADMIN")
     @PostMapping("/{productId}/review")
     fun postProductReview(
         @PathVariable("productId") productId: Long,
@@ -49,6 +51,7 @@ class ProductController(
     }
 
     // todo: delete
+    @RolesAllowed("ROLE_ADMIN")
     @GetMapping("/popular/setting")
     fun popularSetting() {
         productViewFacade.clearAllProductViewCount()

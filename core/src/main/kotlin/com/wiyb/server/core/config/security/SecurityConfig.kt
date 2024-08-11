@@ -7,13 +7,11 @@ import com.wiyb.server.core.handler.auth.CustomAuthenticationFailureHandler
 import com.wiyb.server.core.handler.auth.CustomAuthenticationSuccessHandler
 import com.wiyb.server.core.handler.auth.CustomLogoutSuccessHandler
 import com.wiyb.server.core.service.CustomOAuth2UserService
-import com.wiyb.server.storage.database.entity.user.constant.Role
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
@@ -24,12 +22,11 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
-import org.springframework.web.cors.CorsUtils
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(jsr250Enabled = true)
 class SecurityConfig(
     private val customOAuth2UserService: CustomOAuth2UserService,
     private val tokenAuthenticationFilter: TokenAuthenticationFilter,
@@ -47,7 +44,9 @@ class SecurityConfig(
                 "/login/**",
                 "/error",
                 "/main",
-                "/sign/**"
+                "/sign/**",
+                "/product/**",
+                "/search/**"
             )
     }
 
@@ -64,14 +63,16 @@ class SecurityConfig(
 
         http.authorizeHttpRequests {
             it
-                .requestMatchers(*WHITELIST_PATH)
-                .permitAll()
-                .requestMatchers(CorsUtils::isPreFlightRequest)
-                .permitAll()
-                .requestMatchers(HttpMethod.POST, "/user")
-                .hasRole(Role.GUEST.name)
                 .anyRequest()
-                .hasAnyRole(Role.USER.name, Role.ADMIN.name)
+                .permitAll()
+//                .requestMatchers(*WHITELIST_PATH)
+//                .permitAll()
+//                .requestMatchers(CorsUtils::isPreFlightRequest)
+//                .permitAll()
+//                .requestMatchers(HttpMethod.POST, "/user")
+//                .hasRole(Role.GUEST.name)
+//                .anyRequest()
+//                .hasAnyRole(Role.USER.name, Role.ADMIN.name)
         }
 
         http

@@ -20,7 +20,6 @@ class ProductViewAspect(
     fun cacheProductViewCount() {
         val request = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
         val sessionId: String = SecurityContextHolder.getContext().authentication.name
-        val userId: Long = userService.findIdBySessionId(sessionId)
         val productId =
             (
                 request.getAttribute(
@@ -28,7 +27,10 @@ class ProductViewAspect(
                 ) as Map<*, *>
             )["productId"].toString().toLong()
 
-        productService.addUserVisitLog(userId, productId)
+        if (sessionId != "anonymousUser") {
+            val userId: Long = userService.findIdBySessionId(sessionId)
+            productService.addUserVisitLog(userId, productId)
+        }
         productService.increaseProductViewCount(productId)
     }
 }
