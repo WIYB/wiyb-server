@@ -32,7 +32,7 @@ class ProductController(
         return ResponseEntity.ok().body(reviews)
     }
 
-    @RolesAllowed("ROLE_USER", "ROLE_ADMIN")
+    @RolesAllowed("USER", "ADMIN")
     @PostMapping("/{productId}/review")
     fun postProductReview(
         @PathVariable("productId") productId: Long,
@@ -51,7 +51,7 @@ class ProductController(
     }
 
     // todo: delete
-    @RolesAllowed("ROLE_ADMIN")
+    @RolesAllowed("ADMIN")
     @GetMapping("/popular/setting")
     fun popularSetting() {
         productViewFacade.clearAllProductViewCount()
