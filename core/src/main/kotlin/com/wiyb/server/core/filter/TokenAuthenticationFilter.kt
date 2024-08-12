@@ -48,13 +48,13 @@ class TokenAuthenticationFilter(
             }
 
             else -> {
-                val accessToken = resolveToken(request, "access")
+                try {
+                    val accessToken = resolveToken(request, "access")
 
-                if (accessToken == null || isPermittedURI(request.requestURI)) {
-                    SecurityContextHolder.getContext().authentication = null
-                } else {
                     tokenProvider.validateToken(accessToken)
-                    SecurityContextHolder.getContext().authentication = getAuthentication(accessToken)
+                    SecurityContextHolder.getContext().authentication = getAuthentication(accessToken!!)
+                } catch (e: Exception) {
+                    SecurityContextHolder.getContext().authentication = null
                 }
             }
         }
