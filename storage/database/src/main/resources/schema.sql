@@ -103,47 +103,154 @@ create table if not exists equipments
     constraint fk_equipments_brands_brand_id foreign key (brand_id) references brands (id)
 );
 
-create table if not exists equipment_details
+create table if not exists drivers
 (
-    id                  bigint       not null
+    id           bigint       not null
         primary key,
-    equipment_id        bigint       not null,
-    color               varchar(255) null,
-    weight              varchar(255) null,
-    launch              varchar(255) null,
-    spin                varchar(255) null,
-    gender              varchar(255) null,
-    bounce              varchar(255) null,
-    grind               varchar(255) null,
-    head_produce_type   varchar(255) null,
-    head_design_type    varchar(255) null,
-    head_number         varchar(255) null,
-    head_shape          varchar(255) null,
-    head_difficulty     varchar(255) null,
-    head_loft_degree    varchar(255) null,
-    driver_volume       float        null,
-    iron_7_loft_degree  varchar(255) null,
-    iron_p_loft_degree  varchar(255) null,
-    putter_neck_shape   varchar(255) null,
-    shaft_strength      varchar(255) null,
-    shaft_kick_point    varchar(255) null,
-    shaft_torque        varchar(255) null,
-    shaft_texture       varchar(255) null,
-    shaft_bend          varchar(255) null,
-    shaft_tip_diameter  varchar(255) null,
-    shaft_butt_diameter varchar(255) null,
-    grip_type           varchar(255) null,
-    grip_round          float        null,
-    ball_piece          int          null,
-    ball_cover          varchar(255) null,
-    ball_feel           varchar(255) null,
-    ball_dimple         varchar(255) null,
-    created_at          datetime(6)  not null,
-    updated_at          datetime(6)  not null,
-    deleted_at          datetime(6)  null,
+    loft_degree  varchar(255) null,
+    volume       float        null,
+    created_at   datetime(6)  not null,
+    updated_at   datetime(6)  not null,
+    deleted_at   datetime(6)  null,
 
     -- Equipment fk
-    constraint fk_equipment_details_equipments_equipment_id foreign key (equipment_id) references equipments (id)
+    constraint fk_drivers_equipments_equipment_id foreign key (id) references equipments (id)
+);
+
+create table if not exists woods
+(
+    id           bigint       not null
+        primary key,
+    loft_degree  varchar(255) null,
+    numbers      varchar(255) null,
+    created_at   datetime(6)  not null,
+    updated_at   datetime(6)  not null,
+    deleted_at   datetime(6)  null,
+
+    -- Equipment fk
+    constraint fk_woods_equipments_equipment_id foreign key (id) references equipments (id)
+);
+
+create table if not exists hybrids
+(
+    id           bigint       not null
+        primary key,
+    loft_degree  varchar(255) null,
+    numbers      varchar(255) null,
+    created_at   datetime(6)  not null,
+    updated_at   datetime(6)  not null,
+    deleted_at   datetime(6)  null,
+
+    -- Equipment fk
+    constraint fk_hybrids_equipments_equipment_id foreign key (id) references equipments (id)
+);
+
+create table if not exists irons
+(
+    id           bigint       not null
+        primary key,
+    loft_degree   varchar(255) null,
+    numbers       varchar(255) null,
+    produce_type  varchar(255) null,
+    design_type   varchar(255) null,
+    loft_7_degree varchar(255) null,
+    loft_p_degree varchar(255) null,
+    created_at    datetime(6)  not null,
+    updated_at    datetime(6)  not null,
+    deleted_at    datetime(6)  null,
+
+    -- Equipment fk
+    constraint fk_irons_equipments_equipment_id foreign key (id) references equipments (id)
+);
+
+create table if not exists wedges
+(
+    id           bigint       not null
+        primary key,
+    loft_degree  varchar(255) null,
+    produce_type varchar(255) null,
+    bounce       varchar(255) null,
+    grind        varchar(255) null,
+    created_at   datetime(6)  not null,
+    updated_at   datetime(6)  not null,
+    deleted_at   datetime(6)  null,
+
+    -- Equipment fk
+    constraint fk_wedges_equipments_equipment_id foreign key (id) references equipments (id)
+);
+
+create table if not exists putters
+(
+    id           bigint       not null
+        primary key,
+    loft_degree  varchar(255) null,
+    weight       varchar(255) null,
+    neck_shape   varchar(255) null,
+    created_at   datetime(6)  not null,
+    updated_at   datetime(6)  not null,
+    deleted_at   datetime(6)  null,
+
+    -- Equipment fk
+    constraint fk_putters_equipments_equipment_id foreign key (id) references equipments (id)
+);
+
+create table if not exists shafts
+(
+    id            bigint       not null
+        primary key,
+    equipment_id  bigint       not null,
+    weight        varchar(255) null,
+    strength      varchar(255) null,
+    kick_point    varchar(255) null,
+    torque        varchar(255) null,
+    texture       varchar(255) null,
+    tip_diameter  varchar(255) null,
+    butt_diameter varchar(255) null,
+    spin          varchar(255) null,
+    launch        varchar(255) null,
+    created_at    datetime(6)  not null,
+    updated_at    datetime(6)  not null,
+    deleted_at    datetime(6)  null,
+
+    -- Equipment fk
+    constraint fk_shafts_equipments_equipment_id foreign key (id) references equipments (id)
+);
+
+create table if not exists grips
+(
+    id           bigint       not null
+        primary key,
+    weight       varchar(255) null,
+    size         varchar(255) null,
+    core_size    varchar(255) null,
+    feel         varchar(255) null,
+    material     varchar(255) null,
+    torque       varchar(255) null,
+    diameter     varchar(255) null,
+    created_at   datetime(6)  not null,
+    updated_at   datetime(6)  not null,
+    deleted_at   datetime(6)  null,
+
+    -- Equipment fk
+    constraint fk_grips_equipments_equipment_id foreign key (id) references equipments (id)
+);
+
+create table if not exists balls
+(
+    id           bigint       not null
+        primary key,
+    piece        varchar(255) null,
+    spin         varchar(255) null,
+    launch       varchar(255) null,
+    feel         varchar(255) null,
+    dimple       varchar(255) null,
+    texture      varchar(255) null,
+    created_at   datetime(6)  not null,
+    updated_at   datetime(6)  not null,
+    deleted_at   datetime(6)  null,
+
+    -- Equipment fk
+    constraint fk_balls_equipments_equipment_id foreign key (id) references equipments (id)
 );
 
 create table if not exists equipment_reviews

@@ -1,8 +1,9 @@
 package com.wiyb.server.storage.database.entity.golf.dto
 
 import com.querydsl.core.annotations.QueryProjection
-import com.wiyb.server.storage.database.entity.golf.EquipmentDetail
+import com.wiyb.server.storage.database.entity.common.BaseEntity
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
+import com.wiyb.server.storage.database.entity.golf.detail.mapper.EquipmentDetailMapper
 
 data class EquipmentDto
     @QueryProjection
@@ -11,17 +12,17 @@ data class EquipmentDto
         val brand: String,
         val type: EquipmentType,
         val name: String,
+        val reviewCount: Long,
+        val equipmentDetail: BaseEntity,
         val releasedYear: String?,
-        val viewCount: Long,
-        val evaluatedCount: Long,
-        private val evaluationMetricTotal: List<Float>,
         val imageUrls: List<String>?,
-        private val equipmentDetail: EquipmentDetail,
-        val reviewCount: Long
+        val viewCount: Long?,
+        val evaluatedCount: Long?,
+        private val evaluationMetricTotal: List<Float>?
     ) {
-        val evaluationMetricAverage: List<Float> =
-            evaluatedCount.let {
-                if (it == 0L) {
+        val evaluationMetricAverage: List<Float>? =
+            evaluationMetricTotal?.let {
+                if (evaluatedCount == null || evaluatedCount == 0L) {
                     listOf(0f, 0f, 0f, 0f, 0f, 0f)
                 } else {
                     evaluationMetricTotal.map { elem ->
@@ -29,6 +30,7 @@ data class EquipmentDto
                     }
                 }
             }
-        val detail: EquipmentDetailDto = EquipmentDetailDto(equipmentDetail)
-        var reviews: List<EquipmentReviewDto> = emptyList()
+
+        val detail = EquipmentDetailMapper.invoke(equipmentDetail)
+        var reviews: List<EquipmentReviewDto>? = null
     }
