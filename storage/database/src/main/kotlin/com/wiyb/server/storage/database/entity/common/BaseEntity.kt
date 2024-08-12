@@ -21,12 +21,15 @@ val tsidFactory: TSID.Factory =
         .build()
 
 @MappedSuperclass
-abstract class BaseEntity : Persistable<Long> {
+abstract class BaseEntity(
+    id: Long? = null
+) : Persistable<Long> {
     @Id
     private val id: Long =
-        tsidFactory
-            .generate()
-            .toLong()
+        id
+            ?: tsidFactory
+                .generate()
+                .toLong()
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
