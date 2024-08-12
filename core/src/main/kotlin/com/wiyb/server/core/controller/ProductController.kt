@@ -1,9 +1,11 @@
 package com.wiyb.server.core.controller
 
 import com.wiyb.server.core.domain.product.PostProductReviewDto
+import com.wiyb.server.core.domain.product.ProductDetailParameterDto
 import com.wiyb.server.core.facade.ProductFacade
 import com.wiyb.server.core.facade.ProductViewFacade
 import com.wiyb.server.storage.cache.entity.MostViewedProduct
+import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
 import org.springframework.http.ResponseEntity
@@ -45,11 +47,13 @@ class ProductController(
     }
 
     // todo: 문자열 들어오면 Long 캐스팅 불가 MethodArgumentTypeMismatchException 발생함
-    @GetMapping("/{productId}")
-    fun getProductDetail(
-        @PathVariable("productId") productId: Long
-    ): ResponseEntity<EquipmentDto> {
-        val productDetailDto = productFacade.getProductDetail(productId)
+    @GetMapping("/{productId}/{productType}")
+    fun getProductDetail(parameter: ProductDetailParameterDto): ResponseEntity<EquipmentDto> {
+        val productDetailDto =
+            productFacade.getProductDetail(
+                parameter.productId,
+                enumValueOf<EquipmentType>(parameter.productType.uppercase())
+            )
         return ResponseEntity.ok().body(productDetailDto)
     }
 
