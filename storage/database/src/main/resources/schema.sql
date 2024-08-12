@@ -198,7 +198,6 @@ create table if not exists shafts
 (
     id            bigint       not null
         primary key,
-    equipment_id  bigint       not null,
     weight        varchar(255) null,
     strength      varchar(255) null,
     kick_point    varchar(255) null,

@@ -13,7 +13,7 @@ data class EquipmentDto
         val type: EquipmentType,
         val name: String,
         val reviewCount: Long,
-        val equipmentDetail: BaseEntity,
+        private val equipmentDetail: BaseEntity,
         val releasedYear: String?,
         val imageUrls: List<String>?,
         val viewCount: Long?,
