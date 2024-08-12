@@ -1,0 +1,40 @@
+package com.wiyb.server.storage.database.repository.golf.detail.custom.impl
+
+import com.wiyb.server.storage.database.entity.golf.QBrand.brand
+import com.wiyb.server.storage.database.entity.golf.QEquipment.equipment
+import com.wiyb.server.storage.database.entity.golf.QEquipmentReview.equipmentReview
+import com.wiyb.server.storage.database.entity.golf.detail.Ball
+import com.wiyb.server.storage.database.entity.golf.detail.QBall.ball
+import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
+import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentDto
+import com.wiyb.server.storage.database.repository.golf.detail.custom.BallCustomRepository
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
+import org.springframework.stereotype.Repository
+
+@Repository
+class BallCustomRepositoryImpl :
+    QuerydslRepositorySupport(Ball::class.java),
+    BallCustomRepository {
+    override fun findDetailById(id: Long): EquipmentDto? =
+        from(ball)
+            .select(
+                QEquipmentDto(
+                    ball.id.stringValue(),
+                    brand.name,
+                    equipment.type,
+                    equipment.name,
+                    equipmentReview.count(),
+                    ball,
+                    equipment.releasedYear,
+                    equipment.imageUrls,
+                    equipment.viewCount,
+                    equipment.evaluatedCount,
+                    equipment.evaluationMetricTotal
+                )
+            ).leftJoin(ball.equipment, equipment)
+            .leftJoin(equipment.brand, brand)
+            .leftJoin(equipment.mutableEquipmentReviews, equipmentReview)
+            .where(ball.id.eq(id))
+            .groupBy(ball.id)
+            .fetchFirst()
+}

@@ -5,6 +5,7 @@ import com.wiyb.server.core.domain.exception.ErrorCode
 import com.wiyb.server.core.domain.product.PostProductReviewDto
 import com.wiyb.server.core.service.EquipmentService
 import com.wiyb.server.core.service.UserService
+import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -16,8 +17,11 @@ class ProductFacade(
 ) {
     fun getProductReviews(productId: Long) = equipmentService.findReviewByEquipmentId(productId)
 
-    fun getProductDetail(productId: Long): EquipmentDto {
-        val equipmentDto = equipmentService.findOneWithDetailById(productId)
+    fun getProductDetail(
+        productId: Long,
+        type: EquipmentType
+    ): EquipmentDto {
+        val equipmentDto = equipmentService.findOneWithDetailById(productId, type)
         equipmentDto.reviews = equipmentService.findSimpleReviewByEquipmentId(productId)
 
         return equipmentDto

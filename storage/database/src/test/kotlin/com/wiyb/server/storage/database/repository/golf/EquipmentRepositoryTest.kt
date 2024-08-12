@@ -10,10 +10,25 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.wiyb.server.storage.DatabaseContextTest
 import com.wiyb.server.storage.database.entity.golf.Brand
 import com.wiyb.server.storage.database.entity.golf.Equipment
-import com.wiyb.server.storage.database.entity.golf.EquipmentDetail
-import com.wiyb.server.storage.database.entity.golf.constant.Difficulty
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
-import com.wiyb.server.storage.database.entity.user.constant.Gender
+import com.wiyb.server.storage.database.entity.golf.detail.Ball
+import com.wiyb.server.storage.database.entity.golf.detail.Driver
+import com.wiyb.server.storage.database.entity.golf.detail.Grip
+import com.wiyb.server.storage.database.entity.golf.detail.Hybrid
+import com.wiyb.server.storage.database.entity.golf.detail.Iron
+import com.wiyb.server.storage.database.entity.golf.detail.Putter
+import com.wiyb.server.storage.database.entity.golf.detail.Shaft
+import com.wiyb.server.storage.database.entity.golf.detail.Wedge
+import com.wiyb.server.storage.database.entity.golf.detail.Wood
+import com.wiyb.server.storage.database.repository.golf.detail.BallRepository
+import com.wiyb.server.storage.database.repository.golf.detail.DriverRepository
+import com.wiyb.server.storage.database.repository.golf.detail.GripRepository
+import com.wiyb.server.storage.database.repository.golf.detail.HybridRepository
+import com.wiyb.server.storage.database.repository.golf.detail.IronRepository
+import com.wiyb.server.storage.database.repository.golf.detail.PutterRepository
+import com.wiyb.server.storage.database.repository.golf.detail.ShaftRepository
+import com.wiyb.server.storage.database.repository.golf.detail.WedgeRepository
+import com.wiyb.server.storage.database.repository.golf.detail.WoodRepository
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
@@ -26,7 +41,15 @@ import kotlin.test.Test
 class EquipmentRepositoryTest(
     private val brandRepository: BrandRepository,
     private val equipmentRepository: EquipmentRepository,
-    private val equipmentDetailRepository: EquipmentDetailRepository
+    private val driverRepository: DriverRepository,
+    private val woodRepository: WoodRepository,
+    private val hybridRepository: HybridRepository,
+    private val ironRepository: IronRepository,
+    private val wedgeRepository: WedgeRepository,
+    private val putterRepository: PutterRepository,
+    private val shaftRepository: ShaftRepository,
+    private val gripRepository: GripRepository,
+    private val ballRepository: BallRepository
 ) : DatabaseContextTest() {
     private val sheetId = "1zE3ctDFHg-tu05EiGCL9tOIdLxCbv-nCJi-_7Oq4AcQ"
     private val service =
@@ -38,7 +61,7 @@ class EquipmentRepositoryTest(
                     GoogleCredentials
                         .fromStream(
                             Credentials::class.java.getResourceAsStream("/google_secret.json")
-                        ).createScoped(listOf(SheetsScopes.SPREADSHEETS_READONLY))
+                        ).createScoped(listOf(SheetsScopes.SPREADSHEETS))
                 )
             ).setApplicationName("golf")
             .build()
@@ -54,13 +77,36 @@ class EquipmentRepositoryTest(
             null
         }
 
+    private fun setSheetId(
+        sheet: String,
+        start: Int = 2,
+        end: Int,
+        data: List<Long>
+    ) {
+//        service
+//            .spreadsheets()
+//            .values()
+//            .update(
+//                sheetId,
+//                "$sheet!A$start:A$end",
+//                ValueRange().setValues(
+//                    data.map {
+//                        listOf(it.toString())
+//                    }
+//                )
+//            ).setValueInputOption("RAW")
+//            .execute()
+    }
+
     @BeforeAll
     fun beforeAll() {
+        val start = 2
+        val end = 52
         val range =
             service
                 .spreadsheets()
                 .values()
-                .get(sheetId, "Brand!B2:B52")
+                .get(sheetId, "Brand!B$start:B5$end")
                 .execute()
 
         @Suppress("UNCHECKED_CAST")
@@ -72,26 +118,30 @@ class EquipmentRepositoryTest(
     @Test
     @Order(1)
     fun brand() {
+        val start = 2
+        val end = 52
         brandRepository.saveAllAndFlush(brands.values)
+        setSheetId("Brand", start, end, brands.values.map { it.id })
     }
 
     @Test
     @Order(2)
     fun driver() {
+        val start = 2
+        val end = 98
         val range =
             service
                 .spreadsheets()
                 .values()
-                .get(sheetId, "Driver!B1:T98")
+                .get(sheetId, "Driver!B$start:H$end")
                 .execute()
 
         @Suppress("UNCHECKED_CAST")
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
-        val equipmentDetails = mutableListOf<EquipmentDetail>()
+        val drivers = mutableListOf<Driver>()
 
         values
-            .filterIndexed { index, _ -> index != 0 }
             .forEachIndexed { index, row ->
                 println("$index - $row")
                 val equipment =
@@ -99,46 +149,23 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.DRIVER,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 10),
-                        imageUrls = getCol(row, 11)?.split(",")
+                        releasedYear = getCol(row, 4),
+                        imageUrls = getCol(row, 5)?.split(",")
                     )
-                val equipmentDetail =
-                    EquipmentDetail(
+                val driver =
+                    Driver(
                         equipment,
-                        launch = getCol(row, 17),
-                        spin = getCol(row, 18),
-                        gender = null,
-                        color = getCol(row, 6),
-                        weight = getCol(row, 7),
-                        // head
-                        headProduceType = getCol(row, 3),
-                        headDesignType = getCol(row, 4),
-                        headNumber = getCol(row, 13),
-                        headShape = getCol(row, 5),
-                        headDifficulty = getCol(row, 8)?.let { enumValueOf<Difficulty>(it.uppercase()) },
-                        headLoftDegree = getCol(row, 9),
-                        driverVolume = getCol(row, 12)?.toFloat(),
-                        iron7LoftDegree = null,
-                        ironPLoftDegree = null,
-                        putterNeckShape = null,
-                        // shaft
-                        shaftStrength = null,
-                        shaftKickPoint = null,
-                        shaftTorque = null,
-                        shaftTexture = null,
-                        // grip
-                        gripType = null,
-                        gripRound = null,
-                        // ball
-                        ballPiece = null,
-                        ballCover = null
+                        loftDegree = getCol(row, 3),
+                        volume = getCol(row, 6)?.toFloat()
                     )
                 equipments.add(equipment)
-                equipmentDetails.add(equipmentDetail)
+                drivers.add(driver)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
-        equipmentDetailRepository.saveAllAndFlush(equipmentDetails)
+        driverRepository.saveAllAndFlush(drivers)
+
+        setSheetId("Driver", start, end, drivers.map { it.id })
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -149,17 +176,19 @@ class EquipmentRepositoryTest(
     @Test
     @Order(3)
     fun wood() {
+        val start = 2
+        val end = 73
         val range =
             service
                 .spreadsheets()
                 .values()
-                .get(sheetId, "Wood!B1:S73")
+                .get(sheetId, "Wood!B$start:I$end")
                 .execute()
 
         @Suppress("UNCHECKED_CAST")
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
-        val equipmentDetails = mutableListOf<EquipmentDetail>()
+        val woods = mutableListOf<Wood>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -168,7 +197,6 @@ class EquipmentRepositoryTest(
         println("\n======================================\n")
 
         values
-            .filterIndexed { index, _ -> index != 0 }
             .forEachIndexed { index, row ->
                 println("$index - $row")
                 val equipment =
@@ -176,49 +204,41 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.WOOD,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 10),
-                        imageUrls = getCol(row, 11)?.split(",")
+                        releasedYear = getCol(row, 4),
+                        imageUrls = getCol(row, 5)?.split(",")
                     )
-                val equipmentDetail =
-                    EquipmentDetail(
+                val wood =
+                    Wood(
                         equipment,
-                        gender = getCol(row, 17)?.let { enumValueOf<Gender>(it.uppercase()) },
-                        color = getCol(row, 6),
-                        weight = getCol(row, 7),
-                        // head
-                        headProduceType = getCol(row, 3),
-                        headDesignType = getCol(row, 4),
-                        headNumber = getCol(row, 13),
-                        headShape = getCol(row, 5),
-                        headDifficulty = getCol(row, 8)?.let { enumValueOf<Difficulty>(it.uppercase()) },
-                        headLoftDegree = getCol(row, 9),
-                        driverVolume = getCol(row, 12)?.toFloat(),
-                        iron7LoftDegree = getCol(row, 14),
-                        ironPLoftDegree = getCol(row, 15),
-                        putterNeckShape = getCol(row, 16)
+                        loftDegree = getCol(row, 3),
+                        numbers = getCol(row, 6)
                     )
                 equipments.add(equipment)
-                equipmentDetails.add(equipmentDetail)
+                woods.add(wood)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
-        equipmentDetailRepository.saveAllAndFlush(equipmentDetails)
+        woodRepository.saveAllAndFlush(woods)
+
+        setSheetId("Wood", start, end, woods.map { it.id })
     }
 
     @Test
     @Order(4)
-    fun utility() {
+    fun hybrid() {
+        val start = 2
+        val end = 47
         val range =
             service
                 .spreadsheets()
                 .values()
-                .get(sheetId, "Utility!B1:S47")
+                .get(sheetId, "Utility!B$start:J$end")
                 .execute()
 
         @Suppress("UNCHECKED_CAST")
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
-        val equipmentDetails = mutableListOf<EquipmentDetail>()
+        val hybrids = mutableListOf<Hybrid>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -227,57 +247,48 @@ class EquipmentRepositoryTest(
         println("\n======================================\n")
 
         values
-            .filterIndexed { index, _ -> index != 0 }
             .forEachIndexed { index, row ->
                 println("$index - $row")
                 val equipment =
                     Equipment(
                         brand = brands[getCol(row, 0)]!!,
-                        type = EquipmentType.UTILITY,
+                        type = EquipmentType.HYBRID,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 10),
-                        imageUrls = getCol(row, 11)?.split(",")
+                        releasedYear = getCol(row, 5),
+                        imageUrls = getCol(row, 6)?.split(",")
                     )
-                val equipmentDetail =
-                    EquipmentDetail(
+                val hybrid =
+                    Hybrid(
                         equipment,
-                        gender = getCol(row, 17)?.let { enumValueOf<Gender>(it.uppercase()) },
-                        color = getCol(row, 6),
-                        weight = getCol(row, 7),
-                        // head
-                        headProduceType = getCol(row, 3),
-                        headDesignType = getCol(row, 4),
-                        headNumber = getCol(row, 13),
-                        headShape = getCol(row, 5),
-                        headDifficulty = getCol(row, 8)?.let { enumValueOf<Difficulty>(it.uppercase()) },
-                        headLoftDegree = getCol(row, 9),
-                        driverVolume = getCol(row, 12)?.toFloat(),
-                        iron7LoftDegree = getCol(row, 14),
-                        ironPLoftDegree = getCol(row, 15),
-                        putterNeckShape = getCol(row, 16)
+                        loftDegree = getCol(row, 4),
+                        numbers = getCol(row, 7)
                     )
                 equipments.add(equipment)
-                equipmentDetails.add(equipmentDetail)
+                hybrids.add(hybrid)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
-        equipmentDetailRepository.saveAllAndFlush(equipmentDetails)
+        hybridRepository.saveAllAndFlush(hybrids)
+
+        setSheetId("Utility", start, end, hybrids.map { it.id })
     }
 
     @Test
     @Order(5)
     fun iron() {
+        val start = 2
+        val end = 182
         val range =
             service
                 .spreadsheets()
                 .values()
-                .get(sheetId, "Iron!B1:Q182")
+                .get(sheetId, "Iron!B$start:M$end")
                 .execute()
 
         @Suppress("UNCHECKED_CAST")
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
-        val equipmentDetails = mutableListOf<EquipmentDetail>()
+        val irons = mutableListOf<Iron>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -286,7 +297,6 @@ class EquipmentRepositoryTest(
         println("\n======================================\n")
 
         values
-            .filterIndexed { index, _ -> index != 0 }
             .forEachIndexed { index, row ->
                 println("$index - $row")
                 val equipment =
@@ -294,48 +304,45 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.IRON,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 10),
-                        imageUrls = getCol(row, 11)?.split(",")
+                        releasedYear = getCol(row, 6),
+                        imageUrls = getCol(row, 7)?.split(",")
                     )
-                val equipmentDetail =
-                    EquipmentDetail(
+                val iron =
+                    Iron(
                         equipment,
-                        color = getCol(row, 6),
-                        weight = getCol(row, 7),
-                        // head
-                        headProduceType = getCol(row, 3),
-                        headDesignType = getCol(row, 4),
-                        headNumber = getCol(row, 13),
-                        headShape = getCol(row, 5),
-                        headDifficulty = getCol(row, 8)?.let { enumValueOf<Difficulty>(it.uppercase()) },
-                        headLoftDegree = getCol(row, 9),
-                        driverVolume = getCol(row, 12)?.toFloat(),
-                        iron7LoftDegree = getCol(row, 14),
-                        ironPLoftDegree = getCol(row, 15),
-                        putterNeckShape = getCol(row, 16)
+                        numbers = getCol(row, 8),
+                        produceType = getCol(row, 3),
+                        designType = getCol(row, 4),
+                        loftDegree = getCol(row, 5),
+                        loft7Degree = getCol(row, 9),
+                        loftPDegree = getCol(row, 10)
                     )
                 equipments.add(equipment)
-                equipmentDetails.add(equipmentDetail)
+                irons.add(iron)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
-        equipmentDetailRepository.saveAllAndFlush(equipmentDetails)
+        ironRepository.saveAllAndFlush(irons)
+
+        setSheetId("Iron", start, end, irons.map { it.id })
     }
 
     @Test
     @Order(6)
     fun wedge() {
+        val start = 2
+        val end = 321
         val range =
             service
                 .spreadsheets()
                 .values()
-                .get(sheetId, "Wedge!B1:O321")
+                .get(sheetId, "Wedge!B$start:J$end")
                 .execute()
 
         @Suppress("UNCHECKED_CAST")
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
-        val equipmentDetails = mutableListOf<EquipmentDetail>()
+        val wedges = mutableListOf<Wedge>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -344,7 +351,6 @@ class EquipmentRepositoryTest(
         println("\n======================================\n")
 
         values
-            .filterIndexed { index, _ -> index != 0 }
             .forEachIndexed { index, row ->
                 println("$index - $row")
                 val equipment =
@@ -352,65 +358,44 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.WEDGE,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 10),
-                        imageUrls = getCol(row, 11)?.split(",")
+                        releasedYear = getCol(row, 5),
+                        imageUrls = getCol(row, 6)?.split(",")
                     )
-                val equipmentDetail =
-                    EquipmentDetail(
+                val wedge =
+                    Wedge(
                         equipment,
-                        color = getCol(row, 6),
-                        weight = getCol(row, 7),
-                        launch = null,
-                        spin = null,
-                        gender = null,
-                        bounce = getCol(row, 12),
-                        grind = getCol(row, 13),
-                        // head
-                        headProduceType = getCol(row, 3),
-                        headDesignType = getCol(row, 4),
-                        headNumber = null,
-                        headShape = getCol(row, 5),
-                        headDifficulty = getCol(row, 8)?.let { enumValueOf<Difficulty>(it.uppercase()) },
-                        headLoftDegree = getCol(row, 9),
-                        driverVolume = null,
-                        iron7LoftDegree = null,
-                        ironPLoftDegree = null,
-                        putterNeckShape = null,
-                        // shaft
-                        shaftStrength = null,
-                        shaftKickPoint = null,
-                        shaftTorque = null,
-                        shaftTexture = null,
-                        // grip
-                        gripType = null,
-                        gripRound = null,
-                        // ball
-                        ballPiece = null,
-                        ballCover = null
+                        loftDegree = getCol(row, 4),
+                        produceType = getCol(row, 3),
+                        bounce = getCol(row, 7),
+                        grind = getCol(row, 8)
                     )
                 equipments.add(equipment)
-                equipmentDetails.add(equipmentDetail)
+                wedges.add(wedge)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
-        equipmentDetailRepository.saveAllAndFlush(equipmentDetails)
+        wedgeRepository.saveAllAndFlush(wedges)
+
+        setSheetId("Wedge", start, end, wedges.map { it.id })
     }
 
     // todo: 2번 빠짐
     @Test
     @Order(7)
     fun putter() {
+        val start = 2
+        val end = 209
         val range =
             service
                 .spreadsheets()
                 .values()
-                .get(sheetId, "Putter!B1:S209")
+                .get(sheetId, "Putter!B$start:J$end")
                 .execute()
 
         @Suppress("UNCHECKED_CAST")
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
-        val equipmentDetails = mutableListOf<EquipmentDetail>()
+        val putters = mutableListOf<Putter>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -419,7 +404,6 @@ class EquipmentRepositoryTest(
         println("\n======================================\n")
 
         values
-            .filterIndexed { index, _ -> index != 0 }
             .forEachIndexed { index, row ->
                 println("$index - $row")
                 val equipment =
@@ -427,49 +411,42 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.WEDGE,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 10),
-                        imageUrls = getCol(row, 11)?.split(",")
+                        releasedYear = getCol(row, 6),
+                        imageUrls = getCol(row, 7)?.split(",")
                     )
-                val equipmentDetail =
-                    EquipmentDetail(
+                val putter =
+                    Putter(
                         equipment,
-                        gender = getCol(row, 17)?.let { enumValueOf<Gender>(it.uppercase()) },
-                        color = getCol(row, 6),
-                        weight = getCol(row, 7),
-                        // head
-                        headProduceType = getCol(row, 3),
-                        headDesignType = getCol(row, 4),
-                        headNumber = getCol(row, 13),
-                        headShape = getCol(row, 5),
-                        headDifficulty = getCol(row, 8)?.let { enumValueOf<Difficulty>(it.uppercase()) },
-                        headLoftDegree = getCol(row, 9),
-                        driverVolume = getCol(row, 12)?.toFloat(),
-                        iron7LoftDegree = getCol(row, 14),
-                        ironPLoftDegree = getCol(row, 15),
-                        putterNeckShape = getCol(row, 16)
+                        loftDegree = getCol(row, 5),
+                        weight = getCol(row, 4),
+                        neckShape = getCol(row, 8)
                     )
                 equipments.add(equipment)
-                equipmentDetails.add(equipmentDetail)
+                putters.add(putter)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
-        equipmentDetailRepository.saveAllAndFlush(equipmentDetails)
+        putterRepository.saveAllAndFlush(putters)
+
+        setSheetId("Putter", start, end, putters.map { it.id })
     }
 
     @Test
     @Order(8)
     fun shaft() {
+        val start = 2
+        val end = 1809
         val range =
             service
                 .spreadsheets()
                 .values()
-                .get(sheetId, "Shaft!B1:N1809")
+                .get(sheetId, "Shaft!B$start:M$end")
                 .execute()
 
         @Suppress("UNCHECKED_CAST")
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
-        val equipmentDetails = mutableListOf<EquipmentDetail>()
+        val shafts = mutableListOf<Shaft>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -478,7 +455,6 @@ class EquipmentRepositoryTest(
         println("\n======================================\n")
 
         values
-            .filterIndexed { index, _ -> index != 0 }
             .forEachIndexed { index, row ->
                 println("$index - $row")
                 val equipment =
@@ -487,44 +463,47 @@ class EquipmentRepositoryTest(
                         type = EquipmentType.SHAFT,
                         name = getCol(row, 1)!!,
                         releasedYear = null,
-                        imageUrls = getCol(row, 12)?.split(",")
+                        imageUrls = getCol(row, 11)?.split(",")
                     )
-                val equipmentDetail =
-                    EquipmentDetail(
+                val shaft =
+                    Shaft(
                         equipment,
                         weight = getCol(row, 6),
-                        launch = getCol(row, 10),
+                        strength = getCol(row, 3),
+                        kickPoint = getCol(row, 4),
+                        torque = getCol(row, 5),
+                        texture = getCol(row, 6),
+                        tipDiameter = getCol(row, 7),
+                        buttDiameter = getCol(row, 8),
                         spin = getCol(row, 9),
-                        shaftStrength = getCol(row, 2),
-                        shaftKickPoint = getCol(row, 3),
-                        shaftTorque = getCol(row, 4),
-                        shaftTexture = getCol(row, 5),
-                        shaftTipDiameter = getCol(row, 7),
-                        shaftButtDiameter = getCol(row, 8),
-                        shaftBend = getCol(row, 11)
+                        launch = getCol(row, 10)
                     )
                 equipments.add(equipment)
-                equipmentDetails.add(equipmentDetail)
+                shafts.add(shaft)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
-        equipmentDetailRepository.saveAllAndFlush(equipmentDetails)
+        shaftRepository.saveAllAndFlush(shafts)
+
+        setSheetId("Shaft", start, end, shafts.map { it.id })
     }
 
     @Test
     @Order(9)
-    fun ball() {
+    fun grip() {
+        val start = 2
+        val end = 299
         val range =
             service
                 .spreadsheets()
                 .values()
-                .get(sheetId, "Ball!B1:J26")
+                .get(sheetId, "Grip!B$start:I$end")
                 .execute()
 
         @Suppress("UNCHECKED_CAST")
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
-        val equipmentDetails = mutableListOf<EquipmentDetail>()
+        val grips = mutableListOf<Grip>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -533,7 +512,61 @@ class EquipmentRepositoryTest(
         println("\n======================================\n")
 
         values
-            .filterIndexed { index, _ -> index != 0 }
+            .forEachIndexed { index, row ->
+                println("$index - $row")
+                val equipment =
+                    Equipment(
+                        brand = brands[getCol(row, 0)]!!,
+                        type = EquipmentType.SHAFT,
+                        name = getCol(row, 1)!!,
+                        releasedYear = null,
+                        imageUrls = null
+                    )
+                val grip =
+                    Grip(
+                        equipment,
+                        weight = getCol(row, 3),
+                        size = getCol(row, 2),
+                        coreSize = getCol(row, 4),
+                        feel = null,
+                        material = getCol(row, 5),
+                        torque = getCol(row, 6),
+                        diameter = getCol(row, 7)
+                    )
+                equipments.add(equipment)
+                grips.add(grip)
+            }
+
+        equipmentRepository.saveAllAndFlush(equipments)
+        gripRepository.saveAllAndFlush(grips)
+
+        setSheetId("Grip", start, end, grips.map { it.id })
+    }
+
+    @Test
+    @Order(10)
+    fun ball() {
+        val start = 2
+        val end = 26
+        val range =
+            service
+                .spreadsheets()
+                .values()
+                .get(sheetId, "Ball!B$start:J$end")
+                .execute()
+
+        @Suppress("UNCHECKED_CAST")
+        val values = range.getValues() as List<List<String>>
+        val equipments = mutableListOf<Equipment>()
+        val balls = mutableListOf<Ball>()
+
+        println(values[0].mapIndexed { index, value -> "$index: $value" })
+        println(values[0].size)
+        println(values[1].let { if (it.size > 18 && it[18].isNotBlank()) it[18] else null })
+        println(values[2].size)
+        println("\n======================================\n")
+
+        values
             .forEachIndexed { index, row ->
                 println("$index - $row")
                 val equipment =
@@ -544,21 +577,23 @@ class EquipmentRepositoryTest(
                         releasedYear = null,
                         imageUrls = getCol(row, 8)?.split(",")
                     )
-                val equipmentDetail =
-                    EquipmentDetail(
+                val ball =
+                    Ball(
                         equipment,
+                        piece = getCol(row, 2),
                         spin = getCol(row, 3),
                         launch = getCol(row, 4),
-                        ballPiece = getCol(row, 2)?.toInt(),
-                        ballCover = getCol(row, 7),
-                        ballFeel = getCol(row, 5),
-                        ballDimple = getCol(row, 6)
+                        feel = getCol(row, 5),
+                        dimple = getCol(row, 6),
+                        texture = getCol(row, 7)
                     )
                 equipments.add(equipment)
-                equipmentDetails.add(equipmentDetail)
+                balls.add(ball)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
-        equipmentDetailRepository.saveAllAndFlush(equipmentDetails)
+        ballRepository.saveAllAndFlush(balls)
+
+        setSheetId("Ball", start, end, balls.map { it.id })
     }
 }

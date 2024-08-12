@@ -9,7 +9,7 @@ enum class EquipmentType(
 ) : CodedEnum<String> {
     DRIVER("driver"),
     WOOD("wood"),
-    UTILITY("utility"),
+    HYBRID("hybrid"),
     IRON("iron"),
     WEDGE("wedge"),
     PUTTER("putter"),

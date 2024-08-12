@@ -12,7 +12,6 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
-import jakarta.persistence.OneToOne
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -55,9 +54,6 @@ class Equipment(
     @Column(name = "image_urls", columnDefinition = "text")
     var imageUrls: List<String>? = imageUrls
         protected set
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
-    var equipmentDetail: EquipmentDetail? = null
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
     protected val mutableEquipmentReviews: MutableList<EquipmentReview> = mutableListOf()
