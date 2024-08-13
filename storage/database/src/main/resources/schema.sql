@@ -77,6 +77,7 @@ create table if not exists brands
     id         bigint       not null
         primary key,
     name       varchar(255) not null,
+    name_ko    varchar(255) null,
     image_url  varchar(255) null,
     created_at datetime(6)  not null,
     updated_at datetime(6)  not null,
