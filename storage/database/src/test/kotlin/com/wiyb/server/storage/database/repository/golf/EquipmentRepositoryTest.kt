@@ -106,13 +106,19 @@ class EquipmentRepositoryTest(
             service
                 .spreadsheets()
                 .values()
-                .get(sheetId, "Brand!B$start:B5$end")
+                .get(sheetId, "Brand!B$start:C$end")
                 .execute()
 
         @Suppress("UNCHECKED_CAST")
-        val values = (range.getValues() as List<List<String>>).flatten()
+        val values = range.getValues() as List<List<String>>
 
-        values.forEach { brands[it] = Brand(name = it) }
+        values.forEach { row ->
+            brands[row[0]] =
+                Brand(
+                    name = getCol(row, 0)!!,
+                    nameKo = getCol(row, 1)
+                )
+        }
     }
 
     @Test

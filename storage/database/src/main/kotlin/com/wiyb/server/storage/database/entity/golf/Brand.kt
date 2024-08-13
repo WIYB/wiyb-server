@@ -14,10 +14,15 @@ import org.hibernate.annotations.SQLRestriction
 @SQLDelete(sql = "UPDATE brands SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 class Brand(
     name: String,
+    nameKo: String? = null,
     imageUrl: String? = null
 ) : BaseEntity() {
     @Column(name = "name", nullable = false)
     var name: String = name
+        protected set
+
+    @Column(name = "name_ko")
+    var nameKo: String? = nameKo
         protected set
 
     @Column(name = "image_url")

@@ -7,6 +7,8 @@ import com.wiyb.server.storage.database.entity.golf.EquipmentReview
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
+import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
+import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDtoV2
 import com.wiyb.server.storage.database.repository.golf.EquipmentRepository
 import com.wiyb.server.storage.database.repository.golf.EquipmentReviewRepository
 import com.wiyb.server.storage.database.repository.golf.detail.wrapper.EquipmentDetailRepositoryWrapper
@@ -25,8 +27,6 @@ class EquipmentService(
 
     fun findById(idList: List<Long>): List<EquipmentSimpleDto> = equipmentRepository.findByIdList(idList)
 
-    fun findByNameKeyword(keyword: String): List<EquipmentSimpleDto> = equipmentRepository.findByNameKeyword(keyword)
-
     fun findOneWithDetailById(
         id: Long,
         type: EquipmentType
@@ -35,6 +35,17 @@ class EquipmentService(
     fun findReviewByEquipmentId(id: Long) = equipmentReviewRepository.findByEquipmentId(id)
 
     fun findSimpleReviewByEquipmentId(id: Long) = equipmentReviewRepository.findSimpleByEquipmentId(id)
+
+    // todo: 통합 검색 method 통합 예정
+    fun findBySearchParameters(dto: SearchParameterDto): List<EquipmentSimpleDto> =
+        equipmentRepository.findBySearchParameters(
+            dto.keyword,
+            dto.filters,
+            dto.sortedBy
+        )
+
+    fun findBySearchParametersV2(dto: SearchParameterDtoV2): List<EquipmentSimpleDto> = equipmentRepository.findBySearchParametersV2(dto)
+    // =============================
 
     fun isAlreadyReviewedByUser(
         equipmentId: Long,

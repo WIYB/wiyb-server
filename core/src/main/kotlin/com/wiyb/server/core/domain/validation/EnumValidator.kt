@@ -24,6 +24,7 @@ class EnumValidator : ConstraintValidator<ValueOfEnum, CharSequence> {
         if (value == null) {
             true
         } else {
-            acceptedValues.contains(value.toString().uppercase())
+            acceptedValues.contains(value.toString().uppercase()) ||
+                acceptedValues.contains(value.toString().replace("(?<=.)[A-Z]".toRegex(), "_$0").uppercase())
         }
 }
