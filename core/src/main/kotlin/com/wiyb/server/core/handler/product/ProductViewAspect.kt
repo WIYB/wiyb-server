@@ -1,7 +1,10 @@
 package com.wiyb.server.core.handler.product
 
+import com.wiyb.server.core.domain.product.mapper.EquipmentCacheMapper
+import com.wiyb.server.core.service.EquipmentService
 import com.wiyb.server.core.service.ProductService
 import com.wiyb.server.core.service.UserService
+import com.wiyb.server.storage.cache.entity.CachedProduct
 import org.aspectj.lang.annotation.AfterReturning
 import org.aspectj.lang.annotation.Aspect
 import org.springframework.security.core.context.SecurityContextHolder
@@ -14,7 +17,8 @@ import org.springframework.web.servlet.HandlerMapping
 @Component
 class ProductViewAspect(
     private val userService: UserService,
-    private val productService: ProductService
+    private val productService: ProductService,
+    private val equipmentService: EquipmentService
 ) {
     @AfterReturning("execution(* com.wiyb.server.core.controller.ProductController.getProductDetail(..))")
     fun cacheProductViewCount() {
@@ -31,6 +35,14 @@ class ProductViewAspect(
             val userId: Long = userService.findIdBySessionId(sessionId)
             productService.addUserVisitLog(userId, productId)
         }
-        productService.increaseProductViewCount(productId)
+
+        val product: CachedProduct =
+            if (!productService.existsById(productId)) {
+                val equipment = equipmentService.findSimpleById(productId)
+                EquipmentCacheMapper.fromSimpleDto(equipment)
+            } else {
+                productService.findById(productId)
+            }
+        productService.increaseViewCount(product)
     }
 }

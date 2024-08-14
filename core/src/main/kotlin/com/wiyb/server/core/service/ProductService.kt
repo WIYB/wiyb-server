@@ -1,19 +1,18 @@
 package com.wiyb.server.core.service
 
-import com.wiyb.server.storage.cache.entity.MostViewedProduct
-import com.wiyb.server.storage.cache.entity.ProductViewCount
+import com.wiyb.server.storage.cache.entity.CachedProduct
 import com.wiyb.server.storage.cache.entity.UserVisitLog
-import com.wiyb.server.storage.cache.repository.MostViewedProductRepository
-import com.wiyb.server.storage.cache.repository.ProductViewCountRepository
+import com.wiyb.server.storage.cache.repository.CachedProductRepository
 import com.wiyb.server.storage.cache.repository.UserVisitLogRepository
 import org.springframework.stereotype.Service
 
 @Service
 class ProductService(
     private val userVisitLogRepository: UserVisitLogRepository,
-    private val productViewCountRepository: ProductViewCountRepository,
-    private val mostViewedProductRepository: MostViewedProductRepository
+    private val cachedProductRepository: CachedProductRepository
 ) {
+    fun existsById(productId: Long): Boolean = cachedProductRepository.existsById(productId)
+
     fun addUserVisitLog(
         userId: Long,
         productId: Long
@@ -25,26 +24,30 @@ class ProductService(
         userVisitLogRepository.save(userVisitLog)
     }
 
-    fun increaseProductViewCount(productId: Long) {
-        val productViewCount = productViewCountRepository.findById(productId).orElse(ProductViewCount(productId))
-
-        productViewCount.increase()
-        productViewCountRepository.save(productViewCount)
+    fun increaseViewCount(product: CachedProduct) {
+        product.increase()
+        cachedProductRepository.save(product)
     }
 
-    fun findAll(): List<ProductViewCount> = productViewCountRepository.findAll()
+    fun findById(id: Long): CachedProduct = cachedProductRepository.findById(id).orElseThrow()
 
-    fun findAllMostViewedProduct(): List<MostViewedProduct> = mostViewedProductRepository.findAll()
+    fun findAll(): List<CachedProduct> = cachedProductRepository.findAll()
 
-    fun saveAllProductViewCounts(productViewCounts: List<ProductViewCount>): List<ProductViewCount> =
-        productViewCountRepository.saveAll(productViewCounts)
+    fun findWeeklyProductByType(type: String? = null) =
+        when (type) {
+            null -> cachedProductRepository.findTop10ByOrderByWeeklyViewCountDesc()
+            else -> cachedProductRepository.findTop10ByTypeOrderByWeeklyViewCountDesc(type)
+        }
 
-    fun saveAllMostViewedProducts(mostViewedProducts: List<MostViewedProduct>): List<MostViewedProduct> =
-        mostViewedProductRepository.saveAll(mostViewedProducts)
+    fun findDailyProductByType(type: String? = null) =
+        when (type) {
+            null -> cachedProductRepository.findTop10ByOrderByDailyViewCountDesc()
+            else -> cachedProductRepository.findTop10ByTypeOrderByDailyViewCountDesc(type)
+        }
+
+    fun saveAllProductViewCounts(cachedProducts: List<CachedProduct>): List<CachedProduct> = cachedProductRepository.saveAll(cachedProducts)
 
     fun deleteAllUserViewLog() = userVisitLogRepository.deleteAll()
 
-    fun deleteAllProductViewCount() = productViewCountRepository.deleteAll()
-
-    fun deleteAllMostViewedProduct() = mostViewedProductRepository.deleteAll()
+    fun deleteAllProductViewCount() = cachedProductRepository.deleteAll()
 }

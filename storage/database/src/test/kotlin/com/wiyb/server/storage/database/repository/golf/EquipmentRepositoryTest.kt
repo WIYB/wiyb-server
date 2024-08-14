@@ -415,7 +415,7 @@ class EquipmentRepositoryTest(
                 val equipment =
                     Equipment(
                         brand = brands[getCol(row, 0)]!!,
-                        type = EquipmentType.WEDGE,
+                        type = EquipmentType.PUTTER,
                         name = getCol(row, 1)!!,
                         releasedYear = getCol(row, 6),
                         imageUrls = getCol(row, 7)?.split(",")
@@ -523,7 +523,7 @@ class EquipmentRepositoryTest(
                 val equipment =
                     Equipment(
                         brand = brands[getCol(row, 0)]!!,
-                        type = EquipmentType.SHAFT,
+                        type = EquipmentType.GRIP,
                         name = getCol(row, 1)!!,
                         releasedYear = null,
                         imageUrls = null
@@ -578,7 +578,7 @@ class EquipmentRepositoryTest(
                 val equipment =
                     Equipment(
                         brand = brands[getCol(row, 0)]!!,
-                        type = EquipmentType.SHAFT,
+                        type = EquipmentType.BALL,
                         name = getCol(row, 1)!!,
                         releasedYear = null,
                         imageUrls = getCol(row, 8)?.split(",")
