@@ -29,6 +29,8 @@ enum class EquipmentType(
 
     override fun getCode(): String = code
 
+    fun getCodeKo(): String = codeKo
+
     @Converter(autoApply = true)
     class EquipmentTypeConverter : AbstractCodedEnumConverter<EquipmentType, String>(EquipmentType::class.java)
 }

@@ -1,17 +1,20 @@
 package com.wiyb.server.core.controller
 
-import com.wiyb.server.storage.database.entity.golf.constant.BrandName
-import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
+import com.wiyb.server.core.facade.ProductFacade
+import com.wiyb.server.storage.database.entity.golf.dto.BrandDto
+import com.wiyb.server.storage.database.entity.golf.dto.EquipmentTypeDto
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/static")
 @RestController
-class StaticController {
+class StaticController(
+    private val productFacade: ProductFacade
+) {
     @GetMapping("/brand")
-    fun brandConstantList(): List<String> = BrandName.entries.map { it.getCode() }
+    fun brandConstantList(): List<BrandDto> = productFacade.findBrandList()
 
-    @GetMapping("/equipment")
-    fun equipmentConstantList(): List<String> = EquipmentType.entries.map { it.getCode() }
+    @GetMapping("/equipment/type")
+    fun equipmentConstantList(): List<EquipmentTypeDto> = EquipmentTypeDto.toDtoList()
 }

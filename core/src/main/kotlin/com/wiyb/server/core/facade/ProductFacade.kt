@@ -3,6 +3,7 @@ package com.wiyb.server.core.facade
 import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
 import com.wiyb.server.core.domain.product.PostProductReviewDto
+import com.wiyb.server.core.service.BrandService
 import com.wiyb.server.core.service.EquipmentService
 import com.wiyb.server.core.service.UserService
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
@@ -13,8 +14,11 @@ import org.springframework.stereotype.Component
 @Component
 class ProductFacade(
     private val userService: UserService,
-    private val equipmentService: EquipmentService
+    private val equipmentService: EquipmentService,
+    private val brandService: BrandService
 ) {
+    fun findBrandList() = brandService.findBrandList()
+
     fun getProductReviews(productId: Long) = equipmentService.findReviewByEquipmentId(productId)
 
     fun getProductDetail(
