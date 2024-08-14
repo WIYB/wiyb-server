@@ -2,16 +2,17 @@ package com.wiyb.server.core.controller
 
 import com.wiyb.server.core.domain.product.PostProductReviewDto
 import com.wiyb.server.core.domain.product.ProductDetailParameterDto
+import com.wiyb.server.core.domain.product.ProductIdDto
 import com.wiyb.server.core.facade.ProductFacade
 import com.wiyb.server.core.facade.ProductViewFacade
 import com.wiyb.server.storage.cache.entity.MostViewedProduct
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -26,29 +27,28 @@ class ProductController(
     @GetMapping("/most/view/simple")
     fun getMostViewed(): ResponseEntity<List<MostViewedProduct>> = ResponseEntity.ok().body(productViewFacade.getMostViewedProduct())
 
-    // todo: 문자열 들어오면 Long 캐스팅 불가 MethodArgumentTypeMismatchException 발생함
     @GetMapping("/{productId}/review")
     fun getProductReviews(
-        @PathVariable("productId") productId: Long
+        @Valid path: ProductIdDto
     ): ResponseEntity<List<EquipmentReviewDto>> {
-        val reviews = productFacade.getProductReviews(productId)
+        val reviews = productFacade.getProductReviews(path.productId)
         return ResponseEntity.ok().body(reviews)
     }
 
-    // todo: 문자열 들어오면 Long 캐스팅 불가 MethodArgumentTypeMismatchException 발생함
     @Secured("ROLE_USER", "ROLE_ADMIN")
     @PostMapping("/{productId}/review")
     fun postProductReview(
-        @PathVariable("productId") productId: Long,
+        @Valid path: ProductIdDto,
         @RequestBody dto: PostProductReviewDto
     ): ResponseEntity<Unit> {
-        productFacade.postProductReview(productId, dto)
+        productFacade.postProductReview(path.productId, dto)
         return ResponseEntity.ok().build()
     }
 
-    // todo: 문자열 들어오면 Long 캐스팅 불가 MethodArgumentTypeMismatchException 발생함
     @GetMapping("/{productId}/{productType}")
-    fun getProductDetail(parameter: ProductDetailParameterDto): ResponseEntity<EquipmentDto> {
+    fun getProductDetail(
+        @Valid parameter: ProductDetailParameterDto
+    ): ResponseEntity<EquipmentDto> {
         val productDetailDto =
             productFacade.getProductDetail(
                 parameter.productId,

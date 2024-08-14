@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authorization.AuthorizationDeniedException
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -34,6 +35,12 @@ class GlobalExceptionHandler {
             }
 
             is NoHandlerFoundException -> {
+                ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(CommonException(ErrorCode.API_NOT_FOUND, e.message).toJson())
+            }
+
+            is HttpRequestMethodNotSupportedException -> {
                 ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(CommonException(ErrorCode.API_NOT_FOUND, e.message).toJson())

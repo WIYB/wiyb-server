@@ -19,7 +19,6 @@ class SearchController(
     private val searchFacade: SearchFacade,
     private val productViewFacade: ProductViewFacade
 ) {
-    // todo: 쿼리스트링 validation 안됨
     @GetMapping
     fun integrateSearch(
         @Valid query: SearchQueryDto
