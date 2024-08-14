@@ -7,10 +7,10 @@ import com.wiyb.server.core.domain.product.ProductIdDto
 import com.wiyb.server.core.domain.product.ProductTypeQueryDto
 import com.wiyb.server.core.facade.ProductFacade
 import com.wiyb.server.core.facade.ProductViewFacade
-import com.wiyb.server.storage.cache.entity.CachedProduct
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
+import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.annotation.Secured
@@ -29,7 +29,7 @@ class ProductController(
     @GetMapping("/most/view/simple")
     fun getMostViewed(
         @Valid query: ProductTypeQueryDto
-    ): ResponseEntity<List<CachedProduct>> =
+    ): ResponseEntity<List<EquipmentSimpleDto>> =
         ResponseEntity.ok().body(
             productViewFacade.getMostViewedProductSimple(
                 type = query.type?.let { EquipmentType.fromCode(it) },

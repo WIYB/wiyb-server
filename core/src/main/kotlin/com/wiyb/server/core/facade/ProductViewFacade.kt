@@ -4,8 +4,8 @@ import TimeRange
 import com.wiyb.server.core.domain.product.mapper.EquipmentCacheMapper
 import com.wiyb.server.core.service.EquipmentService
 import com.wiyb.server.core.service.ProductService
-import com.wiyb.server.storage.cache.entity.CachedProduct
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
+import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import org.springframework.stereotype.Component
 
 @Component
@@ -16,7 +16,7 @@ class ProductViewFacade(
     fun getMostViewedProductSimple(
         type: EquipmentType?,
         range: TimeRange
-    ): List<CachedProduct> {
+    ): List<EquipmentSimpleDto> {
         when (range) {
             TimeRange.DAILY, TimeRange.WEEKLY -> {
                 val products =
@@ -27,18 +27,20 @@ class ProductViewFacade(
                     }
 
                 if (products.isNotEmpty()) {
+                    println(products.map { it.id })
                     val counts = equipmentService.findReviewCounts(products.map { it.id })
-                    products.forEachIndexed { index, product ->
-                        product.reviewCount = counts[index]
+                    if (products.size == counts.size) {
+                        products.forEachIndexed { index, product ->
+                            product.reviewCount = counts[index]
+                        }
                     }
                 }
 
-                return products
+                return EquipmentCacheMapper.fromCachedDtoList(products, range)
             }
 
             else -> {
-                val products = equipmentService.findMostViewedProduct(type)
-                return EquipmentCacheMapper.fromSimpleDtoList(products)
+                return equipmentService.findMostViewedProduct(type)
             }
         }
     }

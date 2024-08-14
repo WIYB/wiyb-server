@@ -31,6 +31,6 @@ class CachedProductRepositoryTest(
 
         assertThat(target).isNotNull
         assertThat(target.id).isEqualTo(cachedProduct.id)
-        assertThat(target.getTotalCount()).isEqualTo(1)
+        assertThat(target.reviewCount).isEqualTo(1)
     }
 }
