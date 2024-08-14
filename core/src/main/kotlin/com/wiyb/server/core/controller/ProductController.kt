@@ -1,11 +1,13 @@
 package com.wiyb.server.core.controller
 
+import TimeRange
 import com.wiyb.server.core.domain.product.PostProductReviewDto
 import com.wiyb.server.core.domain.product.ProductDetailParameterDto
 import com.wiyb.server.core.domain.product.ProductIdDto
+import com.wiyb.server.core.domain.product.ProductTypeQueryDto
 import com.wiyb.server.core.facade.ProductFacade
 import com.wiyb.server.core.facade.ProductViewFacade
-import com.wiyb.server.storage.cache.entity.MostViewedProduct
+import com.wiyb.server.storage.cache.entity.CachedProduct
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
@@ -25,7 +27,15 @@ class ProductController(
     private val productViewFacade: ProductViewFacade
 ) {
     @GetMapping("/most/view/simple")
-    fun getMostViewed(): ResponseEntity<List<MostViewedProduct>> = ResponseEntity.ok().body(productViewFacade.getMostViewedProduct())
+    fun getMostViewed(
+        @Valid query: ProductTypeQueryDto
+    ): ResponseEntity<List<CachedProduct>> =
+        ResponseEntity.ok().body(
+            productViewFacade.getMostViewedProductSimple(
+                type = query.type?.let { EquipmentType.fromCode(it) },
+                range = query.range?.let { TimeRange.fromCode(it) } ?: TimeRange.WEEKLY
+            )
+        )
 
     @GetMapping("/{productId}/review")
     fun getProductReviews(

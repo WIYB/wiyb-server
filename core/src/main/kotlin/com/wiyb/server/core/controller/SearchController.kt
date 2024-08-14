@@ -32,5 +32,6 @@ class SearchController(
         ResponseEntity.ok().body(searchFacade.integrateSearchV2(SearchParameterDtoV2.fromQuery(query.keyword, query.filters, query.sort)))
 
     @GetMapping("/popular")
-    fun getPopularKeywords(): ResponseEntity<List<String>> = ResponseEntity.ok().body(productViewFacade.getPopularProductNames())
+    fun getPopularKeywords(): ResponseEntity<List<String>> = ResponseEntity.ok().body(emptyList())
+//        ResponseEntity.ok().body(productViewFacade.getPopularProductNames())
 }
