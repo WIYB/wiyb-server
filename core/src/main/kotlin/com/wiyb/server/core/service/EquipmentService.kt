@@ -20,10 +20,15 @@ class EquipmentService(
     private val equipmentReviewRepository: EquipmentReviewRepository,
     private val equipmentDetailRepositoryWrapper: EquipmentDetailRepositoryWrapper
 ) {
+    fun findSimpleById(id: Long): EquipmentSimpleDto =
+        equipmentRepository.findSimpleById(id) ?: throw CommonException(ErrorCode.PRODUCT_NOT_FOUND)
+
     fun findOneById(id: Long): Equipment =
         equipmentRepository.findById(id).orElseThrow {
             CommonException(ErrorCode.PRODUCT_NOT_FOUND)
         }
+
+    fun findReviewCounts(id: List<Long>): List<Long> = equipmentRepository.findReviewCounts(id)
 
     fun findById(idList: List<Long>): List<EquipmentSimpleDto> = equipmentRepository.findByIdList(idList)
 
@@ -46,6 +51,8 @@ class EquipmentService(
 
     fun findBySearchParametersV2(dto: SearchParameterDtoV2): List<EquipmentSimpleDto> = equipmentRepository.findBySearchParametersV2(dto)
     // =============================
+
+    fun findMostViewedProduct(type: EquipmentType?): List<EquipmentSimpleDto> = equipmentRepository.findMostViewedProduct(type)
 
     fun isAlreadyReviewedByUser(
         equipmentId: Long,

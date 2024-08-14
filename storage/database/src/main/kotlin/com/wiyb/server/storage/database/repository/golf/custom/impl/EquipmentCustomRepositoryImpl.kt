@@ -7,6 +7,7 @@ import com.wiyb.server.storage.database.entity.golf.Equipment
 import com.wiyb.server.storage.database.entity.golf.QBrand.brand
 import com.wiyb.server.storage.database.entity.golf.QEquipment.equipment
 import com.wiyb.server.storage.database.entity.golf.QEquipmentReview.equipmentReview
+import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.constant.SearchSortedBy
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentSimpleDto
@@ -21,6 +22,62 @@ import org.springframework.stereotype.Repository
 class EquipmentCustomRepositoryImpl :
     QuerydslRepositorySupport(Equipment::class.java),
     EquipmentCustomRepository {
+    override fun findSimpleById(id: Long): EquipmentSimpleDto? =
+        from(equipment)
+            .select(
+                QEquipmentSimpleDto(
+                    equipment.id.stringValue(),
+                    brand.name,
+                    equipment.type,
+                    equipment.name,
+                    equipment.viewCount,
+                    equipmentReview.count(),
+                    equipment.releasedYear,
+                    equipment.imageUrls
+                )
+            ).leftJoin(equipment.brand, brand)
+            .leftJoin(equipment.mutableEquipmentReviews, equipmentReview)
+            .where(equipment.id.eq(id))
+            .fetchFirst()
+
+    override fun findReviewCounts(id: List<Long>): List<Long> =
+        from(equipment)
+            .select(equipmentReview.count())
+            .leftJoin(equipment.mutableEquipmentReviews, equipmentReview)
+            .where(equipment.id.`in`(id))
+            .groupBy(equipment.id)
+            .fetch()
+
+    override fun findMostViewedProduct(
+        type: EquipmentType?,
+        limit: Long?
+    ): List<EquipmentSimpleDto> {
+        val query =
+            from(equipment)
+                .select(
+                    QEquipmentSimpleDto(
+                        equipment.id.stringValue(),
+                        brand.name,
+                        equipment.type,
+                        equipment.name,
+                        equipment.viewCount,
+                        equipmentReview.count(),
+                        equipment.releasedYear,
+                        equipment.imageUrls
+                    )
+                ).leftJoin(equipment.brand, brand)
+                .leftJoin(equipment.mutableEquipmentReviews, equipmentReview)
+                .groupBy(equipment.id)
+                .orderBy(equipment.viewCount.castToNum(Int::class.java).desc())
+                .limit(limit ?: 10)
+
+        if (type != null) {
+            query.where(equipment.type.eq(type))
+        }
+
+        return query.fetch()
+    }
+
     override fun findByIdList(idList: List<Long>): List<EquipmentSimpleDto> =
         from(equipment)
             .select(

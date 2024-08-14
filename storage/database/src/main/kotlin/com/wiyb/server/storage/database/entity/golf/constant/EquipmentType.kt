@@ -20,6 +20,10 @@ enum class EquipmentType(
     OTHER("other", "기타");
 
     companion object {
+        fun fromCode(code: String?): EquipmentType =
+            entries.find { it.code.lowercase() == code?.lowercase() }
+                ?: throw IllegalArgumentException("Unknown code: $code")
+
         fun find(code: String): EquipmentType? = entries.find { it.code.lowercase() == code.lowercase() }
 
         fun findContains(code: String): EquipmentType? = entries.find { it.code.lowercase().contains(code.lowercase()) }
