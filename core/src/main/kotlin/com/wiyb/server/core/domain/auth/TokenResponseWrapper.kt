@@ -1,7 +1,7 @@
 package com.wiyb.server.core.domain.auth
 
 import com.wiyb.server.core.domain.common.CustomCookie
-import com.wiyb.server.core.domain.common.CustomResponseCookie
+import com.wiyb.server.core.provider.TokenProvider
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -14,8 +14,20 @@ class TokenResponseWrapper {
             response: HttpServletResponse,
             issueTokenDto: IssueTokenDto
         ) {
-            response.addCookie(CustomCookie.makeForAccessToken(issueTokenDto.accessToken))
-            response.addCookie(CustomCookie.makeForRefreshToken(issueTokenDto.refreshToken))
+            response.addHeader(
+                HttpHeaders.SET_COOKIE,
+                CustomCookie.make(
+                    key = TokenProvider.ACCESS_TOKEN_KEY,
+                    value = issueTokenDto.accessToken
+                )
+            )
+            response.addHeader(
+                HttpHeaders.SET_COOKIE,
+                CustomCookie.make(
+                    key = TokenProvider.REFRESH_TOKEN_KEY,
+                    value = issueTokenDto.refreshToken
+                )
+            )
         }
 
         fun send(
@@ -38,8 +50,18 @@ class TokenResponseWrapper {
         ): ResponseEntity<T> =
             ResponseEntity
                 .ok()
-                .header(HttpHeaders.SET_COOKIE, CustomResponseCookie.makeForAccessToken(issueTokenDto.accessToken).toString())
-                .header(HttpHeaders.SET_COOKIE, CustomResponseCookie.makeForRefreshToken(issueTokenDto.refreshToken).toString())
-                .body(body)
+                .header(
+                    HttpHeaders.SET_COOKIE,
+                    CustomCookie.make(
+                        key = TokenProvider.ACCESS_TOKEN_KEY,
+                        value = issueTokenDto.accessToken
+                    )
+                ).header(
+                    HttpHeaders.SET_COOKIE,
+                    CustomCookie.make(
+                        key = TokenProvider.REFRESH_TOKEN_KEY,
+                        value = issueTokenDto.refreshToken
+                    )
+                ).body(body)
     }
 }
