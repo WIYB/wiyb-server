@@ -45,7 +45,7 @@ class ProductController(
         return ResponseEntity.ok().body(reviews)
     }
 
-    @Secured("ROLE_USER", "ROLE_ADMIN")
+    @Secured("ROLE_USER")
     @PostMapping("/{productId}/review")
     fun postProductReview(
         @Valid path: ProductIdDto,

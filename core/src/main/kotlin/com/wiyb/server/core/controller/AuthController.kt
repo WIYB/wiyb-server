@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     private val authFacade: AuthFacade
 ) {
-    @Secured("ROLE_GUEST", "ROLE_USER", "ROLE_ADMIN")
+    @Secured("ROLE_GUEST")
     @GetMapping("/token")
     fun checkToken(response: HttpServletResponse): ResponseEntity<CheckTokenDto> {
         val role =

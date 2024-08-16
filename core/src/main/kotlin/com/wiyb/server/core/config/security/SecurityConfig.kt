@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -49,6 +50,23 @@ class SecurityConfig(
                 "/main",
                 "/sign/**"
             )
+
+        @Bean
+        fun roleHierarchy(): RoleHierarchy =
+            RoleHierarchyImpl
+                .withDefaultRolePrefix()
+                .role("ADMIN")
+                .implies("USER")
+                .role("USER")
+                .implies("GUEST")
+                .build()
+
+        @Bean
+        fun methodSecurityExpressionHandler(roleHierarchy: RoleHierarchy): MethodSecurityExpressionHandler {
+            val expressionHandler = DefaultMethodSecurityExpressionHandler()
+            expressionHandler.setRoleHierarchy(roleHierarchy)
+            return expressionHandler
+        }
     }
 
     @Bean
@@ -107,20 +125,6 @@ class SecurityConfig(
                 .ignoring()
                 .requestMatchers(PathRequest.toH2Console())
         }
-
-    @Bean
-    fun methodSecurityExpressionHandler(): MethodSecurityExpressionHandler {
-        val handler = DefaultMethodSecurityExpressionHandler()
-        handler.setRoleHierarchy(
-            RoleHierarchyImpl.fromHierarchy(
-                """
-            ROLE_ADMIN > ROLE_USER
-            ROLE_USER > ROLE_GUEST
-            """
-            )
-        )
-        return handler
-    }
 
     private fun corsConfigurationSource(): CorsConfigurationSource {
         val config = CorsConfiguration()
