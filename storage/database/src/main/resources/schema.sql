@@ -44,7 +44,7 @@ create table if not exists accounts
     user_id         bigint       not null,
     social_provider varchar(255) not null,
     social_id       varchar(255) not null,
-    email           varchar(255) not null,
+    email           varchar(255) null,
     created_at      datetime(6)  not null,
     updated_at      datetime(6)  not null,
     deleted_at      datetime(6)  null,

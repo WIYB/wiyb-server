@@ -24,8 +24,10 @@ class TokenProvider(
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(key.toByteArray())
 
     companion object {
-        private const val ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 2
-        private const val REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 30
+        const val ACCESS_TOKEN_KEY = "access"
+        const val REFRESH_TOKEN_KEY = "refresh"
+        const val ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 2
+        const val REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 30
     }
 
     fun validateToken(token: String?): Claims =

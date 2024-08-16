@@ -11,6 +11,11 @@ enum class SocialProvider(
     NAVER("naver"),
     KAKAO("kakao");
 
+    companion object {
+        fun fromCode(code: String?): SocialProvider =
+            entries.find { it.code.lowercase() == code?.lowercase() } ?: throw IllegalArgumentException("Unknown code: $code")
+    }
+
     override fun getCode(): String = code
 
     @Converter(autoApply = true)

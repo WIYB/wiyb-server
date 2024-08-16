@@ -23,7 +23,7 @@ class CustomOAuth2UserService(
         val attributes: MutableMap<String, Any> = super.loadUser(userRequest).attributes
         val provider: String = userRequest.clientRegistration.registrationId
         val oauth2UserInfo = OAuth2UserInfo.of(provider, attributes)
-        var account: Account? = accountRepository.findByEmailWithUser(oauth2UserInfo.email)
+        var account: Account? = accountRepository.findBySocialIdWithUser(oauth2UserInfo.socialId)
 
         if (account == null) {
             val newUser = User(role = Role.GUEST)

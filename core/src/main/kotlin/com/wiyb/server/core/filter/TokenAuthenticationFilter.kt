@@ -24,6 +24,9 @@ import java.util.Collections
 class TokenAuthenticationFilter(
     private val tokenProvider: TokenProvider
 ) : OncePerRequestFilter() {
+    // todo: 필터링 제외 경로 추가
+//    override fun shouldNotFilter(request: HttpServletRequest): Boolean = super.shouldNotFilter(request)
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,

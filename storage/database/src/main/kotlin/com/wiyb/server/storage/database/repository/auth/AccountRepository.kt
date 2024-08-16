@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository
 interface AccountRepository :
     JpaRepository<Account, Long>,
     AccountCustomRepository {
-    @Query("SELECT a FROM accounts a JOIN FETCH a.user WHERE a.email = :email")
-    fun findByEmailWithUser(email: String): Account?
+    @Query("SELECT a FROM accounts a JOIN FETCH a.user WHERE a.socialId = :socialId")
+    fun findBySocialIdWithUser(socialId: String): Account?
 }
