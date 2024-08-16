@@ -1,27 +1,25 @@
-package com.wiyb.server.storage.database.entity.user.constant
+package com.wiyb.server.core.domain.common
 
 import com.wiyb.server.storage.database.converter.AbstractCodedEnumConverter
 import com.wiyb.server.storage.database.converter.CodedEnum
 import jakarta.persistence.Converter
 
-enum class Role(
-    private val code: String,
-    private val role: String
+enum class ResponseType(
+    private val code: String
 ) : CodedEnum<String> {
-    ADMIN("admin", "ROLE_ADMIN"),
-    USER("user", "ROLE_USER"),
-    GUEST("guest", "ROLE_GUEST");
+    SERVLET("servlet"),
+    ENTITY("entity");
 
     companion object {
-        fun fromCode(code: String?): Role =
+        fun fromCode(code: String?): ResponseType =
             entries.find { it.code.lowercase() == code?.lowercase() }
                 ?: throw IllegalArgumentException("Unknown code: $code")
+
+        fun find(code: String): ResponseType? = entries.find { it.code.lowercase() == code.lowercase() }
     }
 
     override fun getCode(): String = code
 
-    fun getRole(): String = role
-
     @Converter(autoApply = true)
-    class RoleConverter : AbstractCodedEnumConverter<Role, String>(Role::class.java)
+    class ResponseTypeConverter : AbstractCodedEnumConverter<ResponseType, String>(ResponseType::class.java)
 }
