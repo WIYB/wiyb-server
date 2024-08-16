@@ -15,10 +15,10 @@ import org.hibernate.annotations.SQLRestriction
 @SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE accounts SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 class Account(
+    user: User,
     socialId: String,
     socialProvider: SocialProvider,
-    email: String,
-    user: User
+    email: String? = null
 ) : BaseEntity() {
     @Column(name = "social_provider", nullable = false)
     var socialProvider: SocialProvider = socialProvider
@@ -28,8 +28,8 @@ class Account(
     var socialId: String = socialId
         protected set
 
-    @Column(nullable = false)
-    var email: String = email
+    @Column(name = "email")
+    var email: String? = email
         protected set
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
