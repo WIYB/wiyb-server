@@ -12,8 +12,7 @@ import com.wiyb.server.storage.database.entity.golf.constant.SearchSortedBy
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchFilterDto
-import com.wiyb.server.storage.database.entity.golf.dto.SearchFilterDtoV2
-import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDtoV2
+import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
 import com.wiyb.server.storage.database.repository.golf.custom.EquipmentCustomRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository
@@ -97,19 +96,9 @@ class EquipmentCustomRepositoryImpl :
             .groupBy(equipment.id)
             .fetch()
 
-    override fun findBySearchParameters(
-        keyword: String?,
-        filters: SearchFilterDto,
-        sort: SearchSortedBy
-    ): List<EquipmentSimpleDto> = searchQuery(keyword, filters, sort).fetch()
+    override fun findBySearchParameters(parameter: SearchParameterDto): List<EquipmentSimpleDto> = searchQuery(parameter).fetch()
 
-    override fun findBySearchParametersV2(parameter: SearchParameterDtoV2): List<EquipmentSimpleDto> = searchQueryV2(parameter).fetch()
-
-    private fun searchQuery(
-        keyword: String? = null,
-        filters: SearchFilterDto,
-        sort: SearchSortedBy
-    ): JPQLQuery<EquipmentSimpleDto> =
+    private fun searchQuery(parameter: SearchParameterDto): JPQLQuery<EquipmentSimpleDto> =
         from(equipment)
             .select(
                 QEquipmentSimpleDto(
@@ -124,79 +113,11 @@ class EquipmentCustomRepositoryImpl :
                 )
             ).leftJoin(equipment.brand, brand)
             .leftJoin(equipment.mutableEquipmentReviews, equipmentReview)
-            .where(filterStrategy(keyword, filters))
+            .where(filterStrategy(parameter.filters))
             .groupBy(equipment.id)
-            .orderBy(*sortStrategy(sort))
+            .orderBy(*sortStrategy(parameter.sortedBy))
 
-    private fun filterStrategy(
-        keyword: String?,
-        filters: SearchFilterDto
-    ): BooleanBuilder {
-        val builder = BooleanBuilder()
-
-        if (filters.brandNames.isNotEmpty()) {
-            builder.and(equipment.brand.name.`in`(filters.brandNames.map { it.getCode() }))
-        }
-        if (filters.equipmentTypes.isNotEmpty()) {
-            builder.and(equipment.type.`in`(filters.equipmentTypes))
-        }
-        if (keyword != null) {
-            builder.and(
-                equipment.name
-                    .containsIgnoreCase(keyword)
-                    .or(brand.name.containsIgnoreCase(keyword))
-                    .or(brand.nameKo.containsIgnoreCase(keyword))
-            )
-        }
-
-        println("\n============================\n")
-        println(filters.brandNames)
-        println(filters.equipmentTypes)
-        println("\n============================\n")
-
-        return builder
-    }
-
-    private fun sortStrategy(sort: SearchSortedBy): Array<OrderSpecifier<Int>> {
-        val strategy =
-            arrayOf(
-                equipmentReview.count().castToNum(Int::class.java).desc(),
-                equipment.releasedYear.castToNum(Int::class.java).desc()
-            )
-
-        if (sort == SearchSortedBy.RELEASED_DESC) {
-            strategy.reverse()
-        } else if (sort == SearchSortedBy.RELEASED_ASC) {
-            strategy[0] =
-                equipment.releasedYear
-                    .castToNum(Int::class.java)
-                    .asc()
-                    .nullsLast()
-        }
-
-        return strategy
-    }
-
-    private fun searchQueryV2(parameter: SearchParameterDtoV2): JPQLQuery<EquipmentSimpleDto> =
-        from(equipment)
-            .select(
-                QEquipmentSimpleDto(
-                    equipment.id.stringValue(),
-                    brand.name,
-                    equipment.type,
-                    equipment.name,
-                    equipment.viewCount,
-                    equipmentReview.count(),
-                    equipment.releasedYear,
-                    equipment.imageUrls
-                )
-            ).leftJoin(equipment.brand, brand)
-            .leftJoin(equipment.mutableEquipmentReviews, equipmentReview)
-            .where(filterStrategyV2(parameter.filters))
-            .groupBy(equipment.id)
-            .orderBy(*sortStrategyV2(parameter.sortedBy))
-
-    private fun filterStrategyV2(filters: SearchFilterDtoV2): BooleanBuilder {
+    private fun filterStrategy(filters: SearchFilterDto): BooleanBuilder {
         val builder = BooleanBuilder()
 
         if (filters.brandNames.isNotEmpty()) {
@@ -214,7 +135,7 @@ class EquipmentCustomRepositoryImpl :
         return builder
     }
 
-    private fun sortStrategyV2(sort: SearchSortedBy): Array<OrderSpecifier<Int>> {
+    private fun sortStrategy(sort: SearchSortedBy): Array<OrderSpecifier<Int>> {
         val strategy =
             arrayOf(
                 equipmentReview.count().castToNum(Int::class.java).desc(),

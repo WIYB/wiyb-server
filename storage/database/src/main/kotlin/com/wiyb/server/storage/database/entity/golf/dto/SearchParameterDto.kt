@@ -3,7 +3,6 @@ package com.wiyb.server.storage.database.entity.golf.dto
 import com.wiyb.server.storage.database.entity.golf.constant.SearchSortedBy
 
 data class SearchParameterDto(
-    val keyword: String? = null,
     val filters: SearchFilterDto,
     val sortedBy: SearchSortedBy
 ) {
@@ -14,11 +13,11 @@ data class SearchParameterDto(
             filters: String?,
             sort: String?
         ): SearchParameterDto {
+            val keywordList = keyword?.trim()?.split("\\s+".toRegex()) ?: emptyList()
             val filterList = (filters?.split(",") ?: emptyList()).toMutableList()
 
             return SearchParameterDto(
-                keyword = keyword,
-                filters = SearchFilterDto.fromFilter(filterList),
+                filters = SearchFilterDto.fromFilter(keywordList, filterList),
                 sortedBy = sort?.let { SearchSortedBy.fromCode(it) } ?: SearchSortedBy.REVIEW_COUNT_DESC
             )
         }
