@@ -7,6 +7,7 @@ import com.wiyb.server.storage.database.entity.golf.EquipmentReview
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
+import com.wiyb.server.storage.database.entity.golf.dto.PageableDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
 import com.wiyb.server.storage.database.repository.golf.EquipmentRepository
 import com.wiyb.server.storage.database.repository.golf.EquipmentReviewRepository
@@ -40,7 +41,7 @@ class EquipmentService(
 
     fun findSimpleReviewByEquipmentId(id: Long) = equipmentReviewRepository.findSimpleByEquipmentId(id)
 
-    fun findBySearchParameters(dto: SearchParameterDto): List<EquipmentSimpleDto> = equipmentRepository.findBySearchParameters(dto)
+    fun findBySearchParameters(dto: SearchParameterDto): PageableDto<EquipmentSimpleDto> = equipmentRepository.findBySearchParameters(dto)
 
     fun findMostViewedProduct(type: EquipmentType?): List<EquipmentSimpleDto> = equipmentRepository.findMostViewedProduct(type)
 

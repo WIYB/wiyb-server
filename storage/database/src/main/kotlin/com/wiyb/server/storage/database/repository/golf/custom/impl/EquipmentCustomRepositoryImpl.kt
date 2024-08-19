@@ -2,6 +2,7 @@ package com.wiyb.server.storage.database.repository.golf.custom.impl
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.OrderSpecifier
+import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.JPQLQuery
 import com.wiyb.server.storage.database.entity.golf.Equipment
 import com.wiyb.server.storage.database.entity.golf.QBrand.brand
@@ -10,10 +11,13 @@ import com.wiyb.server.storage.database.entity.golf.QEquipmentReview.equipmentRe
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.constant.SearchSortedBy
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
+import com.wiyb.server.storage.database.entity.golf.dto.PageableDto
 import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchFilterDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
 import com.wiyb.server.storage.database.repository.golf.custom.EquipmentCustomRepository
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository
 
@@ -96,10 +100,21 @@ class EquipmentCustomRepositoryImpl :
             .groupBy(equipment.id)
             .fetch()
 
-    override fun findBySearchParameters(parameter: SearchParameterDto): List<EquipmentSimpleDto> = searchQuery(parameter).fetch()
+    override fun findBySearchParameters(parameter: SearchParameterDto): PageableDto<EquipmentSimpleDto> {
+        val pageRequest = parameter.page.of()
+        val query = searchQuery(parameter, pageRequest)
+        val page = PageImpl(query.fetch(), pageRequest, query.fetchCount())
 
-    private fun searchQuery(parameter: SearchParameterDto): JPQLQuery<EquipmentSimpleDto> =
-        from(equipment)
+        return PageableDto.fromPage<EquipmentSimpleDto>(parameter.page.sessionId, page)
+    }
+
+    private fun searchQuery(
+        parameter: SearchParameterDto,
+        pageRequest: PageRequest
+    ): JPQLQuery<EquipmentSimpleDto> {
+        val reviewCount = Expressions.numberPath(Long::class.java, "review_count")
+
+        return from(equipment)
             .select(
                 QEquipmentSimpleDto(
                     equipment.id.stringValue(),
@@ -107,15 +122,18 @@ class EquipmentCustomRepositoryImpl :
                     equipment.type,
                     equipment.name,
                     equipment.viewCount,
-                    equipmentReview.count(),
+                    equipmentReview.count().`as`(reviewCount),
                     equipment.releasedYear,
                     equipment.imageUrls
                 )
             ).leftJoin(equipment.brand, brand)
             .leftJoin(equipment.mutableEquipmentReviews, equipmentReview)
             .where(filterStrategy(parameter.filters))
-            .groupBy(equipment.id)
-            .orderBy(*sortStrategy(parameter.sortedBy))
+            .groupBy(equipment)
+            .offset(pageRequest.offset)
+            .limit(pageRequest.pageSize.toLong())
+            .orderBy(*paginationStrategy(parameter.page.getSortedBy()))
+    }
 
     private fun filterStrategy(filters: SearchFilterDto): BooleanBuilder {
         val builder = BooleanBuilder()
@@ -135,28 +153,31 @@ class EquipmentCustomRepositoryImpl :
         return builder
     }
 
-    private fun sortStrategy(sort: SearchSortedBy): Array<OrderSpecifier<Int>> {
-        val strategy =
-            arrayOf(
-                equipmentReview.count().castToNum(Int::class.java).desc(),
-                equipment.releasedYear.castToNum(Int::class.java).desc()
-            )
+    private fun paginationStrategy(sort: SearchSortedBy): Array<OrderSpecifier<Int>> =
+        when (sort) {
+            SearchSortedBy.VIEW_COUNT_DESC ->
+                arrayOf(
+                    equipment.viewCount.castToNum(Int::class.java).desc(),
+                    equipmentReview.count().castToNum(Int::class.java).desc(),
+                    equipment.releasedYear.castToNum(Int::class.java).desc()
+                )
 
-        if (sort == SearchSortedBy.VIEW_COUNT_DESC) {
-            return arrayOf(
-                equipment.viewCount.castToNum(Int::class.java).desc(),
-                *strategy
-            )
-        } else if (sort == SearchSortedBy.RELEASED_DESC) {
-            strategy.reverse()
-        } else if (sort == SearchSortedBy.RELEASED_ASC) {
-            strategy[0] =
-                equipment.releasedYear
-                    .castToNum(Int::class.java)
-                    .asc()
-                    .nullsLast()
+            SearchSortedBy.RELEASED_DESC ->
+                arrayOf(
+                    equipment.releasedYear.castToNum(Int::class.java).desc(),
+                    equipmentReview.count().castToNum(Int::class.java).desc()
+                )
+
+            SearchSortedBy.RELEASED_ASC ->
+                arrayOf(
+                    equipment.releasedYear.castToNum(Int::class.java).asc(),
+                    equipmentReview.count().castToNum(Int::class.java).desc()
+                )
+
+            else ->
+                arrayOf(
+                    equipmentReview.count().castToNum(Int::class.java).desc(),
+                    equipment.releasedYear.castToNum(Int::class.java).desc()
+                )
         }
-
-        return strategy
-    }
 }

@@ -21,7 +21,18 @@ class SearchController(
     fun integrateSearch(
         @Valid query: SearchQueryDto
     ): ResponseEntity<IntegrateSearchDto> =
-        ResponseEntity.ok().body(searchFacade.integrateSearch(SearchParameterDto.fromQuery(query.keyword, query.filters, query.sort)))
+        ResponseEntity.ok().body(
+            searchFacade.integrateSearch(
+                SearchParameterDto.fromQuery(
+                    keyword = query.keyword,
+                    filters = query.filters,
+                    sort = query.sort,
+                    sessionId = query.sessionId,
+                    page = query.page,
+                    size = query.pageSize
+                )
+            )
+        )
 
     @GetMapping("/popular")
     fun getPopularKeywords(): ResponseEntity<List<String>> = ResponseEntity.ok().body(emptyList())
