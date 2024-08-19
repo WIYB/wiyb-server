@@ -11,10 +11,10 @@ import com.wiyb.server.storage.database.entity.golf.QEquipmentReview.equipmentRe
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.constant.SearchSortedBy
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
-import com.wiyb.server.storage.database.entity.golf.dto.PageableDto
 import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchFilterDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
+import com.wiyb.server.storage.database.entity.golf.dto.SearchResultDto
 import com.wiyb.server.storage.database.repository.golf.custom.EquipmentCustomRepository
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -100,12 +100,12 @@ class EquipmentCustomRepositoryImpl :
             .groupBy(equipment.id)
             .fetch()
 
-    override fun findBySearchParameters(parameter: SearchParameterDto): PageableDto<EquipmentSimpleDto> {
+    override fun findBySearchParameters(parameter: SearchParameterDto): SearchResultDto<EquipmentSimpleDto> {
         val pageRequest = parameter.page.of()
         val query = searchQuery(parameter, pageRequest)
         val page = PageImpl(query.fetch(), pageRequest, query.fetchCount())
 
-        return PageableDto.fromPage<EquipmentSimpleDto>(parameter.page.sessionId, page)
+        return SearchResultDto.fromPage<EquipmentSimpleDto>(parameter.page.contextId, page)
     }
 
     private fun searchQuery(
@@ -132,7 +132,7 @@ class EquipmentCustomRepositoryImpl :
             .groupBy(equipment)
             .offset(pageRequest.offset)
             .limit(pageRequest.pageSize.toLong())
-            .orderBy(*paginationStrategy(parameter.page.getSortedBy()))
+            .orderBy(*paginationStrategy(parameter.page.sortedBy))
     }
 
     private fun filterStrategy(filters: SearchFilterDto): BooleanBuilder {

@@ -40,10 +40,10 @@ data class SearchFilterDto(
                                 isContainedBrandName = true
                                 brandNames.add(name)
                             }
-                            ?: EquipmentType.findContains(it)?.let { type ->
+                            ?: EquipmentType.find(it)?.let { type ->
                                 isContainedEquipmentType = true
                                 equipmentTypes.add(type)
-                            } ?: EquipmentType.findContainsKo(it)?.let { type ->
+                            } ?: EquipmentType.findKo(it)?.let { type ->
                             isContainedEquipmentType = true
                             equipmentTypes.add(type)
                         } ?: keywordList.add(it)
