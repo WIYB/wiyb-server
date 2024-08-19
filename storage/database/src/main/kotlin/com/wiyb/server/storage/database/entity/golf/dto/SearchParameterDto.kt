@@ -3,23 +3,31 @@ package com.wiyb.server.storage.database.entity.golf.dto
 import com.wiyb.server.storage.database.entity.golf.constant.SearchSortedBy
 
 data class SearchParameterDto(
-    val keyword: String? = null,
     val filters: SearchFilterDto,
-    val sortedBy: SearchSortedBy
+    val page: SearchPaginationDto
 ) {
     companion object {
         // todo: domain 모듈 분리하면 SearchQueryDto로 parameter 수정
         fun fromQuery(
-            keyword: String?,
-            filters: String?,
-            sort: String?
+            keyword: String,
+            filters: String,
+            sort: String,
+            contextId: String?,
+            offset: Int,
+            size: Int
         ): SearchParameterDto {
-            val filterList = (filters?.split(",") ?: emptyList()).toMutableList()
+            val keywordList = keyword.trim().split("\\s+".toRegex())
+            val filterList = filters.split(",").toMutableList()
 
             return SearchParameterDto(
-                keyword = keyword,
-                filters = SearchFilterDto.fromFilter(filterList),
-                sortedBy = sort?.let { SearchSortedBy.fromCode(it) } ?: SearchSortedBy.REVIEW_COUNT_DESC
+                filters = SearchFilterDto.fromFilter(keywordList, filterList),
+                page =
+                    SearchPaginationDto.fromQuery(
+                        contextId = contextId,
+                        offset = offset,
+                        size = size,
+                        sortedBy = SearchSortedBy.fromCode(sort)
+                    )
             )
         }
     }

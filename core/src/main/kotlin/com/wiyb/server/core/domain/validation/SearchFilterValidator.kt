@@ -22,7 +22,7 @@ class SearchFilterValidator : ConstraintValidator<SearchFilterKeywords, CharSequ
         value: CharSequence?,
         context: ConstraintValidatorContext
     ): Boolean =
-        if (value == null) {
+        if (value.isNullOrBlank()) {
             true
         } else {
             acceptedValues.containsAll(value.split(',').map { it.uppercase() })

@@ -26,6 +26,8 @@ enum class EquipmentType(
 
         fun find(code: String): EquipmentType? = entries.find { it.code.lowercase() == code.lowercase() }
 
+        fun findKo(code: String): EquipmentType? = entries.find { it.codeKo == code }
+
         fun findContains(code: String): EquipmentType? = entries.find { it.code.lowercase().contains(code.lowercase()) }
 
         fun findContainsKo(code: String): EquipmentType? = entries.find { it.codeKo.contains(code) }

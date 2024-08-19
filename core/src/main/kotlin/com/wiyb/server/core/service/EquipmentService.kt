@@ -8,7 +8,7 @@ import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
-import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDtoV2
+import com.wiyb.server.storage.database.entity.golf.dto.SearchResultDto
 import com.wiyb.server.storage.database.repository.golf.EquipmentRepository
 import com.wiyb.server.storage.database.repository.golf.EquipmentReviewRepository
 import com.wiyb.server.storage.database.repository.golf.detail.wrapper.EquipmentDetailRepositoryWrapper
@@ -41,16 +41,8 @@ class EquipmentService(
 
     fun findSimpleReviewByEquipmentId(id: Long) = equipmentReviewRepository.findSimpleByEquipmentId(id)
 
-    // todo: 통합 검색 method 통합 예정
-    fun findBySearchParameters(dto: SearchParameterDto): List<EquipmentSimpleDto> =
-        equipmentRepository.findBySearchParameters(
-            dto.keyword,
-            dto.filters,
-            dto.sortedBy
-        )
-
-    fun findBySearchParametersV2(dto: SearchParameterDtoV2): List<EquipmentSimpleDto> = equipmentRepository.findBySearchParametersV2(dto)
-    // =============================
+    fun findBySearchParameters(dto: SearchParameterDto): SearchResultDto<EquipmentSimpleDto> =
+        equipmentRepository.findBySearchParameters(dto)
 
     fun findMostViewedProduct(type: EquipmentType?): List<EquipmentSimpleDto> = equipmentRepository.findMostViewedProduct(type)
 
