@@ -36,7 +36,7 @@ class ProductViewFacade(
                     }
                 }
 
-                return EquipmentCacheMapper.fromCachedDtoList(products, range)
+                return EquipmentCacheMapper.toList(products, range)
             }
 
             else -> {

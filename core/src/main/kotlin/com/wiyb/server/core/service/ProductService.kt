@@ -29,7 +29,7 @@ class ProductService(
         cachedProductRepository.save(product)
     }
 
-    fun findById(id: Long): CachedProduct = cachedProductRepository.findById(id).orElseThrow()
+    fun findById(id: Long): CachedProduct? = cachedProductRepository.findById(id).orElse(null)
 
     fun findAll(): List<CachedProduct> = cachedProductRepository.findAll()
 

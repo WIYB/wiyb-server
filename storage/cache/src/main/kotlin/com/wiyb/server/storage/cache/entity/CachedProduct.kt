@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.redis.core.index.Indexed
 import java.io.Serializable
 
-@RedisHash("product_view_count")
+@RedisHash("cached_product")
 data class CachedProduct(
     @Id
     val id: Long,

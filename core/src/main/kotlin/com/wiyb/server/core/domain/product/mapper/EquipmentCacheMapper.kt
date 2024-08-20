@@ -3,11 +3,12 @@ package com.wiyb.server.core.domain.product.mapper
 import TimeRange
 import com.wiyb.server.storage.cache.entity.CachedProduct
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
+import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 
 class EquipmentCacheMapper {
     companion object {
-        fun fromSimpleDto(dto: EquipmentSimpleDto): CachedProduct =
+        fun to(dto: EquipmentDto): CachedProduct =
             CachedProduct(
                 dto.id.toLong(),
                 dto.brand,
@@ -18,9 +19,18 @@ class EquipmentCacheMapper {
                 dto.imageUrls
             )
 
-        fun fromSimpleDtoList(dtoList: List<EquipmentSimpleDto>): List<CachedProduct> = dtoList.map { fromSimpleDto(it) }
+        fun to(dto: EquipmentSimpleDto): CachedProduct =
+            CachedProduct(
+                dto.id.toLong(),
+                dto.brand,
+                dto.type.toString(),
+                dto.name,
+                dto.reviewCount,
+                dto.releasedYear,
+                dto.imageUrls
+            )
 
-        fun fromCachedDto(
+        fun to(
             dto: CachedProduct,
             range: TimeRange
         ): EquipmentSimpleDto =
@@ -35,9 +45,11 @@ class EquipmentCacheMapper {
                 dto.imageUrls
             )
 
-        fun fromCachedDtoList(
+        fun toList(dtoList: List<EquipmentSimpleDto>): List<CachedProduct> = dtoList.map { to(it) }
+
+        fun toList(
             dtoList: List<CachedProduct>,
             range: TimeRange
-        ): List<EquipmentSimpleDto> = dtoList.map { fromCachedDto(it, range) }
+        ): List<EquipmentSimpleDto> = dtoList.map { to(it, range) }
     }
 }
