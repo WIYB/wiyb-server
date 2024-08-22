@@ -16,8 +16,8 @@ data class SearchParameterDto(
             offset: Int,
             size: Int
         ): SearchParameterDto {
-            val keywordList = keyword.trim().split("\\s+".toRegex())
-            val filterList = filters.split(",").toMutableList()
+            val keywordList = keyword.trim().split("\\s+".toRegex()).filter { it.isNotBlank() }
+            val filterList = filters.split(",").toMutableList().filter { it.isNotBlank() }
 
             return SearchParameterDto(
                 filters = SearchFilterDto.fromFilter(keywordList, filterList),
