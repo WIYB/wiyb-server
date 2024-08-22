@@ -38,6 +38,9 @@ cloud:
     region:
       static: ap-northeast-2
 
+youtube:
+  api:
+    key: ${YOUTUBE_API_KEY}
 
 ---
 spring.config.activate.on-profile: local
