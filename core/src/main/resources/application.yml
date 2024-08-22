@@ -4,6 +4,7 @@ spring.profiles.active: local
 spring:
   config:
     origin:
+      whitelist: ${WHITELIST_ORIGIN:http://localhost:3000}
       client: ${CLIENT_ORIGIN:http://localhost:3000}
       server: ${SERVER_ORIGIN:http://localhost:8080}
       root-domain: ${ROOT_DOMAIN:localhost}
