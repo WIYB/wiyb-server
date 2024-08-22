@@ -16,8 +16,9 @@ data class SearchResultDto<T>(
                     SearchMetadataDto(
                         contextId = contextId,
                         offset = page.number + 1,
-                        total = page.totalPages,
+                        totalOffset = page.totalPages,
                         size = page.content.size,
+                        totalSize = page.totalElements.toInt(),
                         isEmpty = page.isEmpty,
                         isLast = page.isLast
                     ),

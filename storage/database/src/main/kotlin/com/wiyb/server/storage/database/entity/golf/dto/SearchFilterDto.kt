@@ -15,49 +15,43 @@ data class SearchFilterDto(
             keywords: List<String>,
             filters: List<String>
         ): SearchFilterDto {
-            when (keywords.size + filters.size) {
-                0 -> return SearchFilterDto()
+            val keywordList = mutableListOf<String>()
+            val brandNames = mutableListOf<BrandName>()
+            val equipmentTypes = mutableListOf<EquipmentType>()
+            var isContainedBrandName = false
+            var isContainedEquipmentType = false
 
-                else -> {
-                    val keywordList = mutableListOf<String>()
-                    val brandNames = mutableListOf<BrandName>()
-                    val equipmentTypes = mutableListOf<EquipmentType>()
-                    var isContainedBrandName = false
-                    var isContainedEquipmentType = false
-
-                    filters.forEach {
-                        BrandName.findContains(it)?.let { name -> brandNames.add(name) }
-                            ?: BrandName.findContainsKo(it)?.let { name -> brandNames.add(name) }
-                            ?: EquipmentType.findContains(it)?.let { type -> equipmentTypes.add(type) }
-                    }
-
-                    keywords.forEach {
-                        BrandName.findContains(it)?.let { name ->
-                            isContainedBrandName = true
-                            brandNames.add(name)
-                        }
-                            ?: BrandName.findContainsKo(it)?.let { name ->
-                                isContainedBrandName = true
-                                brandNames.add(name)
-                            }
-                            ?: EquipmentType.find(it)?.let { type ->
-                                isContainedEquipmentType = true
-                                equipmentTypes.add(type)
-                            } ?: EquipmentType.findKo(it)?.let { type ->
-                            isContainedEquipmentType = true
-                            equipmentTypes.add(type)
-                        } ?: keywordList.add(it)
-                    }
-
-                    return SearchFilterDto(
-                        keywordList,
-                        brandNames,
-                        equipmentTypes,
-                        isContainedBrandName,
-                        isContainedEquipmentType
-                    )
-                }
+            filters.forEach {
+                BrandName.findContains(it)?.let { name -> brandNames.add(name) }
+                    ?: BrandName.findContainsKo(it)?.let { name -> brandNames.add(name) }
+                    ?: EquipmentType.findContains(it)?.let { type -> equipmentTypes.add(type) }
             }
+
+            keywords.forEach {
+                BrandName.findContains(it)?.let { name ->
+                    isContainedBrandName = true
+                    brandNames.add(name)
+                }
+                    ?: BrandName.findContainsKo(it)?.let { name ->
+                        isContainedBrandName = true
+                        brandNames.add(name)
+                    }
+                    ?: EquipmentType.find(it)?.let { type ->
+                        isContainedEquipmentType = true
+                        equipmentTypes.add(type)
+                    } ?: EquipmentType.findKo(it)?.let { type ->
+                    isContainedEquipmentType = true
+                    equipmentTypes.add(type)
+                } ?: keywordList.add(it)
+            }
+
+            return SearchFilterDto(
+                keywordList,
+                brandNames,
+                equipmentTypes,
+                isContainedBrandName,
+                isContainedEquipmentType
+            )
         }
     }
 }
