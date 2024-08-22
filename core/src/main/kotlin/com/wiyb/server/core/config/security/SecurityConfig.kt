@@ -7,6 +7,7 @@ import com.wiyb.server.core.handler.auth.CustomAuthenticationFailureHandler
 import com.wiyb.server.core.handler.auth.CustomAuthenticationSuccessHandler
 import com.wiyb.server.core.handler.auth.CustomLogoutSuccessHandler
 import com.wiyb.server.core.service.CustomOAuth2UserService
+import com.wiyb.server.core.service.CustomOidcUserService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
@@ -22,6 +23,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
@@ -32,9 +35,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 class SecurityConfig(
+    private val clientRegistrationRepository: ClientRegistrationRepository,
     private val customOAuth2UserService: CustomOAuth2UserService,
+    private val customOidcUserService: CustomOidcUserService,
     private val tokenAuthenticationFilter: TokenAuthenticationFilter,
     private val customAuthenticationSuccessHandler: CustomAuthenticationSuccessHandler,
+    @Value("\${spring.config.origin.whitelist}")
+    private val whitelist: List<String>,
     @Value("\${spring.config.origin.client}")
     private val clientOrigin: String
 ) {
@@ -95,13 +102,38 @@ class SecurityConfig(
         }
 
         http
+            .authenticationProvider(
+                CustomAuthenticationProvider(
+                    DefaultAuthorizationCodeTokenResponseClient(),
+                    customOAuth2UserService,
+                    customOidcUserService
+                )
+            ).authenticationProvider(
+                CustomAuthenticationProvider(
+                    DefaultAuthorizationCodeTokenResponseClient(),
+                    customOAuth2UserService,
+                    customOidcUserService
+                )
+            )
+
+        http
             .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(TokenExceptionFilter(), tokenAuthenticationFilter::class.java)
 
         http.oauth2Login {
             it
-                .userInfoEndpoint { u -> u.userService(customOAuth2UserService) }
-                .successHandler(customAuthenticationSuccessHandler)
+                .authorizationEndpoint { endpoint ->
+                    endpoint.authorizationRequestResolver(
+                        CustomAuthorizationRequestResolver(
+                            clientRegistrationRepository,
+                            "/oauth2/authorization"
+                        )
+                    )
+                }.userInfoEndpoint { endpoint ->
+                    endpoint
+                        .userService(customOAuth2UserService)
+                        .oidcUserService(customOidcUserService)
+                }.successHandler(customAuthenticationSuccessHandler)
                 .failureHandler(CustomAuthenticationFailureHandler(clientOrigin))
         }
 
@@ -132,7 +164,7 @@ class SecurityConfig(
 
         config.addAllowedHeader("*")
         config.addAllowedMethod("*")
-        config.allowedOrigins = listOf(clientOrigin)
+        config.allowedOrigins = whitelist
         config.allowCredentials = true
         source.registerCorsConfiguration("/**", config)
 

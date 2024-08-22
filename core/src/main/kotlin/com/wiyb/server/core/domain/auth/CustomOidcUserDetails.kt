@@ -10,12 +10,9 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.oauth2.core.user.OAuth2User
 import java.util.Collections
 
-data class CustomOAuth2UserDetails(
+data class CustomOidcUserDetails(
     val user: User,
-    private var attributes: Map<String, Any>,
-    private var claims: MutableMap<String, Any>? = null,
-    private var userInfo: OidcUserInfo? = null,
-    private var idToken: OidcIdToken? = null
+    private var attributes: Map<String, Any>
 ) : UserDetails,
     OAuth2User,
     OidcUser {
@@ -25,11 +22,17 @@ data class CustomOAuth2UserDetails(
 
     override fun getAuthorities(): Collection<GrantedAuthority?> = Collections.singletonList(SimpleGrantedAuthority(user.role.getRole()))
 
-    override fun getClaims(): MutableMap<String, Any>? = this.claims
+    override fun getClaims(): MutableMap<String, Any> {
+        TODO("Not yet implemented")
+    }
 
-    override fun getUserInfo(): OidcUserInfo? = this.userInfo
+    override fun getUserInfo(): OidcUserInfo {
+        TODO("Not yet implemented")
+    }
 
-    override fun getIdToken(): OidcIdToken? = this.idToken
+    override fun getIdToken(): OidcIdToken {
+        TODO("Not yet implemented")
+    }
 
     override fun getUsername(): String = "unknown"
 
