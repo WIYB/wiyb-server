@@ -3,11 +3,14 @@ package com.wiyb.server.core.facade
 import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
 import com.wiyb.server.core.domain.product.PostProductReviewDto
+import com.wiyb.server.core.domain.product.ProductDetailDto
+import com.wiyb.server.core.domain.product.mapper.ProductMapper
+import com.wiyb.server.core.domain.search.mapper.SearchKeywordMapper
 import com.wiyb.server.core.service.BrandService
 import com.wiyb.server.core.service.EquipmentService
 import com.wiyb.server.core.service.UserService
+import com.wiyb.server.core.service.YoutubeService
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
-import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 
@@ -15,7 +18,8 @@ import org.springframework.stereotype.Component
 class ProductFacade(
     private val userService: UserService,
     private val equipmentService: EquipmentService,
-    private val brandService: BrandService
+    private val brandService: BrandService,
+    private val youtubeService: YoutubeService
 ) {
     fun findBrandList() = brandService.findBrandList()
 
@@ -24,11 +28,13 @@ class ProductFacade(
     fun getProductDetail(
         productId: Long,
         type: EquipmentType
-    ): EquipmentDto {
+    ): ProductDetailDto {
         val equipmentDto = equipmentService.findOneWithDetailById(productId, type)
+        // todo: 결과 캐싱(일주일? 하루?) 및 캐싱된 결과가 있을 경우 캐싱된 결과 반환
+        val youtubeResults = youtubeService.search(SearchKeywordMapper.to(equipmentDto))
         equipmentDto.reviews = equipmentService.findSimpleReviewByEquipmentId(productId)
 
-        return equipmentDto
+        return ProductMapper.to(equipmentDto, youtubeResults)
     }
 
     fun postProductReview(
