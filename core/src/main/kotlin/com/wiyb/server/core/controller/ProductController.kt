@@ -49,7 +49,7 @@ class ProductController(
     @PostMapping("/{productId}/review")
     fun postProductReview(
         @Valid path: ProductIdDto,
-        @RequestBody dto: PostProductReviewDto
+        @RequestBody @Valid dto: PostProductReviewDto
     ): ResponseEntity<Unit> {
         productFacade.postProductReview(path.productId, dto)
         return ResponseEntity.ok().build()
