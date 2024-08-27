@@ -4,6 +4,7 @@ import com.wiyb.server.storage.database.converter.FloatListConverter
 import com.wiyb.server.storage.database.converter.StringListConverter
 import com.wiyb.server.storage.database.entity.common.BaseEntity
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
+import com.wiyb.server.storage.database.entity.golf.dto.metric.BaseMetric
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Convert
@@ -43,7 +44,7 @@ class Equipment(
 
     @Convert(converter = FloatListConverter::class)
     @Column(name = "evaluation_metric_total", nullable = false)
-    var evaluationMetricTotal: List<Float> = listOf(0f, 0f, 0f, 0f, 0f, 0f)
+    var evaluationMetricTotal: List<Float> = BaseMetric.listPad()
         protected set
 
     @Column(name = "released_year")

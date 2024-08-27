@@ -260,7 +260,7 @@ create table if not exists equipment_reviews
     user_id           bigint       not null,
     equipment_id      bigint       not null,
     content           text         not null,
-    evaluation_metric varchar(255) null,
+    evaluation_metric varchar(255) not null,
     image_urls        text         null,
     created_at        datetime(6)  not null,
     updated_at        datetime(6)  not null,

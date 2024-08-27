@@ -23,7 +23,7 @@ class EquipmentReview(
     user: User,
     equipment: Equipment,
     content: String,
-    evaluationMetric: List<Float>? = null,
+    evaluationMetric: List<Float>,
     imageUrls: List<String>? = null
 ) : BaseEntity() {
     @Column(name = "content", columnDefinition = "text", nullable = false)
@@ -31,8 +31,8 @@ class EquipmentReview(
         protected set
 
     @Convert(converter = FloatListConverter::class)
-    @Column(name = "evaluation_metric")
-    var evaluationMetric: List<Float>? = evaluationMetric
+    @Column(name = "evaluation_metric", nullable = false)
+    var evaluationMetric: List<Float> = evaluationMetric
         protected set
 
     @Convert(converter = StringListConverter::class)
