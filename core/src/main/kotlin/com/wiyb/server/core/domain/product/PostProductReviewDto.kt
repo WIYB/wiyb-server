@@ -3,8 +3,9 @@ package com.wiyb.server.core.domain.product
 import com.wiyb.server.storage.database.entity.golf.Equipment
 import com.wiyb.server.storage.database.entity.golf.EquipmentReview
 import com.wiyb.server.storage.database.entity.user.User
+import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Size
+import jakarta.validation.constraints.NotNull
 import org.hibernate.validator.constraints.Length
 
 data class PostProductReviewDto(
@@ -12,8 +13,9 @@ data class PostProductReviewDto(
     @field:NotBlank
     val content: String,
     val imageUrls: List<String>? = null,
-    @field:Size(min = 6, max = 6, message = "evaluationMetric size must be 6")
-    val evaluationMetric: List<Float>? = null
+    @field:NotNull(message = "evaluation metric must be provided")
+    @field:Valid
+    val evaluationMetric: EvaluationMetricDto
 ) {
     fun toEntity(
         user: User,
@@ -23,6 +25,6 @@ data class PostProductReviewDto(
         equipment = equipment,
         content = content,
         imageUrls = imageUrls,
-        evaluationMetric = evaluationMetric
+        evaluationMetric = evaluationMetric.flatten(equipment.type)
     )
 }

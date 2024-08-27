@@ -4,6 +4,7 @@ import com.querydsl.core.annotations.QueryProjection
 import com.wiyb.server.storage.database.entity.common.BaseEntity
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.detail.mapper.EquipmentDetailMapper
+import com.wiyb.server.storage.database.entity.golf.dto.metric.BaseMetric
 
 data class EquipmentDto
     @QueryProjection
@@ -20,16 +21,17 @@ data class EquipmentDto
         val evaluatedCount: Long?,
         private val evaluationMetricTotal: List<Float>?
     ) {
-        val evaluationMetricAverage: List<Float>? =
-            evaluationMetricTotal?.let {
-                if (evaluatedCount == null || evaluatedCount == 0L) {
-                    listOf(0f, 0f, 0f, 0f, 0f, 0f)
-                } else {
-                    evaluationMetricTotal.map { elem ->
-                        elem / evaluatedCount
+        val evaluationMetricAverage: BaseMetric? =
+            evaluationMetricTotal
+                ?.let {
+                    if (evaluatedCount == null || evaluatedCount == 0L) {
+                        BaseMetric.listPad()
+                    } else {
+                        evaluationMetricTotal.map { elem ->
+                            elem / evaluatedCount
+                        }
                     }
-                }
-            }
+                }?.let { BaseMetric.expand(type, it) }
 
         val detail = EquipmentDetailMapper.invoke(equipmentDetail)
         var reviews: List<EquipmentReviewDto>? = null

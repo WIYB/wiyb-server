@@ -29,12 +29,9 @@ import com.wiyb.server.storage.database.repository.golf.detail.PutterRepository
 import com.wiyb.server.storage.database.repository.golf.detail.ShaftRepository
 import com.wiyb.server.storage.database.repository.golf.detail.WedgeRepository
 import com.wiyb.server.storage.database.repository.golf.detail.WoodRepository
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer
-import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
-import kotlin.test.Test
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
@@ -98,7 +95,7 @@ class EquipmentRepositoryTest(
 //            .execute()
     }
 
-    @BeforeAll
+//    @BeforeAll
     fun beforeAll() {
         val start = 2
         val end = 52
@@ -121,8 +118,8 @@ class EquipmentRepositoryTest(
         }
     }
 
-    @Test
-    @Order(1)
+//    @Test
+//    @Order(1)
     fun brand() {
         val start = 2
         val end = 52
@@ -130,8 +127,8 @@ class EquipmentRepositoryTest(
         setSheetId("Brand", start, end, brands.values.map { it.id })
     }
 
-    @Test
-    @Order(2)
+//    @Test
+//    @Order(2)
     fun driver() {
         val start = 2
         val end = 98
@@ -179,8 +176,8 @@ class EquipmentRepositoryTest(
         println(values[2].size)
     }
 
-    @Test
-    @Order(3)
+//    @Test
+//    @Order(3)
     fun wood() {
         val start = 2
         val end = 73
@@ -229,8 +226,8 @@ class EquipmentRepositoryTest(
         setSheetId("Wood", start, end, woods.map { it.id })
     }
 
-    @Test
-    @Order(4)
+//    @Test
+//    @Order(4)
     fun hybrid() {
         val start = 2
         val end = 47
@@ -279,8 +276,8 @@ class EquipmentRepositoryTest(
         setSheetId("Utility", start, end, hybrids.map { it.id })
     }
 
-    @Test
-    @Order(5)
+//    @Test
+//    @Order(5)
     fun iron() {
         val start = 2
         val end = 182
@@ -333,8 +330,8 @@ class EquipmentRepositoryTest(
         setSheetId("Iron", start, end, irons.map { it.id })
     }
 
-    @Test
-    @Order(6)
+//    @Test
+//    @Order(6)
     fun wedge() {
         val start = 2
         val end = 321
@@ -386,8 +383,8 @@ class EquipmentRepositoryTest(
     }
 
     // todo: 2번 빠짐
-    @Test
-    @Order(7)
+//    @Test
+//    @Order(7)
     fun putter() {
         val start = 2
         val end = 209
@@ -437,8 +434,8 @@ class EquipmentRepositoryTest(
         setSheetId("Putter", start, end, putters.map { it.id })
     }
 
-    @Test
-    @Order(8)
+//    @Test
+//    @Order(8)
     fun shaft() {
         val start = 2
         val end = 1809
@@ -494,8 +491,8 @@ class EquipmentRepositoryTest(
         setSheetId("Shaft", start, end, shafts.map { it.id })
     }
 
-    @Test
-    @Order(9)
+//    @Test
+//    @Order(9)
     fun grip() {
         val start = 2
         val end = 299
@@ -549,8 +546,8 @@ class EquipmentRepositoryTest(
         setSheetId("Grip", start, end, grips.map { it.id })
     }
 
-    @Test
-    @Order(10)
+//    @Test
+//    @Order(10)
     fun ball() {
         val start = 2
         val end = 26

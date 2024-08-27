@@ -49,12 +49,10 @@ class ProductFacade(
             throw CommonException(ErrorCode.ALREADY_REVIEWED)
         }
 
-        equipmentService.postProductReview(dto.toEntity(user, equipment))
+        val review = dto.toEntity(user, equipment)
+        equipmentService.postProductReview(review)
 
-        // todo: 추후 기획 완성 시, 장비 별 metric 집계 로직 세분화
-        if (dto.evaluationMetric != null) {
-            equipment.addEvaluationMetric(dto.evaluationMetric)
-            equipmentService.saveEquipment(equipment)
-        }
+        equipment.addEvaluationMetric(review.evaluationMetric)
+        equipmentService.saveEquipment(equipment)
     }
 }
