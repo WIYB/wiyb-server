@@ -17,7 +17,9 @@ import org.hibernate.annotations.SQLRestriction
 class Driver(
     equipment: Equipment,
     loftDegree: String? = null,
-    volume: Float? = null
+    volume: Float? = null,
+    isLoftChangeable: Boolean? = null,
+    isWeightChangeable: Boolean? = null
 ) : BaseEntity(equipment.id),
     AbstractDriver {
     // 로프트 각도
@@ -28,6 +30,16 @@ class Driver(
     // 드라이버 체적
     @Column(name = "volume")
     var volume: Float? = volume
+        protected set
+
+    // 로프트 변경 가능 여부
+    @Column(name = "is_loft_changeable")
+    var isLoftChangeable: Boolean? = isLoftChangeable
+        protected set
+
+    // 무게추 변경 가능 여부
+    @Column(name = "is_weight_changeable")
+    var isWeightChangeable: Boolean? = isWeightChangeable
         protected set
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)

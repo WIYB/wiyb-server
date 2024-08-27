@@ -8,4 +8,6 @@ data class DriverDto(
 ) : AbstractDriver {
     val loftDegree: String? = equipment.loftDegree
     val volume: Float? = equipment.volume
+    val isLoftChangeable: Boolean? = equipment.isLoftChangeable
+    val isWeightChangeable: Boolean? = equipment.isWeightChangeable
 }
