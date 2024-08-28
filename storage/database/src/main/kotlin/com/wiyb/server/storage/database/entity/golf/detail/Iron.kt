@@ -22,8 +22,6 @@ class Iron(
     designType: String? = null,
     numbers: List<String>? = null,
     loftDegree: List<String>? = null,
-    loft7Degree: String? = null,
-    loftPDegree: String? = null,
     lieAngle: List<String>? = null
 ) : BaseEntity(equipment.id),
     AbstractIron {
@@ -47,16 +45,6 @@ class Iron(
     @Convert(converter = StringListConverter::class)
     @Column(name = "loft_degree")
     var loftDegree: List<String>? = loftDegree
-        protected set
-
-    // 7번 아이언의 로프트 각도
-    @Column(name = "loft_7_degree")
-    var loft7Degree: String? = loft7Degree
-        protected set
-
-    // P번 아이언의 로프트 각도
-    @Column(name = "loft_p_degree")
-    var loftPDegree: String? = loftPDegree
         protected set
 
     // 라이각

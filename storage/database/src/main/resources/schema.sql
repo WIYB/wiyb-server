@@ -106,13 +106,15 @@ create table if not exists equipments
 
 create table if not exists drivers
 (
-    id           bigint       not null
+    id                   bigint       not null
         primary key,
-    loft_degree  varchar(255) null,
-    volume       float        null,
-    created_at   datetime(6)  not null,
-    updated_at   datetime(6)  not null,
-    deleted_at   datetime(6)  null,
+    volume               float        null,
+    loft_degree          varchar(255) null,
+    is_loft_changeable   boolean      null,
+    is_weight_changeable boolean      null,
+    created_at           datetime(6)  not null,
+    updated_at           datetime(6)  not null,
+    deleted_at           datetime(6)  null,
 
     -- Equipment fk
     constraint fk_drivers_equipments_equipment_id foreign key (id) references equipments (id)
@@ -120,12 +122,15 @@ create table if not exists drivers
 
 create table if not exists woods
 (
-    id           bigint       not null
+    id                   bigint       not null
         primary key,
-    loft_degree  varchar(255) null,
-    numbers      varchar(255) null,
-    created_at   datetime(6)  not null,
-    updated_at   datetime(6)  not null,
+    numbers              varchar(255) null,
+    loft_degree          varchar(255) null,
+    lie_angle            varchar(255) null,
+    is_loft_changeable   boolean      null,
+    is_weight_changeable boolean      null,
+    created_at           datetime(6)  not null,
+    updated_at           datetime(6)  not null,
     deleted_at   datetime(6)  null,
 
     -- Equipment fk
@@ -134,13 +139,16 @@ create table if not exists woods
 
 create table if not exists hybrids
 (
-    id           bigint       not null
+    id                   bigint       not null
         primary key,
-    loft_degree  varchar(255) null,
-    numbers      varchar(255) null,
-    created_at   datetime(6)  not null,
-    updated_at   datetime(6)  not null,
-    deleted_at   datetime(6)  null,
+    numbers              varchar(255) null,
+    loft_degree          varchar(255) null,
+    lie_angle            varchar(255) null,
+    is_loft_changeable   boolean      null,
+    is_weight_changeable boolean      null,
+    created_at           datetime(6)  not null,
+    updated_at           datetime(6)  not null,
+    deleted_at           datetime(6)  null,
 
     -- Equipment fk
     constraint fk_hybrids_equipments_equipment_id foreign key (id) references equipments (id)
@@ -150,12 +158,11 @@ create table if not exists irons
 (
     id           bigint       not null
         primary key,
-    loft_degree   varchar(255) null,
-    numbers       varchar(255) null,
     produce_type  varchar(255) null,
     design_type   varchar(255) null,
-    loft_7_degree varchar(255) null,
-    loft_p_degree varchar(255) null,
+    numbers       varchar(255) null,
+    loft_degree   varchar(255) null,
+    lie_angle     varchar(255) null,
     created_at    datetime(6)  not null,
     updated_at    datetime(6)  not null,
     deleted_at    datetime(6)  null,
@@ -168,8 +175,9 @@ create table if not exists wedges
 (
     id           bigint       not null
         primary key,
-    loft_degree  varchar(255) null,
     produce_type varchar(255) null,
+    model        varchar(255) null,
+    loft_degree  varchar(255) null,
     bounce       varchar(255) null,
     grind        varchar(255) null,
     created_at   datetime(6)  not null,

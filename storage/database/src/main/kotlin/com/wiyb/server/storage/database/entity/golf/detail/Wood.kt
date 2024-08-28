@@ -18,23 +18,23 @@ import org.hibernate.annotations.SQLRestriction
 @SQLDelete(sql = "UPDATE woods SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 class Wood(
     equipment: Equipment,
-    loftDegree: List<String>? = null,
     numbers: List<String>? = null,
+    loftDegree: List<String>? = null,
     lieAngle: List<String>? = null,
     isLoftChangeable: Boolean? = null,
     isWeightChangeable: Boolean? = null
 ) : BaseEntity(equipment.id),
     AbstractWood {
-    // 로프트 각도
-    @Convert(converter = StringListConverter::class)
-    @Column(name = "loft_degree")
-    var loftDegree: List<String>? = loftDegree
-        protected set
-
     // 헤드 번호들 ex) [3, 5, 7]
     @Convert(converter = StringListConverter::class)
     @Column(name = "numbers")
     var numbers: List<String>? = numbers
+        protected set
+
+    // 로프트 각도
+    @Convert(converter = StringListConverter::class)
+    @Column(name = "loft_degree")
+    var loftDegree: List<String>? = loftDegree
         protected set
 
     // 라이각
