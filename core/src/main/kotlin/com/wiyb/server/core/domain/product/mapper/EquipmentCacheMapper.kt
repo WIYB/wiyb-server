@@ -35,14 +35,14 @@ class EquipmentCacheMapper {
             range: TimeRange
         ): EquipmentSimpleDto =
             EquipmentSimpleDto(
-                dto.id.toString(),
-                dto.brand,
-                EquipmentType.fromCode(dto.type),
-                dto.name,
-                if (range == TimeRange.WEEKLY) dto.weeklyViewCount else dto.dailyViewCount,
-                dto.reviewCount,
-                dto.releasedYear,
-                dto.imageUrls
+                id = dto.id.toString(),
+                brand = dto.brand,
+                type = EquipmentType.fromCode(dto.type),
+                name = dto.name,
+                viewCount = if (range == TimeRange.WEEKLY) dto.weeklyViewCount else dto.dailyViewCount,
+                reviewCount = dto.reviewCount,
+                releasedYear = dto.releasedYear,
+                imageUrls = dto.imageUrls
             )
 
         fun toList(dtoList: List<EquipmentSimpleDto>): List<CachedProduct> = dtoList.map { to(it) }

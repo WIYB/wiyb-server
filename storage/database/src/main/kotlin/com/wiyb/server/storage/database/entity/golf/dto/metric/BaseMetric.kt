@@ -78,5 +78,19 @@ abstract class BaseMetric : EvaluatedMetric {
                 else -> NotSupportedMetric()
             }
         }
+
+        fun average(
+            type: EquipmentType,
+            reviewCount: Long,
+            data: List<Float>
+        ): Float {
+            if (reviewCount <= 0) return 0f
+
+            return when (type) {
+                EquipmentType.PUTTER -> listOf(data[0], data[1], data[2], data[3])
+                EquipmentType.SHAFT, EquipmentType.GRIP -> listOf(data[0], data[1], data[2])
+                else -> data
+            }.average().toFloat() / reviewCount
+        }
     }
 }
