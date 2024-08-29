@@ -1,9 +1,9 @@
 package com.wiyb.server.storage.database.repository.golf.custom
 
+import com.wiyb.server.storage.database.entity.common.dto.SearchResultDto
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
-import com.wiyb.server.storage.database.entity.golf.dto.SearchResultDto
 
 interface EquipmentCustomRepository {
     fun findSimpleById(id: Long): EquipmentSimpleDto?

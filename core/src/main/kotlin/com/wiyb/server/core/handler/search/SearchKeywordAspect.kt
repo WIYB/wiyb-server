@@ -1,8 +1,8 @@
 package com.wiyb.server.core.handler.search
 
 import com.wiyb.server.core.service.SearchService
+import com.wiyb.server.storage.database.entity.common.dto.SearchResultDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
-import com.wiyb.server.storage.database.entity.golf.dto.SearchResultDto
 import org.aspectj.lang.annotation.AfterReturning
 import org.aspectj.lang.annotation.Aspect
 import org.springframework.http.ResponseEntity

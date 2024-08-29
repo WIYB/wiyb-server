@@ -2,13 +2,13 @@ package com.wiyb.server.core.service
 
 import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
+import com.wiyb.server.storage.database.entity.common.dto.SearchResultDto
 import com.wiyb.server.storage.database.entity.golf.Equipment
 import com.wiyb.server.storage.database.entity.golf.EquipmentReview
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
-import com.wiyb.server.storage.database.entity.golf.dto.SearchResultDto
 import com.wiyb.server.storage.database.entity.user.User
 import com.wiyb.server.storage.database.entity.user.UserEquipmentBookmark
 import com.wiyb.server.storage.database.repository.golf.EquipmentRepository

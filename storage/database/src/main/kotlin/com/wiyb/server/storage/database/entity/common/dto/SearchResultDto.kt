@@ -1,4 +1,4 @@
-package com.wiyb.server.storage.database.entity.golf.dto
+package com.wiyb.server.storage.database.entity.common.dto
 
 import org.springframework.data.domain.Page
 

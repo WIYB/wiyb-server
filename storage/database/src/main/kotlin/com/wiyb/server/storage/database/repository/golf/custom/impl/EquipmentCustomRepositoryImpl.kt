@@ -3,6 +3,7 @@ package com.wiyb.server.storage.database.repository.golf.custom.impl
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.jpa.JPQLQuery
+import com.wiyb.server.storage.database.entity.common.dto.SearchResultDto
 import com.wiyb.server.storage.database.entity.golf.Equipment
 import com.wiyb.server.storage.database.entity.golf.QBrand.brand
 import com.wiyb.server.storage.database.entity.golf.QEquipment.equipment
@@ -12,7 +13,6 @@ import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchFilterDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
-import com.wiyb.server.storage.database.entity.golf.dto.SearchResultDto
 import com.wiyb.server.storage.database.repository.golf.custom.EquipmentCustomRepository
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
