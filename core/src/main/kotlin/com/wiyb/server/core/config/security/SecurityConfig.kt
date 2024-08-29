@@ -57,8 +57,6 @@ class SecurityConfig(
                 .withDefaultRolePrefix()
                 .role("ADMIN")
                 .implies("USER")
-                .role("USER")
-                .implies("GUEST")
                 .build()
 
         @Bean
