@@ -11,6 +11,7 @@ import com.wiyb.server.core.service.EquipmentService
 import com.wiyb.server.core.service.UserService
 import com.wiyb.server.core.service.YoutubeService
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
+import jakarta.transaction.Transactional
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 
@@ -37,6 +38,7 @@ class ProductFacade(
         return ProductMapper.to(equipmentDto, youtubeResults)
     }
 
+    @Transactional
     fun postProductReview(
         productId: Long,
         dto: PostProductReviewDto

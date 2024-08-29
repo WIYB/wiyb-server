@@ -20,7 +20,6 @@ class ProductMapper {
                 detail = from.detail,
                 releasedYear = from.releasedYear,
                 imageUrls = from.imageUrls,
-                evaluatedCount = from.evaluatedCount,
                 evaluationMetricAverage = from.evaluationMetricAverage,
                 youtubeResults = youtubeResults,
                 reviews = from.reviews

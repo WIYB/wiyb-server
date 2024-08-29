@@ -2,7 +2,6 @@ package com.wiyb.server.storage.database.repository.golf.detail.custom.impl
 
 import com.wiyb.server.storage.database.entity.golf.QBrand.brand
 import com.wiyb.server.storage.database.entity.golf.QEquipment.equipment
-import com.wiyb.server.storage.database.entity.golf.QEquipmentReview.equipmentReview
 import com.wiyb.server.storage.database.entity.golf.detail.QWood.wood
 import com.wiyb.server.storage.database.entity.golf.detail.Wood
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
@@ -23,17 +22,15 @@ class WoodCustomRepositoryImpl :
                     brand.name,
                     equipment.type,
                     equipment.name,
-                    equipmentReview.count(),
+                    equipment.evaluatedCount,
                     wood,
                     equipment.releasedYear,
                     equipment.imageUrls,
                     equipment.viewCount,
-                    equipment.evaluatedCount,
                     equipment.evaluationMetricTotal
                 )
             ).leftJoin(wood.equipment, equipment)
             .leftJoin(equipment.brand, brand)
-            .leftJoin(equipment.mutableEquipmentReviews, equipmentReview)
             .where(wood.id.eq(id))
             .groupBy(wood.id)
             .fetchFirst()
