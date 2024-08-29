@@ -18,5 +18,6 @@ data class ProductDetailDto(
     val imageUrls: List<String>?,
     val evaluationMetricAverage: BaseMetric?,
     val youtubeResults: List<YoutubeSearchResultDto>?,
-    var reviews: List<EquipmentReviewDto>?
+    var reviews: List<EquipmentReviewDto>?,
+    var isBookmarked: Boolean = false
 )

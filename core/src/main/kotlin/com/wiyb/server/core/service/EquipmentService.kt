@@ -9,16 +9,20 @@ import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchResultDto
+import com.wiyb.server.storage.database.entity.user.User
+import com.wiyb.server.storage.database.entity.user.UserEquipmentBookmark
 import com.wiyb.server.storage.database.repository.golf.EquipmentRepository
 import com.wiyb.server.storage.database.repository.golf.EquipmentReviewRepository
 import com.wiyb.server.storage.database.repository.golf.detail.wrapper.EquipmentDetailRepositoryWrapper
+import com.wiyb.server.storage.database.repository.user.UserEquipmentBookmarkRepository
 import org.springframework.stereotype.Service
 
 @Service
 class EquipmentService(
     private val equipmentRepository: EquipmentRepository,
     private val equipmentReviewRepository: EquipmentReviewRepository,
-    private val equipmentDetailRepositoryWrapper: EquipmentDetailRepositoryWrapper
+    private val equipmentDetailRepositoryWrapper: EquipmentDetailRepositoryWrapper,
+    private val userEquipmentBookmarkRepository: UserEquipmentBookmarkRepository
 ) {
     fun findSimpleById(id: Long): EquipmentSimpleDto =
         equipmentRepository.findSimpleById(id) ?: throw CommonException(ErrorCode.PRODUCT_NOT_FOUND)
@@ -46,10 +50,20 @@ class EquipmentService(
 
     fun findMostViewedProduct(type: EquipmentType?): List<EquipmentSimpleDto> = equipmentRepository.findMostViewedProduct(type)
 
+    fun findBookmarkByUserAndEquipment(
+        userId: Long,
+        equipmentId: Long
+    ): List<Long> = userEquipmentBookmarkRepository.findAllBookmarkIdByForeign(userId, equipmentId)
+
     fun isAlreadyReviewedByUser(
         equipmentId: Long,
         userId: Long
     ): Boolean = equipmentReviewRepository.existsByEquipmentIdAndUserId(equipmentId, userId)
+
+    fun isAlreadyBookmarkedByUser(
+        userId: Long,
+        equipmentId: Long
+    ): Boolean = userEquipmentBookmarkRepository.existsByUserIdAndEquipmentId(userId = userId, equipmentId = equipmentId)
 
     fun saveEquipment(equipment: Equipment) {
         equipmentRepository.save(equipment)
@@ -57,5 +71,16 @@ class EquipmentService(
 
     fun postProductReview(equipmentReview: EquipmentReview) {
         equipmentReviewRepository.save(equipmentReview)
+    }
+
+    fun bookmarkProduct(
+        user: User,
+        equipment: Equipment
+    ) {
+        userEquipmentBookmarkRepository.save(UserEquipmentBookmark(user, equipment))
+    }
+
+    fun unBookmarkProduct(id: List<Long>) {
+        userEquipmentBookmarkRepository.deleteAllById(id)
     }
 }

@@ -300,3 +300,20 @@ create table if not exists user_equipments
     -- Equipment fk
     constraint fk_user_equipments_equipments_equipment_id foreign key (equipment_id) references equipments (id)
 );
+
+create table if not exists user_equipment_bookmarks
+(
+    id              bigint      not null
+        primary key,
+    user_id         bigint      not null,
+    equipment_id    bigint      not null,
+    created_at      datetime(6) not null,
+    updated_at      datetime(6) not null,
+    deleted_at      datetime(6) null,
+
+    -- User fk
+    constraint fk_user_equipment_bookmarks_users_user_id foreign key (user_id) references users (id),
+
+    -- Equipment fk
+    constraint fk_user_equipment_bookmarks_equipments_equipment_id foreign key (equipment_id) references equipments (id)
+);
