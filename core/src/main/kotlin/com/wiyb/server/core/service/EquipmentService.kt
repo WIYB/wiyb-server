@@ -11,10 +11,12 @@ import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchResultDto
 import com.wiyb.server.storage.database.entity.user.User
 import com.wiyb.server.storage.database.entity.user.UserEquipmentBookmark
+import com.wiyb.server.storage.database.entity.user.UserEquipmentReviewLike
 import com.wiyb.server.storage.database.repository.golf.EquipmentRepository
 import com.wiyb.server.storage.database.repository.golf.EquipmentReviewRepository
 import com.wiyb.server.storage.database.repository.golf.detail.wrapper.EquipmentDetailRepositoryWrapper
 import com.wiyb.server.storage.database.repository.user.UserEquipmentBookmarkRepository
+import com.wiyb.server.storage.database.repository.user.UserEquipmentReviewLikeRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,6 +24,7 @@ class EquipmentService(
     private val equipmentRepository: EquipmentRepository,
     private val equipmentReviewRepository: EquipmentReviewRepository,
     private val equipmentDetailRepositoryWrapper: EquipmentDetailRepositoryWrapper,
+    private val userEquipmentReviewLikeRepository: UserEquipmentReviewLikeRepository,
     private val userEquipmentBookmarkRepository: UserEquipmentBookmarkRepository
 ) {
     fun findSimpleById(id: Long): EquipmentSimpleDto =
@@ -43,12 +46,24 @@ class EquipmentService(
 
     fun findReviewByEquipmentId(id: Long) = equipmentReviewRepository.findByEquipmentId(id)
 
+    fun findReviewById(id: Long) = equipmentReviewRepository.findFirstById(id) ?: throw CommonException(ErrorCode.REVIEW_NOT_FOUND)
+
     fun findSimpleReviewByEquipmentId(id: Long) = equipmentReviewRepository.findSimpleByEquipmentId(id)
 
     fun findBySearchParameters(dto: SearchParameterDto): SearchResultDto<EquipmentSimpleDto> =
         equipmentRepository.findBySearchParameters(dto)
 
     fun findMostViewedProduct(type: EquipmentType?): List<EquipmentSimpleDto> = equipmentRepository.findMostViewedProduct(type)
+
+    fun findLikeByForeign(
+        userId: Long,
+        equipmentReviewIds: List<Long>
+    ): List<Long> = userEquipmentReviewLikeRepository.findAllLikeIdByForeign(userId, equipmentReviewIds)
+
+    fun findLikeByForeign(
+        userId: Long,
+        equipmentReviewId: Long
+    ): List<Long> = userEquipmentReviewLikeRepository.findAllLikeIdByForeign(userId, equipmentReviewId)
 
     fun findBookmarkByUserAndEquipment(
         userId: Long,
@@ -59,6 +74,11 @@ class EquipmentService(
         equipmentId: Long,
         userId: Long
     ): Boolean = equipmentReviewRepository.existsByEquipmentIdAndUserId(equipmentId, userId)
+
+    fun isAlreadyLikedReview(
+        userId: Long,
+        equipmentReviewId: Long
+    ): Boolean = userEquipmentReviewLikeRepository.existsByForeign(userId, equipmentReviewId)
 
     fun isAlreadyBookmarkedByUser(
         userId: Long,
@@ -71,6 +91,27 @@ class EquipmentService(
 
     fun postProductReview(equipmentReview: EquipmentReview) {
         equipmentReviewRepository.save(equipmentReview)
+    }
+
+    fun increaseReviewLikeCount(review: EquipmentReview) {
+        review.increaseLikeCount()
+        equipmentReviewRepository.save(review)
+    }
+
+    fun decreaseReviewLikeCount(review: EquipmentReview) {
+        review.decreaseLikeCount()
+        equipmentReviewRepository.save(review)
+    }
+
+    fun likeProductReview(
+        user: User,
+        review: EquipmentReview
+    ) {
+        userEquipmentReviewLikeRepository.save(UserEquipmentReviewLike(user, review))
+    }
+
+    fun unlikeProductReview(id: List<Long>) {
+        userEquipmentReviewLikeRepository.deleteAllById(id)
     }
 
     fun bookmarkProduct(
