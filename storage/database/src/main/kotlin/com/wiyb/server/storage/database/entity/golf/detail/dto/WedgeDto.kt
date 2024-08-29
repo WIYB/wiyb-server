@@ -6,8 +6,32 @@ import com.wiyb.server.storage.database.entity.golf.detail.common.AbstractWedge
 data class WedgeDto(
     private val equipment: Wedge
 ) : AbstractWedge {
-    val loftDegree: String? = equipment.loftDegree
+    data class WedgeLoftSpecDto(
+        val number: String?,
+        val loftDegree: String?,
+        val bounce: String?,
+        val grind: String?
+    )
+
     val produceType: String? = equipment.produceType
-    val bounce: String? = equipment.bounce
-    val grind: String? = equipment.grind
+    val loftSpec: List<WedgeLoftSpecDto>? = makeLoftSpec()
+
+    private fun makeLoftSpec(): List<WedgeLoftSpecDto>? {
+        if (equipment.model.isNullOrEmpty() ||
+            equipment.loftDegree.isNullOrEmpty() ||
+            equipment.bounce.isNullOrEmpty() ||
+            equipment.grind.isNullOrEmpty()
+        ) {
+            return null
+        }
+
+        return equipment.model!!.mapIndexed { index, model ->
+            WedgeLoftSpecDto(
+                number = model,
+                loftDegree = equipment.loftDegree!![index],
+                bounce = equipment.bounce!![index],
+                grind = equipment.grind!![index]
+            )
+        }
+    }
 }

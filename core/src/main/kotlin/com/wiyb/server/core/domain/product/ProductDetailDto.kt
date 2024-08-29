@@ -16,7 +16,6 @@ data class ProductDetailDto(
     val detail: AbstractEquipmentDetail,
     val releasedYear: String?,
     val imageUrls: List<String>?,
-    val evaluatedCount: Long?,
     val evaluationMetricAverage: BaseMetric?,
     val youtubeResults: List<YoutubeSearchResultDto>?,
     var reviews: List<EquipmentReviewDto>?

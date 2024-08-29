@@ -18,17 +18,16 @@ data class EquipmentDto
         val releasedYear: String?,
         val imageUrls: List<String>?,
         val viewCount: Long?,
-        val evaluatedCount: Long?,
         private val evaluationMetricTotal: List<Float>?
     ) {
         val evaluationMetricAverage: BaseMetric? =
             evaluationMetricTotal
                 ?.let {
-                    if (evaluatedCount == null || evaluatedCount == 0L) {
+                    if (reviewCount == 0L) {
                         BaseMetric.listPad()
                     } else {
                         evaluationMetricTotal.map { elem ->
-                            elem / evaluatedCount
+                            elem / reviewCount
                         }
                     }
                 }?.let { BaseMetric.expand(type, it) }
