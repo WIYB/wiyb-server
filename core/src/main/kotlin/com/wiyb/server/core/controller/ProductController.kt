@@ -73,9 +73,9 @@ class ProductController(
     @PostMapping("/{productId}/review/{reviewId}/like")
     fun likeProductReview(
         @Valid path: ProductReviewLikePathDto
-    ): ResponseEntity<Unit> {
+    ): ResponseEntity<ProductReviewLikePathDto> {
         productFacade.likeProductReview(path)
-        return ResponseEntity.ok().build()
+        return ResponseEntity.ok().body(path)
     }
 
     @Secured("ROLE_USER")
