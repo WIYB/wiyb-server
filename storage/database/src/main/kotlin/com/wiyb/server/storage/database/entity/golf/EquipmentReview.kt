@@ -40,6 +40,10 @@ class EquipmentReview(
     var imageUrls: List<String>? = imageUrls
         protected set
 
+    @Column(name = "like_count", nullable = false)
+    var likeCount: Int = 0
+        protected set
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     var user: User = user
@@ -49,4 +53,12 @@ class EquipmentReview(
     @JoinColumn(name = "equipment_id", nullable = false)
     var equipment: Equipment = equipment
         protected set
+
+    fun increaseLikeCount() {
+        likeCount++
+    }
+
+    fun decreaseLikeCount() {
+        likeCount--
+    }
 }

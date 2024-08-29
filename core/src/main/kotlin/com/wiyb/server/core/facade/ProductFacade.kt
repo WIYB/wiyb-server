@@ -4,6 +4,8 @@ import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
 import com.wiyb.server.core.domain.product.PostProductReviewDto
 import com.wiyb.server.core.domain.product.ProductDetailDto
+import com.wiyb.server.core.domain.product.ProductReviewDto
+import com.wiyb.server.core.domain.product.ProductReviewLikePathDto
 import com.wiyb.server.core.domain.product.mapper.ProductMapper
 import com.wiyb.server.core.domain.search.mapper.SearchKeywordMapper
 import com.wiyb.server.core.service.BrandService
@@ -24,7 +26,19 @@ class ProductFacade(
 ) {
     fun findBrandList() = brandService.findBrandList()
 
-    fun getProductReviews(productId: Long) = equipmentService.findReviewByEquipmentId(productId)
+    fun getProductReviews(productId: Long): List<ProductReviewDto> {
+        val session = SecurityContextHolder.getContext().authentication
+        val equipmentReviews = equipmentService.findReviewByEquipmentId(productId)
+        var likeIds: List<Long>? = null
+
+        if (session.principal != "anonymousUser" && !session.authorities.stream().anyMatch { it.authority.equals("ROLE_GUEST") }) {
+            val user = userService.findBySessionId(session.name)
+            likeIds =
+                equipmentService.findLikeByForeign(userId = user.id, equipmentReviewIds = equipmentReviews.map { it.id.toLong() })
+        }
+
+        return ProductReviewDto.from(equipmentReviews, likeIds)
+    }
 
     fun getProductDetail(
         productId: Long,
@@ -32,19 +46,32 @@ class ProductFacade(
     ): ProductDetailDto {
         val session = SecurityContextHolder.getContext().authentication
         val equipmentDto = equipmentService.findOneWithDetailById(productId, type)
+        var likeIds: List<Long>? = null
+        var isBookmarked = false
 
         // todo: 결과 캐싱(일주일? 하루?) 및 캐싱된 결과가 있을 경우 캐싱된 결과 반환
         val youtubeResults = youtubeService.search(SearchKeywordMapper.to(equipmentDto))
-        equipmentDto.reviews = equipmentService.findSimpleReviewByEquipmentId(productId)
-
-        val productDetail = ProductMapper.to(equipmentDto, youtubeResults)
+        val reviews = equipmentService.findSimpleReviewByEquipmentId(productId)
 
         // todo: Spring Security에서 static 메서드로 캡슐화
         if (session.principal != "anonymousUser" && !session.authorities.stream().anyMatch { it.authority.equals("ROLE_GUEST") }) {
             val user = userService.findBySessionId(session.name)
-            val isBookmarked = equipmentService.isAlreadyBookmarkedByUser(userId = user.id, equipmentId = productId)
-            productDetail.isBookmarked = isBookmarked
+
+            equipmentService
+                .findLikeByForeign(userId = user.id, equipmentReviewIds = reviews.map { it.id.toLong() })
+                .also { likeIds = it }
+            equipmentService
+                .isAlreadyBookmarkedByUser(
+                    userId = user.id,
+                    equipmentId = productId
+                ).also { isBookmarked = it }
         }
+
+        val productReviews = ProductReviewDto.from(reviews, likeIds)
+        val productDetail = ProductMapper.to(equipmentDto, youtubeResults)
+
+        productDetail.reviews = productReviews
+        productDetail.isBookmarked = isBookmarked
 
         return productDetail
     }
@@ -67,6 +94,35 @@ class ProductFacade(
 
         equipment.addEvaluationMetric(review.evaluationMetric)
         equipmentService.saveEquipment(equipment)
+    }
+
+    @Transactional
+    fun likeProductReview(dto: ProductReviewLikePathDto) {
+        val sessionId = SecurityContextHolder.getContext().authentication.name
+        val user = userService.findBySessionId(sessionId)
+        val review = equipmentService.findReviewById(dto.reviewId)
+
+        if (equipmentService.isAlreadyLikedReview(userId = user.id, equipmentReviewId = review.id)) {
+            throw CommonException(ErrorCode.ALREADY_LIKED_REVIEW)
+        }
+
+        equipmentService.increaseReviewLikeCount(review)
+        equipmentService.likeProductReview(user, review)
+    }
+
+    @Transactional
+    fun unlikeProductReview(dto: ProductReviewLikePathDto) {
+        val sessionId = SecurityContextHolder.getContext().authentication.name
+        val user = userService.findBySessionId(sessionId)
+        val review = equipmentService.findReviewById(dto.reviewId)
+        val likes = equipmentService.findLikeByForeign(userId = user.id, equipmentReviewId = review.id)
+
+        if (likes.isEmpty()) {
+            throw CommonException(ErrorCode.NOT_LIKED_REVIEW)
+        }
+
+        equipmentService.decreaseReviewLikeCount(review)
+        equipmentService.unlikeProductReview(likes)
     }
 
     fun bookmarkProduct(productId: Long) {

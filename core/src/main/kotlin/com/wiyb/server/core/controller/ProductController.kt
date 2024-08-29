@@ -5,11 +5,12 @@ import com.wiyb.server.core.domain.product.PostProductReviewDto
 import com.wiyb.server.core.domain.product.ProductDetailDto
 import com.wiyb.server.core.domain.product.ProductDetailParameterDto
 import com.wiyb.server.core.domain.product.ProductIdDto
+import com.wiyb.server.core.domain.product.ProductReviewDto
+import com.wiyb.server.core.domain.product.ProductReviewLikePathDto
 import com.wiyb.server.core.domain.product.ProductTypeQueryDto
 import com.wiyb.server.core.facade.ProductFacade
 import com.wiyb.server.core.facade.ProductViewFacade
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
-import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -38,10 +39,22 @@ class ProductController(
             )
         )
 
+    @GetMapping("/{productId}/{productType}")
+    fun getProductDetail(
+        @Valid parameter: ProductDetailParameterDto
+    ): ResponseEntity<ProductDetailDto> {
+        val productDetailDto =
+            productFacade.getProductDetail(
+                parameter.productId,
+                enumValueOf<EquipmentType>(parameter.productType.uppercase())
+            )
+        return ResponseEntity.ok().body(productDetailDto)
+    }
+
     @GetMapping("/{productId}/review")
     fun getProductReviews(
         @Valid path: ProductIdDto
-    ): ResponseEntity<List<EquipmentReviewDto>> {
+    ): ResponseEntity<List<ProductReviewDto>> {
         val reviews = productFacade.getProductReviews(path.productId)
         return ResponseEntity.ok().body(reviews)
     }
@@ -56,16 +69,22 @@ class ProductController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("/{productId}/{productType}")
-    fun getProductDetail(
-        @Valid parameter: ProductDetailParameterDto
-    ): ResponseEntity<ProductDetailDto> {
-        val productDetailDto =
-            productFacade.getProductDetail(
-                parameter.productId,
-                enumValueOf<EquipmentType>(parameter.productType.uppercase())
-            )
-        return ResponseEntity.ok().body(productDetailDto)
+    @Secured("ROLE_USER")
+    @PostMapping("/{productId}/review/{reviewId}/like")
+    fun likeProductReview(
+        @Valid path: ProductReviewLikePathDto
+    ): ResponseEntity<Unit> {
+        productFacade.likeProductReview(path)
+        return ResponseEntity.ok().build()
+    }
+
+    @Secured("ROLE_USER")
+    @DeleteMapping("/{productId}/review/{reviewId}/like")
+    fun unLikeProductReview(
+        @Valid path: ProductReviewLikePathDto
+    ): ResponseEntity<Unit> {
+        productFacade.unlikeProductReview(path)
+        return ResponseEntity.ok().build()
     }
 
     @Secured("ROLE_USER")
