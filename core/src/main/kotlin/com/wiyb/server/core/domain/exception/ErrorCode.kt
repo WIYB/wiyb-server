@@ -32,5 +32,9 @@ enum class ErrorCode(
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, 3000, "PRODUCT_NOT_FOUND"),
 
     // Product Review
-    ALREADY_REVIEWED(HttpStatus.BAD_REQUEST, 3100, "이미 리뷰를 작성하셨습니다.")
+    ALREADY_REVIEWED(HttpStatus.BAD_REQUEST, 3100, "이미 리뷰를 작성하셨습니다."),
+
+    // Product Bookmark
+    ALREADY_BOOKMARKED(HttpStatus.BAD_REQUEST, 3200, "이미 북마크를 추가하셨습니다."),
+    NOT_BOOKMARKED(HttpStatus.BAD_REQUEST, 3201, "북마크를 추가하지 않았습니다.")
 }

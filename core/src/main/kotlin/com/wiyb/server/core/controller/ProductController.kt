@@ -14,6 +14,7 @@ import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.annotation.Secured
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -65,6 +66,24 @@ class ProductController(
                 enumValueOf<EquipmentType>(parameter.productType.uppercase())
             )
         return ResponseEntity.ok().body(productDetailDto)
+    }
+
+    @Secured("ROLE_USER")
+    @PostMapping("/{productId}/bookmark")
+    fun bookmarkProduct(
+        @Valid path: ProductIdDto
+    ): ResponseEntity<Unit> {
+        productFacade.bookmarkProduct(path.productId)
+        return ResponseEntity.ok().build()
+    }
+
+    @Secured("ROLE_USER")
+    @DeleteMapping("/{productId}/bookmark")
+    fun unBookmarkProduct(
+        @Valid path: ProductIdDto
+    ): ResponseEntity<Unit> {
+        productFacade.unBookmarkProduct(path.productId)
+        return ResponseEntity.ok().build()
     }
 
     // todo: delete

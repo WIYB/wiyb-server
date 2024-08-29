@@ -30,12 +30,23 @@ class ProductFacade(
         productId: Long,
         type: EquipmentType
     ): ProductDetailDto {
+        val session = SecurityContextHolder.getContext().authentication
         val equipmentDto = equipmentService.findOneWithDetailById(productId, type)
+
         // todo: 결과 캐싱(일주일? 하루?) 및 캐싱된 결과가 있을 경우 캐싱된 결과 반환
         val youtubeResults = youtubeService.search(SearchKeywordMapper.to(equipmentDto))
         equipmentDto.reviews = equipmentService.findSimpleReviewByEquipmentId(productId)
 
-        return ProductMapper.to(equipmentDto, youtubeResults)
+        val productDetail = ProductMapper.to(equipmentDto, youtubeResults)
+
+        // todo: Spring Security에서 static 메서드로 캡슐화
+        if (session.principal != "anonymousUser" && !session.authorities.stream().anyMatch { it.authority.equals("ROLE_GUEST") }) {
+            val user = userService.findBySessionId(session.name)
+            val isBookmarked = equipmentService.isAlreadyBookmarkedByUser(userId = user.id, equipmentId = productId)
+            productDetail.isBookmarked = isBookmarked
+        }
+
+        return productDetail
     }
 
     @Transactional
@@ -56,5 +67,30 @@ class ProductFacade(
 
         equipment.addEvaluationMetric(review.evaluationMetric)
         equipmentService.saveEquipment(equipment)
+    }
+
+    fun bookmarkProduct(productId: Long) {
+        val sessionId = SecurityContextHolder.getContext().authentication.name
+        val user = userService.findBySessionId(sessionId)
+        val equipment = equipmentService.findOneById(productId)
+
+        if (equipmentService.isAlreadyBookmarkedByUser(userId = user.id, equipmentId = equipment.id)) {
+            throw CommonException(ErrorCode.ALREADY_BOOKMARKED)
+        }
+
+        equipmentService.bookmarkProduct(user, equipment)
+    }
+
+    fun unBookmarkProduct(productId: Long) {
+        val sessionId = SecurityContextHolder.getContext().authentication.name
+        val user = userService.findBySessionId(sessionId)
+        val equipment = equipmentService.findOneById(productId)
+        val bookmarks = equipmentService.findBookmarkByUserAndEquipment(userId = user.id, equipmentId = equipment.id)
+
+        if (bookmarks.isEmpty()) {
+            throw CommonException(ErrorCode.NOT_BOOKMARKED)
+        }
+
+        equipmentService.unBookmarkProduct(bookmarks)
     }
 }
