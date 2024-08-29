@@ -33,6 +33,7 @@ class EquipmentCustomRepositoryImpl :
                     equipment.name,
                     equipment.viewCount,
                     equipment.evaluatedCount,
+                    equipment.evaluationMetricTotal,
                     equipment.releasedYear,
                     equipment.imageUrls
                 )
@@ -61,6 +62,7 @@ class EquipmentCustomRepositoryImpl :
                         equipment.name,
                         equipment.viewCount,
                         equipment.evaluatedCount,
+                        equipment.evaluationMetricTotal,
                         equipment.releasedYear,
                         equipment.imageUrls
                     )
@@ -86,6 +88,7 @@ class EquipmentCustomRepositoryImpl :
                     equipment.name,
                     equipment.viewCount,
                     equipment.evaluatedCount,
+                    equipment.evaluationMetricTotal,
                     equipment.releasedYear,
                     equipment.imageUrls
                 )
@@ -115,6 +118,7 @@ class EquipmentCustomRepositoryImpl :
                     equipment.name,
                     equipment.viewCount,
                     equipment.evaluatedCount,
+                    equipment.evaluationMetricTotal,
                     equipment.releasedYear,
                     equipment.imageUrls
                 )
