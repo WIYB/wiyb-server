@@ -12,14 +12,20 @@ data class WoodDto(
         val lieAngle: String?
     )
 
+    val loftDegree: String? = equipment.loftDegree?.joinToString(separator = ", ") { "$it°" }
     val isLoftChangeable: Boolean? = equipment.isLoftChangeable
     val isWeightChangeable: Boolean? = equipment.isWeightChangeable
-    val loftSpec: List<WoodLoftSpecDto>? =
-        equipment.loftDegree?.mapIndexed { index, s ->
+    val loftSpec: List<WoodLoftSpecDto>? = makeLoftSpec()
+
+    private fun makeLoftSpec(): List<WoodLoftSpecDto>? {
+        if (equipment.numbers.isNullOrEmpty() || equipment.loftDegree.isNullOrEmpty() || equipment.lieAngle.isNullOrEmpty()) return null
+
+        return equipment.numbers!!.mapIndexed { index, number ->
             WoodLoftSpecDto(
-                number = equipment.numbers?.getOrNull(index),
-                loftDegree = s,
-                lieAngle = equipment.lieAngle?.getOrNull(index)
+                number = number,
+                loftDegree = equipment.loftDegree!![index],
+                lieAngle = equipment.lieAngle!![index]
             )
         }
+    }
 }

@@ -4,6 +4,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.SheetsScopes
+import com.google.api.services.sheets.v4.model.ValueRange
 import com.google.auth.Credentials
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.GoogleCredentials
@@ -29,9 +30,12 @@ import com.wiyb.server.storage.database.repository.golf.detail.PutterRepository
 import com.wiyb.server.storage.database.repository.golf.detail.ShaftRepository
 import com.wiyb.server.storage.database.repository.golf.detail.WedgeRepository
 import com.wiyb.server.storage.database.repository.golf.detail.WoodRepository
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
+import kotlin.test.Test
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
@@ -80,22 +84,22 @@ class EquipmentRepositoryTest(
         end: Int,
         data: List<Long>
     ) {
-//        service
-//            .spreadsheets()
-//            .values()
-//            .update(
-//                sheetId,
-//                "$sheet!A$start:A$end",
-//                ValueRange().setValues(
-//                    data.map {
-//                        listOf(it.toString())
-//                    }
-//                )
-//            ).setValueInputOption("RAW")
-//            .execute()
+        service
+            .spreadsheets()
+            .values()
+            .update(
+                sheetId,
+                "$sheet!A$start:A$end",
+                ValueRange().setValues(
+                    data.map {
+                        listOf(it.toString())
+                    }
+                )
+            ).setValueInputOption("RAW")
+            .execute()
     }
 
-//    @BeforeAll
+    @BeforeAll
     fun beforeAll() {
         val start = 2
         val end = 52
@@ -118,8 +122,8 @@ class EquipmentRepositoryTest(
         }
     }
 
-//    @Test
-//    @Order(1)
+    @Test
+    @Order(1)
     fun brand() {
         val start = 2
         val end = 52
@@ -127,8 +131,8 @@ class EquipmentRepositoryTest(
         setSheetId("Brand", start, end, brands.values.map { it.id })
     }
 
-//    @Test
-//    @Order(2)
+    @Test
+    @Order(2)
     fun driver() {
         val start = 2
         val end = 98
@@ -158,8 +162,12 @@ class EquipmentRepositoryTest(
                 val driver =
                     Driver(
                         equipment,
-                        loftDegree = getCol(row, 3),
-                        volume = getCol(row, 6)?.toFloat()
+                        volume = getCol(row, 6)?.toFloat(),
+                        loftDegree = getCol(row, 3)?.split(",") ?: emptyList(),
+                        // todo: 나중에 시트 업데이트되면 한 번 더 확인 필요!!
+                        isLoftChangeable = getCol(row, 7)?.isNotBlank(),
+                        isWeightChangeable = getCol(row, 8)?.isNotBlank()
+                        // todo: 여기까지
                     )
                 equipments.add(equipment)
                 drivers.add(driver)
@@ -176,8 +184,8 @@ class EquipmentRepositoryTest(
         println(values[2].size)
     }
 
-//    @Test
-//    @Order(3)
+    @Test
+    @Order(3)
     fun wood() {
         val start = 2
         val end = 73
@@ -210,11 +218,31 @@ class EquipmentRepositoryTest(
                         releasedYear = getCol(row, 4),
                         imageUrls = getCol(row, 5)?.split(",")
                     )
+
+                val primitiveNumber = getCol(row, 6)?.split(",")
+                val primitiveLoftDegree = getCol(row, 3)?.split(",")
+                val primitiveLieAngle = getCol(row, 7)?.split(",")
+
+                val maxSize =
+                    maxOf(
+                        primitiveNumber?.size ?: 0,
+                        primitiveLoftDegree?.size ?: 0,
+                        primitiveLieAngle?.size ?: 0
+                    )
+                val numbers = primitiveNumber ?: List(maxSize) { "" }
+                val loftDegree = primitiveLoftDegree ?: List(maxSize) { "" }
+                val lieAngle = primitiveLieAngle ?: List(maxSize) { "" }
+
                 val wood =
                     Wood(
                         equipment,
-                        loftDegree = getCol(row, 3),
-                        numbers = getCol(row, 6)
+                        numbers = numbers,
+                        loftDegree = loftDegree,
+                        // todo: 나중에 시트 업데이트되면 한 번 더 확인 필요!!
+                        lieAngle = lieAngle,
+                        isLoftChangeable = getCol(row, 8)?.isNotBlank(),
+                        isWeightChangeable = getCol(row, 9)?.isNotBlank()
+                        // todo: 여기까지
                     )
                 equipments.add(equipment)
                 woods.add(wood)
@@ -226,8 +254,8 @@ class EquipmentRepositoryTest(
         setSheetId("Wood", start, end, woods.map { it.id })
     }
 
-//    @Test
-//    @Order(4)
+    @Test
+    @Order(4)
     fun hybrid() {
         val start = 2
         val end = 47
@@ -260,11 +288,31 @@ class EquipmentRepositoryTest(
                         releasedYear = getCol(row, 5),
                         imageUrls = getCol(row, 6)?.split(",")
                     )
+
+                val primitiveNumber = getCol(row, 7)?.split(",")
+                val primitiveLoftDegree = getCol(row, 4)?.split(",")
+                val primitiveLieAngle = getCol(row, 8)?.split(",")
+
+                val maxSize =
+                    maxOf(
+                        primitiveNumber?.size ?: 0,
+                        primitiveLoftDegree?.size ?: 0,
+                        primitiveLieAngle?.size ?: 0
+                    )
+                val numbers = primitiveNumber ?: List(maxSize) { "" }
+                val loftDegree = primitiveLoftDegree ?: List(maxSize) { "" }
+                val lieAngle = primitiveLieAngle ?: List(maxSize) { "" }
+
                 val hybrid =
                     Hybrid(
                         equipment,
-                        loftDegree = getCol(row, 4),
-                        numbers = getCol(row, 7)
+                        numbers = numbers,
+                        loftDegree = loftDegree,
+                        // todo: 나중에 시트 업데이트되면 한 번 더 확인 필요!!
+                        lieAngle = lieAngle,
+                        isLoftChangeable = getCol(row, 9)?.isNotBlank(),
+                        isWeightChangeable = getCol(row, 10)?.isNotBlank()
+                        // todo: 여기까지
                     )
                 equipments.add(equipment)
                 hybrids.add(hybrid)
@@ -276,8 +324,8 @@ class EquipmentRepositoryTest(
         setSheetId("Utility", start, end, hybrids.map { it.id })
     }
 
-//    @Test
-//    @Order(5)
+    @Test
+    @Order(5)
     fun iron() {
         val start = 2
         val end = 182
@@ -310,16 +358,43 @@ class EquipmentRepositoryTest(
                         releasedYear = getCol(row, 6),
                         imageUrls = getCol(row, 7)?.split(",")
                     )
+                val primitiveNumber = getCol(row, 8)?.split(",")
+                val primitiveLoftDegree = getCol(row, 5)?.split(",")
+                val primitiveLieAngle = getCol(row, 11)?.split(",")
+
+                val maxSize =
+                    maxOf(
+                        primitiveNumber?.size ?: 0,
+                        primitiveLoftDegree?.size ?: 0,
+                        primitiveLieAngle?.size ?: 0
+                    )
+
+                val numbers = primitiveNumber ?: List(maxSize) { "" }
+                val loftDegree = primitiveLoftDegree?.toMutableList() ?: MutableList(maxSize) { "" }
+                val lieAngle = primitiveLieAngle ?: List(maxSize) { "" }
+                val loft7Degree = getCol(row, 9) ?: ""
+                val loftPDegree = getCol(row, 10) ?: ""
+
+                if (numbers.isNotEmpty()) {
+                    loftDegree.forEachIndexed { idx, elem ->
+                        if (loft7Degree.isNotBlank() && elem == "7") {
+                            loftDegree[idx] = loft7Degree
+                        } else if (loftPDegree.isNotBlank() && elem.lowercase() == "p") {
+                            loftDegree[idx] = loftPDegree
+                        }
+                    }
+                }
+
                 val iron =
                     Iron(
                         equipment,
-                        numbers = getCol(row, 8),
                         produceType = getCol(row, 3),
                         designType = getCol(row, 4),
-                        loftDegree = getCol(row, 5),
-                        loft7Degree = getCol(row, 9),
-                        loftPDegree = getCol(row, 10)
+                        numbers = numbers,
+                        loftDegree = loftDegree,
+                        lieAngle = lieAngle
                     )
+
                 equipments.add(equipment)
                 irons.add(iron)
             }
@@ -330,8 +405,8 @@ class EquipmentRepositoryTest(
         setSheetId("Iron", start, end, irons.map { it.id })
     }
 
-//    @Test
-//    @Order(6)
+    @Test
+    @Order(6)
     fun wedge() {
         val start = 2
         val end = 321
@@ -364,13 +439,38 @@ class EquipmentRepositoryTest(
                         releasedYear = getCol(row, 5),
                         imageUrls = getCol(row, 6)?.split(",")
                     )
+
+                val primitiveLoftDegree = getCol(row, 4)?.split(",")
+                val primitiveBounce = getCol(row, 7)?.split(",")
+                val primitiveGrind = getCol(row, 8)?.split(",")
+
+                val maxSize =
+                    maxOf(
+                        primitiveLoftDegree?.size ?: 0,
+                        primitiveBounce?.size ?: 0,
+                        primitiveGrind?.size ?: 0
+                    )
+
+                val loftDegree = primitiveLoftDegree ?: List(maxSize) { "" }
+                val bounce = primitiveBounce ?: List(maxSize) { "" }
+                val grind = primitiveGrind ?: List(maxSize) { "" }
+                val model =
+                    loftDegree.mapIndexed { idx, loft ->
+                        if (loft.isBlank() || bounce[idx].isBlank()) {
+                            ""
+                        } else {
+                            "$loft.${bounce[idx]}"
+                        }
+                    }
+
                 val wedge =
                     Wedge(
                         equipment,
-                        loftDegree = getCol(row, 4),
                         produceType = getCol(row, 3),
-                        bounce = getCol(row, 7),
-                        grind = getCol(row, 8)
+                        model = model,
+                        loftDegree = loftDegree,
+                        bounce = bounce,
+                        grind = grind
                     )
                 equipments.add(equipment)
                 wedges.add(wedge)
@@ -383,8 +483,8 @@ class EquipmentRepositoryTest(
     }
 
     // todo: 2번 빠짐
-//    @Test
-//    @Order(7)
+    @Test
+    @Order(7)
     fun putter() {
         val start = 2
         val end = 209
@@ -434,8 +534,8 @@ class EquipmentRepositoryTest(
         setSheetId("Putter", start, end, putters.map { it.id })
     }
 
-//    @Test
-//    @Order(8)
+    @Test
+    @Order(8)
     fun shaft() {
         val start = 2
         val end = 1809
@@ -491,8 +591,8 @@ class EquipmentRepositoryTest(
         setSheetId("Shaft", start, end, shafts.map { it.id })
     }
 
-//    @Test
-//    @Order(9)
+    @Test
+    @Order(9)
     fun grip() {
         val start = 2
         val end = 299
@@ -546,8 +646,8 @@ class EquipmentRepositoryTest(
         setSheetId("Grip", start, end, grips.map { it.id })
     }
 
-//    @Test
-//    @Order(10)
+    @Test
+    @Order(10)
     fun ball() {
         val start = 2
         val end = 26

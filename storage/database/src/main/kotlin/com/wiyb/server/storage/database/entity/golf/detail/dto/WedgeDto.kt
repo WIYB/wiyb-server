@@ -14,13 +14,24 @@ data class WedgeDto(
     )
 
     val produceType: String? = equipment.produceType
-    val loftSpec: List<WedgeLoftSpecDto>? =
-        equipment.loftDegree?.mapIndexed { index, s ->
+    val loftSpec: List<WedgeLoftSpecDto>? = makeLoftSpec()
+
+    private fun makeLoftSpec(): List<WedgeLoftSpecDto>? {
+        if (equipment.model.isNullOrEmpty() ||
+            equipment.loftDegree.isNullOrEmpty() ||
+            equipment.bounce.isNullOrEmpty() ||
+            equipment.grind.isNullOrEmpty()
+        ) {
+            return null
+        }
+
+        return equipment.model!!.mapIndexed { index, model ->
             WedgeLoftSpecDto(
-                number = equipment.model?.getOrNull(index),
-                loftDegree = s,
-                bounce = equipment.bounce?.getOrNull(index),
-                grind = equipment.grind?.getOrNull(index)
+                number = model,
+                loftDegree = equipment.loftDegree!![index],
+                bounce = equipment.bounce!![index],
+                grind = equipment.grind!![index]
             )
         }
+    }
 }
