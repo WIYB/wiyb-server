@@ -1,6 +1,6 @@
 package com.wiyb.server.storage.database.entity.common.dto
 
-data class SearchMetadataDto(
+data class PaginationMetadataDto(
     val contextId: String,
     val offset: Int,
     val totalOffset: Int,

@@ -1,7 +1,7 @@
 package com.wiyb.server.core.handler.search
 
 import com.wiyb.server.core.service.SearchService
-import com.wiyb.server.storage.database.entity.common.dto.SearchResultDto
+import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import org.aspectj.lang.annotation.AfterReturning
 import org.aspectj.lang.annotation.Aspect
@@ -20,7 +20,7 @@ class SearchKeywordAspect(
         pointcut = "execution(* com.wiyb.server.core.controller.SearchController.productIntegrateSearch(..))",
         returning = "response"
     )
-    fun hitSearchKeyword(response: ResponseEntity<SearchResultDto<EquipmentSimpleDto>>) {
+    fun hitSearchKeyword(response: ResponseEntity<PaginationResultDto<EquipmentSimpleDto>>) {
         val request = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
         val result = response.body ?: return
         val keyword = splitQuery(request.queryString)["keyword"] ?: return

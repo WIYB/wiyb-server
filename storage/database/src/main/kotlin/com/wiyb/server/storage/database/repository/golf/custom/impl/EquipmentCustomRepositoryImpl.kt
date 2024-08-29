@@ -3,7 +3,7 @@ package com.wiyb.server.storage.database.repository.golf.custom.impl
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.jpa.JPQLQuery
-import com.wiyb.server.storage.database.entity.common.dto.SearchResultDto
+import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.golf.Equipment
 import com.wiyb.server.storage.database.entity.golf.QBrand.brand
 import com.wiyb.server.storage.database.entity.golf.QEquipment.equipment
@@ -97,12 +97,12 @@ class EquipmentCustomRepositoryImpl :
             .groupBy(equipment.id)
             .fetch()
 
-    override fun findBySearchParameters(parameter: SearchParameterDto): SearchResultDto<EquipmentSimpleDto> {
+    override fun findBySearchParameters(parameter: SearchParameterDto): PaginationResultDto<EquipmentSimpleDto> {
         val pageRequest = parameter.page.of()
         val query = searchQuery(parameter, pageRequest)
         val page = PageImpl(query.fetch(), pageRequest, query.fetchCount())
 
-        return SearchResultDto.fromPage<EquipmentSimpleDto>(parameter.page.contextId, page)
+        return PaginationResultDto.fromPage<EquipmentSimpleDto>(parameter.page.contextId, page)
     }
 
     private fun searchQuery(

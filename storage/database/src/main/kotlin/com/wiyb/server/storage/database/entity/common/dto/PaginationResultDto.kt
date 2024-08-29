@@ -2,18 +2,18 @@ package com.wiyb.server.storage.database.entity.common.dto
 
 import org.springframework.data.domain.Page
 
-data class SearchResultDto<T>(
-    val metadata: SearchMetadataDto,
+data class PaginationResultDto<T>(
+    val metadata: PaginationMetadataDto,
     val content: List<T>
 ) {
     companion object {
         fun <K> fromPage(
             contextId: String,
             page: Page<K>
-        ): SearchResultDto<K> =
-            SearchResultDto(
+        ): PaginationResultDto<K> =
+            PaginationResultDto(
                 metadata =
-                    SearchMetadataDto(
+                    PaginationMetadataDto(
                         contextId = contextId,
                         offset = page.number + 1,
                         totalOffset = page.totalPages,

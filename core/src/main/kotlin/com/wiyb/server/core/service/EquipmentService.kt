@@ -2,7 +2,7 @@ package com.wiyb.server.core.service
 
 import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
-import com.wiyb.server.storage.database.entity.common.dto.SearchResultDto
+import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.golf.Equipment
 import com.wiyb.server.storage.database.entity.golf.EquipmentReview
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
@@ -45,7 +45,7 @@ class EquipmentService(
 
     fun findSimpleReviewByEquipmentId(id: Long) = equipmentReviewRepository.findSimpleByEquipmentId(id)
 
-    fun findBySearchParameters(dto: SearchParameterDto): SearchResultDto<EquipmentSimpleDto> =
+    fun findBySearchParameters(dto: SearchParameterDto): PaginationResultDto<EquipmentSimpleDto> =
         equipmentRepository.findBySearchParameters(dto)
 
     fun findMostViewedProduct(type: EquipmentType?): List<EquipmentSimpleDto> = equipmentRepository.findMostViewedProduct(type)
