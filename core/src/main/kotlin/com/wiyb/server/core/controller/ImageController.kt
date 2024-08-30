@@ -3,6 +3,7 @@ package com.wiyb.server.core.controller
 import com.wiyb.server.core.domain.common.UploadImageDto
 import com.wiyb.server.core.domain.common.UploadedImageDto
 import com.wiyb.server.core.service.ImageService
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -18,6 +19,6 @@ class ImageController(
     @Secured("ROLE_USER")
     @PostMapping
     fun uploadImage(
-        @ModelAttribute uploadImageDto: UploadImageDto
+        @ModelAttribute @Valid uploadImageDto: UploadImageDto
     ): ResponseEntity<List<UploadedImageDto>> = ResponseEntity.ok().body(imageService.uploadImages(uploadImageDto))
 }

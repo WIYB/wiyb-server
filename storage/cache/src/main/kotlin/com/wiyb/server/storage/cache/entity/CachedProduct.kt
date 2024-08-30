@@ -30,8 +30,8 @@ data class CachedProduct(
     }
 
     fun applyWeeklyCount(): Long {
-        val erasedCount = weeklyChart.removeLast()
-        weeklyChart.addFirst(dailyViewCount)
+        val erasedCount = weeklyChart.removeFirst()
+        weeklyChart.add(dailyViewCount)
         dailyViewCount = 0
         weeklyViewCount -= erasedCount
         return erasedCount

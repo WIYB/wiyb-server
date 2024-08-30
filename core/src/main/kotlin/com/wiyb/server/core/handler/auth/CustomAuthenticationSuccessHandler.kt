@@ -32,7 +32,7 @@ class CustomAuthenticationSuccessHandler(
 
         when (user.role) {
             Role.GUEST -> response.sendRedirect("$clientOrigin/sign")
-            else -> response.sendRedirect("$clientOrigin/main")
+            else -> response.sendRedirect(clientOrigin)
         }
     }
 }
