@@ -20,6 +20,7 @@ data class EquipmentDto
         val viewCount: Long?,
         private val evaluationMetricTotal: List<Float>?
     ) {
+        val score: Float? = evaluationMetricTotal?.let { BaseMetric.average(type, reviewCount, evaluationMetricTotal) }
         val evaluationMetricAverage: BaseMetric? =
             evaluationMetricTotal
                 ?.let {

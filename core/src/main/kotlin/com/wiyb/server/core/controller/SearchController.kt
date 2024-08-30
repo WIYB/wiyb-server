@@ -3,9 +3,9 @@ package com.wiyb.server.core.controller
 import com.wiyb.server.core.domain.search.PopularSearchKeywordDto
 import com.wiyb.server.core.domain.search.SearchQueryDto
 import com.wiyb.server.core.facade.SearchFacade
+import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
-import com.wiyb.server.storage.database.entity.golf.dto.SearchResultDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,7 +20,7 @@ class SearchController(
     @GetMapping("/product")
     fun productIntegrateSearch(
         @Valid query: SearchQueryDto
-    ): ResponseEntity<SearchResultDto<EquipmentSimpleDto>> =
+    ): ResponseEntity<PaginationResultDto<EquipmentSimpleDto>> =
         ResponseEntity.ok().body(
             searchFacade.productIntegrateSearch(
                 SearchParameterDto.fromQuery(

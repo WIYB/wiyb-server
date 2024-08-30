@@ -22,6 +22,7 @@ import org.hibernate.annotations.SQLRestriction
 class EquipmentReview(
     user: User,
     equipment: Equipment,
+    likeCount: Int? = 0,
     evaluationMetric: List<Float>,
     content: String? = null,
     imageUrls: List<String>? = null
@@ -32,7 +33,7 @@ class EquipmentReview(
         protected set
 
     @Column(name = "like_count", nullable = false)
-    var likeCount: Int = 0
+    var likeCount: Int = likeCount!!
         protected set
 
     @Column(name = "content", columnDefinition = "text")

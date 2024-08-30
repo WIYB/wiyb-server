@@ -2,13 +2,15 @@ package com.wiyb.server.core.service
 
 import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
+import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.golf.Equipment
 import com.wiyb.server.storage.database.entity.golf.EquipmentReview
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
+import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
+import com.wiyb.server.storage.database.entity.golf.dto.ReviewPaginationDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
-import com.wiyb.server.storage.database.entity.golf.dto.SearchResultDto
 import com.wiyb.server.storage.database.entity.user.User
 import com.wiyb.server.storage.database.entity.user.UserEquipmentBookmark
 import com.wiyb.server.storage.database.entity.user.UserEquipmentReviewLike
@@ -44,13 +46,14 @@ class EquipmentService(
         type: EquipmentType
     ): EquipmentDto = equipmentDetailRepositoryWrapper.findDetailById(id, type) ?: throw CommonException(ErrorCode.PRODUCT_NOT_FOUND)
 
-    fun findReviewByEquipmentId(id: Long) = equipmentReviewRepository.findByEquipmentId(id)
+    fun findReviewWithPagination(parameter: ReviewPaginationDto): PaginationResultDto<EquipmentReviewDto> =
+        equipmentReviewRepository.findWithPagination(parameter)
 
     fun findReviewById(id: Long) = equipmentReviewRepository.findFirstById(id) ?: throw CommonException(ErrorCode.REVIEW_NOT_FOUND)
 
     fun findSimpleReviewByEquipmentId(id: Long) = equipmentReviewRepository.findSimpleByEquipmentId(id)
 
-    fun findBySearchParameters(dto: SearchParameterDto): SearchResultDto<EquipmentSimpleDto> =
+    fun findBySearchParameters(dto: SearchParameterDto): PaginationResultDto<EquipmentSimpleDto> =
         equipmentRepository.findBySearchParameters(dto)
 
     fun findMostViewedProduct(type: EquipmentType?): List<EquipmentSimpleDto> = equipmentRepository.findMostViewedProduct(type)

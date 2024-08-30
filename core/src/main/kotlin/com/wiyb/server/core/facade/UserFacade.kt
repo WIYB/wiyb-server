@@ -30,7 +30,17 @@ class UserFacade(
         val userProfile = createUserProfileDto.toEntity(user)
         userProfileService.save(userProfile)
 
-        return UserProfileDto(user, userProfile)
+        return UserProfileDto(
+            user.id.toString(),
+            userProfile.nickname,
+            userProfile.gender,
+            userProfile.birth,
+            userProfile.handy,
+            userProfile.height,
+            userProfile.weight,
+            userProfile.imageUrl,
+            userProfile.createdAt
+        )
     }
 
     fun getProfile(userId: String?): UserProfileDto =
@@ -48,7 +58,17 @@ class UserFacade(
 
         userProfileService.save(userProfile)
 
-        return UserProfileDto(user, userProfile)
+        return UserProfileDto(
+            user.id.toString(),
+            userProfile.nickname,
+            userProfile.gender,
+            userProfile.birth,
+            userProfile.handy,
+            userProfile.height,
+            userProfile.weight,
+            userProfile.imageUrl,
+            userProfile.createdAt
+        )
     }
 
     fun deleteProfile() {

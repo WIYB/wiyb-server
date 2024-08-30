@@ -5,12 +5,15 @@ import com.wiyb.server.core.domain.product.PostProductReviewDto
 import com.wiyb.server.core.domain.product.ProductDetailDto
 import com.wiyb.server.core.domain.product.ProductDetailParameterDto
 import com.wiyb.server.core.domain.product.ProductIdDto
-import com.wiyb.server.core.domain.product.ProductReviewDto
 import com.wiyb.server.core.domain.product.ProductReviewLikePathDto
 import com.wiyb.server.core.domain.product.ProductTypeQueryDto
+import com.wiyb.server.core.domain.product.ReviewPaginationQuery
+import com.wiyb.server.core.domain.product.mapper.ReviewPaginationMapper
 import com.wiyb.server.core.facade.ProductFacade
 import com.wiyb.server.core.facade.ProductViewFacade
+import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
+import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -53,9 +56,10 @@ class ProductController(
 
     @GetMapping("/{productId}/review")
     fun getProductReviews(
-        @Valid path: ProductIdDto
-    ): ResponseEntity<List<ProductReviewDto>> {
-        val reviews = productFacade.getProductReviews(path.productId)
+        @Valid path: ProductIdDto,
+        @Valid query: ReviewPaginationQuery
+    ): ResponseEntity<PaginationResultDto<EquipmentReviewDto>> {
+        val reviews = productFacade.getProductReviews(ReviewPaginationMapper.to(path.productId, query))
         return ResponseEntity.ok().body(reviews)
     }
 
