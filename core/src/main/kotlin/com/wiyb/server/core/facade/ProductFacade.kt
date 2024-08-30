@@ -34,9 +34,9 @@ class ProductFacade(
         val result = equipmentService.findReviewWithPagination(paginationDto)
 
         if (session.principal != "anonymousUser" && !session.authorities.stream().anyMatch { it.authority.equals("ROLE_GUEST") }) {
-            val user = userService.findBySessionId(session.name)
+            val userId = userService.findIdBySessionId(session.name)
             val likeIds =
-                equipmentService.findLikeByForeign(userId = user.id, equipmentReviewIds = result.content.map { it.id.toLong() })
+                equipmentService.findLikeByForeign(userId = userId, equipmentReviewIds = result.content.map { it.id.toLong() })
 
             result.content.forEach { review ->
                 review.isLiked = likeIds.contains(review.id.toLong())
@@ -61,14 +61,14 @@ class ProductFacade(
 
         // todo: Spring Security에서 static 메서드로 캡슐화
         if (session.principal != "anonymousUser" && !session.authorities.stream().anyMatch { it.authority.equals("ROLE_GUEST") }) {
-            val user = userService.findBySessionId(session.name)
+            val userId = userService.findIdBySessionId(session.name)
 
             equipmentService
-                .findLikeByForeign(userId = user.id, equipmentReviewIds = reviews.map { it.id.toLong() })
+                .findLikeByForeign(userId = userId, equipmentReviewIds = reviews.map { it.id.toLong() })
                 .also { likeIds = it }
             equipmentService
                 .isAlreadyBookmarkedByUser(
-                    userId = user.id,
+                    userId = userId,
                     equipmentId = productId
                 ).also { isBookmarked = it }
         }

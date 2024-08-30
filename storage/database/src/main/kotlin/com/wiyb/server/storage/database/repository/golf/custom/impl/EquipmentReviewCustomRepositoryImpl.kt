@@ -53,7 +53,14 @@ class EquipmentReviewCustomRepositoryImpl :
                     equipmentReview.imageUrls,
                     equipmentReview.createdAt,
                     equipmentReview.updatedAt,
-                    QUserSimpleProfileDto(user, userProfile)
+                    QUserSimpleProfileDto(
+                        user.id.stringValue(),
+                        userProfile.nickname,
+                        userProfile.handy,
+                        userProfile.height,
+                        userProfile.weight,
+                        userProfile.imageUrl
+                    )
                 )
             ).leftJoin(equipmentReview.equipment, equipment)
             .leftJoin(equipmentReview.user, user)
