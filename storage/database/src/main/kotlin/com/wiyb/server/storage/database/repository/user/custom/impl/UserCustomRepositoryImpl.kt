@@ -45,7 +45,6 @@ class UserCustomRepositoryImpl :
                     userProfile.createdAt
                 )
             ).leftJoin(user.userProfile, userProfile)
-            .fetchJoin()
             .where(user.id.eq(userId))
             .fetchOne()
 
@@ -65,7 +64,6 @@ class UserCustomRepositoryImpl :
                 )
             ).leftJoin(user.mutableAuthorizations, authorization)
             .leftJoin(user.userProfile, userProfile)
-            .fetchJoin()
             .where(authorization.sessionId.eq(sessionId))
             .fetchOne()
 
@@ -81,7 +79,6 @@ class UserCustomRepositoryImpl :
                     userProfile.imageUrl
                 )
             ).leftJoin(user.userProfile, userProfile)
-            .fetchJoin()
             .where(userProfile.nickname.containsIgnoreCase(keyword))
             .fetch()
 
