@@ -22,7 +22,7 @@ class ProductMapper {
                 imageUrls = from.imageUrls,
                 evaluationMetricAverage = from.evaluationMetricAverage,
                 youtubeResults = youtubeResults,
-                reviews = from.reviews
+                reviews = null
             )
     }
 }

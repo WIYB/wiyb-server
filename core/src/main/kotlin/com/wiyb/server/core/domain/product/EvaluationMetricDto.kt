@@ -7,31 +7,31 @@ import com.wiyb.server.storage.database.entity.golf.dto.metric.BaseMetric
 import org.hibernate.validator.constraints.Range
 
 data class EvaluationMetricDto(
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val forgiveness: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val distance: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val accuracy: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val impactFeel: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val impactSound: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val backSpin: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val distanceControl: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val stiffness: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val weight: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val trajectory: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val touch: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val gripComfort: Float? = null,
-    @field:Range(min = 0, max = 5)
+    @field:Range(min = 1, max = 5)
     val durability: Float? = null
 ) {
     fun flatten(type: EquipmentType): List<Float> {

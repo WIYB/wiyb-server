@@ -267,8 +267,9 @@ create table if not exists equipment_reviews
         primary key,
     user_id           bigint       not null,
     equipment_id      bigint       not null,
-    content           text         not null,
     evaluation_metric varchar(255) not null,
+    like_count        int          not null,
+    content           text         null,
     image_urls        text         null,
     created_at        datetime(6)  not null,
     updated_at        datetime(6)  not null,
@@ -299,6 +300,23 @@ create table if not exists user_equipments
 
     -- Equipment fk
     constraint fk_user_equipments_equipments_equipment_id foreign key (equipment_id) references equipments (id)
+);
+
+create table if not exists user_equipment_review_likes
+(
+    id                  bigint      not null
+        primary key,
+    user_id             bigint      not null,
+    equipment_review_id bigint      not null,
+    created_at          datetime(6) not null,
+    updated_at          datetime(6) not null,
+    deleted_at          datetime(6) null,
+
+    -- User fk
+    constraint fk_user_equipment_review_likes_users_id foreign key (user_id) references users (id),
+
+    -- Equipment fk
+    constraint fk_user_equipment_review_likes_equipment_reviews_id foreign key (equipment_review_id) references equipment_reviews (id)
 );
 
 create table if not exists user_equipment_bookmarks
