@@ -7,7 +7,6 @@ import com.wiyb.server.core.domain.product.ProductDetailDto
 import com.wiyb.server.core.domain.product.ProductReviewDto
 import com.wiyb.server.core.domain.product.ProductReviewLikePathDto
 import com.wiyb.server.core.domain.product.mapper.ProductMapper
-import com.wiyb.server.core.domain.search.mapper.SearchKeywordMapper
 import com.wiyb.server.core.service.BrandService
 import com.wiyb.server.core.service.EquipmentService
 import com.wiyb.server.core.service.UserService
@@ -56,7 +55,8 @@ class ProductFacade(
         var isBookmarked = false
 
         // todo: 결과 캐싱(일주일? 하루?) 및 캐싱된 결과가 있을 경우 캐싱된 결과 반환
-        val youtubeResults = youtubeService.search(SearchKeywordMapper.to(equipmentDto))
+//        val youtubeResults = youtubeService.search(SearchKeywordMapper.to(equipmentDto))
+        val youtubeResults = youtubeService.getCachedPlayList(equipmentDto.id.toLong())
         val reviews = equipmentService.findSimpleReviewByEquipmentId(productId)
 
         // todo: Spring Security에서 static 메서드로 캡슐화
