@@ -25,7 +25,7 @@ class UserController(
 ) {
     @PostMapping
     fun createUser(
-        @RequestBody createUserProfileDto: CreateUserProfileDto
+        @Valid @RequestBody createUserProfileDto: CreateUserProfileDto
     ): ResponseEntity<UserProfileDto> {
         val userProfileDto = userFacade.createProfile(createUserProfileDto)
         val tokenDto = authFacade.refreshToken()
@@ -53,7 +53,7 @@ class UserController(
 
     @PutMapping("/profile")
     fun updateUserProfile(
-        @RequestBody updateUserProfileDto: UpdateUserProfileDto
+        @Valid @RequestBody updateUserProfileDto: UpdateUserProfileDto
     ): ResponseEntity<UserProfileDto> {
         val userProfileDto = userFacade.updateProfile(updateUserProfileDto)
         return ResponseEntity.ok().body(userProfileDto)
