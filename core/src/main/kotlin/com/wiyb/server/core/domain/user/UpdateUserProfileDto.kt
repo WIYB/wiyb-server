@@ -1,5 +1,6 @@
 package com.wiyb.server.core.domain.user
 
+import com.wiyb.server.core.config.annotation.ImageEndpoint
 import com.wiyb.server.core.config.annotation.ValueOfEnum
 import com.wiyb.server.storage.database.entity.user.UserProfile
 import com.wiyb.server.storage.database.entity.user.constant.Gender
@@ -23,6 +24,7 @@ data class UpdateUserProfileDto(
     @field:Positive(message = "weight must be positive")
     val weight: Int? = null,
     @field:URL(message = "imageUrl must be url")
+    @ImageEndpoint
     val imageUrl: String? = null
 ) {
     fun updateEntity(entity: UserProfile): UserProfile {
