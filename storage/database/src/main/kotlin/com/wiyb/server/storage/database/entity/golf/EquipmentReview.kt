@@ -22,26 +22,26 @@ import org.hibernate.annotations.SQLRestriction
 class EquipmentReview(
     user: User,
     equipment: Equipment,
-    content: String,
     evaluationMetric: List<Float>,
+    content: String? = null,
     imageUrls: List<String>? = null
 ) : BaseEntity() {
-    @Column(name = "content", columnDefinition = "text", nullable = false)
-    var content: String = content
-        protected set
-
     @Convert(converter = FloatListConverter::class)
     @Column(name = "evaluation_metric", nullable = false)
     var evaluationMetric: List<Float> = evaluationMetric
         protected set
 
+    @Column(name = "like_count", nullable = false)
+    var likeCount: Int = 0
+        protected set
+
+    @Column(name = "content", columnDefinition = "text")
+    var content: String? = content
+        protected set
+
     @Convert(converter = StringListConverter::class)
     @Column(name = "image_urls", columnDefinition = "text")
     var imageUrls: List<String>? = imageUrls
-        protected set
-
-    @Column(name = "like_count", nullable = false)
-    var likeCount: Int = 0
         protected set
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
