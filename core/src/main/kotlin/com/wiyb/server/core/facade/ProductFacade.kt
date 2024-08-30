@@ -12,7 +12,10 @@ import com.wiyb.server.core.service.BrandService
 import com.wiyb.server.core.service.EquipmentService
 import com.wiyb.server.core.service.UserService
 import com.wiyb.server.core.service.YoutubeService
+import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
+import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
+import com.wiyb.server.storage.database.entity.golf.dto.ReviewPaginationDto
 import jakarta.transaction.Transactional
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -26,18 +29,21 @@ class ProductFacade(
 ) {
     fun findBrandList() = brandService.findBrandList()
 
-    fun getProductReviews(productId: Long): List<ProductReviewDto> {
+    fun getProductReviews(paginationDto: ReviewPaginationDto): PaginationResultDto<EquipmentReviewDto> {
         val session = SecurityContextHolder.getContext().authentication
-        val equipmentReviews = equipmentService.findReviewByEquipmentId(productId)
-        var likeIds: List<Long>? = null
+        val result = equipmentService.findReviewWithPagination(paginationDto)
 
         if (session.principal != "anonymousUser" && !session.authorities.stream().anyMatch { it.authority.equals("ROLE_GUEST") }) {
             val user = userService.findBySessionId(session.name)
-            likeIds =
-                equipmentService.findLikeByForeign(userId = user.id, equipmentReviewIds = equipmentReviews.map { it.id.toLong() })
+            val likeIds =
+                equipmentService.findLikeByForeign(userId = user.id, equipmentReviewIds = result.content.map { it.id.toLong() })
+
+            result.content.forEach { review ->
+                review.isLiked = likeIds.contains(review.id.toLong())
+            }
         }
 
-        return ProductReviewDto.from(equipmentReviews, likeIds)
+        return result
     }
 
     fun getProductDetail(
