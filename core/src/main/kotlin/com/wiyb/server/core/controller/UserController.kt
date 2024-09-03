@@ -9,6 +9,7 @@ import com.wiyb.server.core.facade.UserFacade
 import com.wiyb.server.storage.database.entity.user.dto.UserProfileDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,6 +24,7 @@ class UserController(
     private val userFacade: UserFacade,
     private val authFacade: AuthFacade
 ) {
+    @Secured("ROLE_GUEST")
     @PostMapping
     fun createUser(
         @Valid @RequestBody createUserProfileDto: CreateUserProfileDto
