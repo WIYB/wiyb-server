@@ -12,6 +12,6 @@ class CustomAuthenticationFailureHandler(
         response: HttpServletResponse,
         authenticationException: AuthenticationException
     ) {
-        response.sendRedirect("$clientOrigin/sign/failure")
+        response.sendRedirect("$clientOrigin/login/failure")
     }
 }

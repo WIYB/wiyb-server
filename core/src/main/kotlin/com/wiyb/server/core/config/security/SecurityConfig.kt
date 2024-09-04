@@ -5,6 +5,7 @@ import com.wiyb.server.core.filter.TokenExceptionFilter
 import com.wiyb.server.core.handler.auth.CustomAccessDeniedHandler
 import com.wiyb.server.core.handler.auth.CustomAuthenticationFailureHandler
 import com.wiyb.server.core.handler.auth.CustomAuthenticationSuccessHandler
+import com.wiyb.server.core.handler.auth.CustomAuthorizationRequestResolver
 import com.wiyb.server.core.handler.auth.CustomLogoutSuccessHandler
 import com.wiyb.server.core.service.CustomOAuth2UserService
 import org.springframework.beans.factory.annotation.Value
@@ -22,6 +23,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
@@ -32,6 +34,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 class SecurityConfig(
+    private val clientRegistrationRepository: ClientRegistrationRepository,
     private val customOAuth2UserService: CustomOAuth2UserService,
     private val tokenAuthenticationFilter: TokenAuthenticationFilter,
     private val customAuthenticationSuccessHandler: CustomAuthenticationSuccessHandler,
@@ -98,7 +101,14 @@ class SecurityConfig(
 
         http.oauth2Login {
             it
-                .userInfoEndpoint { u -> u.userService(customOAuth2UserService) }
+                .authorizationEndpoint { a ->
+                    a.authorizationRequestResolver(
+                        CustomAuthorizationRequestResolver(
+                            clientRegistrationRepository,
+                            "/oauth2/authorization"
+                        )
+                    )
+                }.userInfoEndpoint { u -> u.userService(customOAuth2UserService) }
                 .successHandler(customAuthenticationSuccessHandler)
                 .failureHandler(CustomAuthenticationFailureHandler(clientOrigin))
         }
