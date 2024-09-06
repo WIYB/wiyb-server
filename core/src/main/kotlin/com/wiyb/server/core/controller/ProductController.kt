@@ -32,7 +32,13 @@ class ProductController(
     private val productFacade: ProductFacade,
     private val productViewFacade: ProductViewFacade
 ) {
-    @GetMapping("/most/view/simple")
+    @GetMapping("/popular/all")
+    fun getPopularAll(): ResponseEntity<List<EquipmentSimpleDto>> =
+        ResponseEntity.ok().body(
+            productViewFacade.getPopularAllProduct()
+        )
+
+    @GetMapping("/popular/simple")
     fun getMostViewed(
         @Valid query: ProductTypeQueryDto
     ): ResponseEntity<List<EquipmentSimpleDto>> =
@@ -41,12 +47,6 @@ class ProductController(
                 type = query.type?.let { EquipmentType.fromCode(it) },
                 range = query.range?.let { TimeRange.fromCode(it) } ?: TimeRange.WEEKLY
             )
-        )
-
-    @GetMapping("/popular/all")
-    fun getPopularAll(): ResponseEntity<List<EquipmentSimpleDto>> =
-        ResponseEntity.ok().body(
-            productViewFacade.getPopularAllProduct()
         )
 
     @GetMapping("/popular/metric")
