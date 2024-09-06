@@ -5,21 +5,22 @@ import com.wiyb.server.storage.database.converter.CodedEnum
 import jakarta.persistence.Converter
 
 enum class EvaluationType(
-    private val code: String
+    private val code: String,
+    private val codeKo: String
 ) : CodedEnum<String> {
-    FORGIVENESS("forgiveness"),
-    DISTANCE("distance"),
-    ACCURACY("accuracy"),
-    IMPACT_FEEL("impactFeel"),
-    IMPACT_SOUND("impactSound"),
-    BACKSPIN("backspin"),
-    DISTANCE_CONTROL("distanceControl"),
-    STIFFNESS("stiffness"),
-    WEIGHT("weight"),
-    TRAJECTORY("trajectory"),
-    TOUCH("touch"),
-    GRIP_COMFORT("gripComfort"),
-    DURABILITY("durability");
+    FORGIVENESS("forgiveness", "관용성"),
+    DISTANCE("distance", "비거리"),
+    ACCURACY("accuracy", "정확도"),
+    IMPACT_FEEL("impactFeel", "타감"),
+    IMPACT_SOUND("impactSound", "타구음"),
+    BACKSPIN("backspin", "백스핀"),
+    DISTANCE_CONTROL("distanceControl", "거리감"),
+    STIFFNESS("stiffness", "강성"),
+    WEIGHT("weight", "무게"),
+    TRAJECTORY("trajectory", "탄도"),
+    TOUCH("touch", "터치감"),
+    GRIP_COMFORT("gripComfort", "그립감"),
+    DURABILITY("durability", "내구성");
 
     companion object {
         fun fromCode(code: String?): EvaluationType =
@@ -28,6 +29,8 @@ enum class EvaluationType(
     }
 
     override fun getCode(): String = code
+
+    fun getCodeKo(): String = codeKo
 
     @Converter(autoApply = true)
     class EvaluationTypeConverter : AbstractCodedEnumConverter<EvaluationType, String>(EvaluationType::class.java)
