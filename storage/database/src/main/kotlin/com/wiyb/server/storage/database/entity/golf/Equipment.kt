@@ -1,10 +1,8 @@
 package com.wiyb.server.storage.database.entity.golf
 
-import com.wiyb.server.storage.database.converter.FloatListConverter
 import com.wiyb.server.storage.database.converter.StringListConverter
 import com.wiyb.server.storage.database.entity.common.BaseEntity
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
-import com.wiyb.server.storage.database.entity.golf.dto.metric.BaseMetric
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Convert
@@ -13,6 +11,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
+import jakarta.persistence.OneToOne
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -38,15 +37,6 @@ class Equipment(
     var viewCount: Long = 0
         protected set
 
-    @Column(name = "evaluated_count", nullable = false)
-    var evaluatedCount: Long = 0
-        protected set
-
-    @Convert(converter = FloatListConverter::class)
-    @Column(name = "evaluation_metric_total", nullable = false)
-    var evaluationMetricTotal: List<Float> = BaseMetric.listPad()
-        protected set
-
     @Column(name = "released_year")
     var releasedYear: String? = releasedYear
         protected set
@@ -55,6 +45,9 @@ class Equipment(
     @Column(name = "image_urls", columnDefinition = "text")
     var imageUrls: List<String>? = imageUrls
         protected set
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
+    var evaluatedMetric: EquipmentEvaluatedMetric? = null
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipment", cascade = [CascadeType.REMOVE])
     protected val mutableEquipmentReviews: MutableList<EquipmentReview> = mutableListOf()
@@ -67,10 +60,5 @@ class Equipment(
 
     fun increase(count: Long) {
         viewCount += count
-    }
-
-    fun addEvaluationMetric(evaluationMetric: List<Float>) {
-        evaluatedCount++
-        evaluationMetricTotal = evaluationMetricTotal.zip(evaluationMetric).map { (a, b) -> a + b }
     }
 }

@@ -6,6 +6,7 @@ import com.wiyb.server.storage.database.entity.golf.detail.QWood.wood
 import com.wiyb.server.storage.database.entity.golf.detail.Wood
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentDto
+import com.wiyb.server.storage.database.entity.golf.dto.metric.QDriverMetric
 import com.wiyb.server.storage.database.repository.golf.detail.custom.WoodCustomRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository
@@ -22,12 +23,19 @@ class WoodCustomRepositoryImpl :
                     brand.name,
                     equipment.type,
                     equipment.name,
-                    equipment.evaluatedCount,
+                    equipment.evaluatedMetric.evaluatedCount,
                     wood,
                     equipment.releasedYear,
                     equipment.imageUrls,
                     equipment.viewCount,
-                    equipment.evaluationMetricTotal
+                    equipment.evaluatedMetric.evaluatedAverage,
+                    QDriverMetric(
+                        equipment.evaluatedMetric.forgivenessAverage,
+                        equipment.evaluatedMetric.distanceAverage,
+                        equipment.evaluatedMetric.accuracyAverage,
+                        equipment.evaluatedMetric.impactFeelAverage,
+                        equipment.evaluatedMetric.impactSoundAverage
+                    )
                 )
             ).leftJoin(wood.equipment, equipment)
             .leftJoin(equipment.brand, brand)

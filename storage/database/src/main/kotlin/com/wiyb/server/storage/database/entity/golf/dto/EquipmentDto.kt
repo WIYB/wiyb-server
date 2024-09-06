@@ -18,21 +18,9 @@ data class EquipmentDto
         val releasedYear: String?,
         val imageUrls: List<String>?,
         val viewCount: Long?,
-        private val evaluationMetricTotal: List<Float>?
+        val averageScore: Float,
+        val evaluationMetricAverage: BaseMetric
     ) {
-        val score: Float? = evaluationMetricTotal?.let { BaseMetric.average(type, reviewCount, evaluationMetricTotal) }
-        val evaluationMetricAverage: BaseMetric? =
-            evaluationMetricTotal
-                ?.let {
-                    if (reviewCount == 0L) {
-                        BaseMetric.listPad()
-                    } else {
-                        evaluationMetricTotal.map { elem ->
-                            elem / reviewCount
-                        }
-                    }
-                }?.let { BaseMetric.expand(type, it) }
-
         val detail = EquipmentDetailMapper.invoke(equipmentDetail)
         var reviews: List<EquipmentReviewDto>? = null
     }

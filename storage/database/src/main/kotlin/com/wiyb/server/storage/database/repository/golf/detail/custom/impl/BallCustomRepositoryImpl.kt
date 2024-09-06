@@ -6,6 +6,7 @@ import com.wiyb.server.storage.database.entity.golf.detail.Ball
 import com.wiyb.server.storage.database.entity.golf.detail.QBall.ball
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentDto
+import com.wiyb.server.storage.database.entity.golf.dto.metric.QNotSupportedMetric
 import com.wiyb.server.storage.database.repository.golf.detail.custom.BallCustomRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository
@@ -22,12 +23,15 @@ class BallCustomRepositoryImpl :
                     brand.name,
                     equipment.type,
                     equipment.name,
-                    equipment.evaluatedCount,
+                    equipment.evaluatedMetric.evaluatedCount,
                     ball,
                     equipment.releasedYear,
                     equipment.imageUrls,
                     equipment.viewCount,
-                    equipment.evaluationMetricTotal
+                    equipment.evaluatedMetric.evaluatedAverage,
+                    QNotSupportedMetric(
+                        equipment.evaluatedMetric.evaluatedAverage
+                    )
                 )
             ).leftJoin(ball.equipment, equipment)
             .leftJoin(equipment.brand, brand)

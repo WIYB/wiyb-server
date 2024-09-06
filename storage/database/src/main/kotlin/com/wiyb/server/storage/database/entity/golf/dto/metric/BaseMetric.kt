@@ -1,6 +1,7 @@
 package com.wiyb.server.storage.database.entity.golf.dto.metric
 
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
+import kotlin.reflect.full.memberProperties
 
 abstract class BaseMetric : EvaluatedMetric {
     override val forgiveness: Float? = null
@@ -8,7 +9,7 @@ abstract class BaseMetric : EvaluatedMetric {
     override val accuracy: Float? = null
     override val impactFeel: Float? = null
     override val impactSound: Float? = null
-    override val backSpin: Float? = null
+    override val backspin: Float? = null
     override val distanceControl: Float? = null
     override val stiffness: Float? = null
     override val weight: Float? = null
@@ -16,6 +17,13 @@ abstract class BaseMetric : EvaluatedMetric {
     override val touch: Float? = null
     override val gripComfort: Float? = null
     override val durability: Float? = null
+
+    fun sum(): Float =
+        this::class
+            .memberProperties
+            .filter { it.returnType.classifier == Float::class }
+            .map { it.getter.call(this) as? Float ?: 0f }
+            .sum()
 
     abstract fun flatten(): List<Float>
 
@@ -50,7 +58,7 @@ abstract class BaseMetric : EvaluatedMetric {
                         distance = data[1],
                         accuracy = data[2],
                         impactFeel = data[3],
-                        backSpin = data[4]
+                        backspin = data[4]
                     )
 
                 EquipmentType.PUTTER ->
@@ -75,22 +83,8 @@ abstract class BaseMetric : EvaluatedMetric {
                         durability = data[2]
                     )
 
-                else -> NotSupportedMetric()
+                else -> NotSupportedMetric(mock = 0f)
             }
-        }
-
-        fun average(
-            type: EquipmentType,
-            reviewCount: Long,
-            data: List<Float>
-        ): Float {
-            if (reviewCount <= 0) return 0f
-
-            return when (type) {
-                EquipmentType.PUTTER -> listOf(data[0], data[1], data[2], data[3])
-                EquipmentType.SHAFT, EquipmentType.GRIP -> listOf(data[0], data[1], data[2])
-                else -> data
-            }.average().toFloat() / reviewCount
         }
     }
 }
