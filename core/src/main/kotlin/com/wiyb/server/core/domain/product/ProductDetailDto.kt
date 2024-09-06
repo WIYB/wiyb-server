@@ -11,6 +11,7 @@ data class ProductDetailDto(
     val type: EquipmentType,
     val name: String,
     val reviewCount: Long,
+    val averageScore: Float,
     val viewCount: Long?,
     val detail: AbstractEquipmentDetail,
     val releasedYear: String?,

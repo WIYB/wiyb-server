@@ -6,6 +6,7 @@ import com.wiyb.server.storage.database.entity.golf.detail.Grip
 import com.wiyb.server.storage.database.entity.golf.detail.QGrip.grip
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentDto
+import com.wiyb.server.storage.database.entity.golf.dto.metric.QGripMetric
 import com.wiyb.server.storage.database.repository.golf.detail.custom.GripCustomRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository
@@ -22,12 +23,17 @@ class GripCustomRepositoryImpl :
                     brand.name,
                     equipment.type,
                     equipment.name,
-                    equipment.evaluatedCount,
+                    equipment.evaluatedMetric.evaluatedCount,
                     grip,
                     equipment.releasedYear,
                     equipment.imageUrls,
                     equipment.viewCount,
-                    equipment.evaluationMetricTotal
+                    equipment.evaluatedMetric.evaluatedAverage,
+                    QGripMetric(
+                        equipment.evaluatedMetric.touchAverage,
+                        equipment.evaluatedMetric.gripComfortAverage,
+                        equipment.evaluatedMetric.durabilityAverage
+                    )
                 )
             ).leftJoin(grip.equipment, equipment)
             .leftJoin(equipment.brand, brand)

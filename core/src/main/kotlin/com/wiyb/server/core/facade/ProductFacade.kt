@@ -2,6 +2,7 @@ package com.wiyb.server.core.facade
 
 import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
+import com.wiyb.server.core.domain.product.PopularProductByMetricQuery
 import com.wiyb.server.core.domain.product.PostProductReviewDto
 import com.wiyb.server.core.domain.product.ProductDetailDto
 import com.wiyb.server.core.domain.product.ProductReviewDto
@@ -14,7 +15,9 @@ import com.wiyb.server.core.service.YoutubeService
 import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
+import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.ReviewPaginationDto
+import com.wiyb.server.storage.database.entity.golf.dto.metric.BaseMetric
 import jakarta.transaction.Transactional
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -82,6 +85,8 @@ class ProductFacade(
         return productDetail
     }
 
+    fun getPopularProductByScore(dto: PopularProductByMetricQuery): List<EquipmentSimpleDto> = equipmentService.findPopularByMetric(dto)
+
     @Transactional
     fun postProductReview(
         productId: Long,
@@ -89,17 +94,21 @@ class ProductFacade(
     ) {
         val sessionId = SecurityContextHolder.getContext().authentication.name
         val user = userService.findBySessionId(sessionId)
-        val equipment = equipmentService.findOneById(productId)
 
         if (equipmentService.isAlreadyReviewedByUser(productId, user.id)) {
             throw CommonException(ErrorCode.ALREADY_REVIEWED)
         }
 
+        val equipment = equipmentService.findByIdWithMetric(productId)
+        val metric = equipment.evaluatedMetric
         val review = dto.toEntity(user, equipment)
+
         equipmentService.postProductReview(review)
 
-        equipment.addEvaluationMetric(review.evaluationMetric)
-        equipmentService.saveEquipment(equipment)
+        metric?.let {
+            it.addMetric(BaseMetric.expand(equipment.type, review.evaluationMetric))
+            equipmentService.saveEquipmentEvaluatedMetric(metric)
+        }
     }
 
     @Transactional

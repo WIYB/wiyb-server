@@ -4,13 +4,13 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.SheetsScopes
-import com.google.api.services.sheets.v4.model.ValueRange
 import com.google.auth.Credentials
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.GoogleCredentials
 import com.wiyb.server.storage.DatabaseContextTest
 import com.wiyb.server.storage.database.entity.golf.Brand
 import com.wiyb.server.storage.database.entity.golf.Equipment
+import com.wiyb.server.storage.database.entity.golf.EquipmentEvaluatedMetric
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.detail.Ball
 import com.wiyb.server.storage.database.entity.golf.detail.Driver
@@ -42,6 +42,7 @@ import kotlin.test.Test
 class EquipmentRepositoryTest(
     private val brandRepository: BrandRepository,
     private val equipmentRepository: EquipmentRepository,
+    private val equipmentEvaluatedMetricRepository: EquipmentEvaluatedMetricRepository,
     private val driverRepository: DriverRepository,
     private val woodRepository: WoodRepository,
     private val hybridRepository: HybridRepository,
@@ -84,19 +85,23 @@ class EquipmentRepositoryTest(
         end: Int,
         data: List<Long>
     ) {
-        service
-            .spreadsheets()
-            .values()
-            .update(
-                sheetId,
-                "$sheet!A$start:A$end",
-                ValueRange().setValues(
-                    data.map {
-                        listOf(it.toString())
-                    }
-                )
-            ).setValueInputOption("RAW")
-            .execute()
+//        service
+//            .spreadsheets()
+//            .values()
+//            .update(
+//                sheetId,
+//                "$sheet!A$start:A$end",
+//                ValueRange().setValues(
+//                    data.map {
+//                        listOf(it.toString())
+//                    }
+//                )
+//            ).setValueInputOption("RAW")
+//            .execute()
+        println(sheet)
+        println(start)
+        println(end)
+        println(data.size)
     }
 
     @BeforeAll
@@ -147,6 +152,7 @@ class EquipmentRepositoryTest(
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
         val drivers = mutableListOf<Driver>()
+        val metrics = mutableListOf<EquipmentEvaluatedMetric>()
 
         values
             .forEachIndexed { index, row ->
@@ -164,17 +170,20 @@ class EquipmentRepositoryTest(
                         equipment,
                         volume = getCol(row, 6)?.toFloat(),
                         loftDegree = getCol(row, 3)?.split(",") ?: emptyList(),
-                        // todo: 나중에 시트 업데이트되면 한 번 더 확인 필요!!
-                        isLoftChangeable = getCol(row, 7)?.isNotBlank(),
-                        isWeightChangeable = getCol(row, 8)?.isNotBlank()
-                        // todo: 여기까지
+                        isLoftChangeable = getCol(row, 8) == "O",
+                        isWeightChangeable = getCol(row, 9) == "O",
+                        isWeightMovable = getCol(row, 7) == "O"
                     )
+                val metric = EquipmentEvaluatedMetric(equipment, 5f)
+
                 equipments.add(equipment)
                 drivers.add(driver)
+                metrics.add(metric)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
         driverRepository.saveAllAndFlush(drivers)
+        equipmentEvaluatedMetricRepository.saveAllAndFlush(metrics)
 
         setSheetId("Driver", start, end, drivers.map { it.id })
 
@@ -200,6 +209,7 @@ class EquipmentRepositoryTest(
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
         val woods = mutableListOf<Wood>()
+        val metrics = mutableListOf<EquipmentEvaluatedMetric>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -244,12 +254,17 @@ class EquipmentRepositoryTest(
                         isWeightChangeable = getCol(row, 9)?.isNotBlank()
                         // todo: 여기까지
                     )
+
+                val metric = EquipmentEvaluatedMetric(equipment, 5f)
+
                 equipments.add(equipment)
                 woods.add(wood)
+                metrics.add(metric)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
         woodRepository.saveAllAndFlush(woods)
+        equipmentEvaluatedMetricRepository.saveAllAndFlush(metrics)
 
         setSheetId("Wood", start, end, woods.map { it.id })
     }
@@ -270,6 +285,7 @@ class EquipmentRepositoryTest(
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
         val hybrids = mutableListOf<Hybrid>()
+        val metrics = mutableListOf<EquipmentEvaluatedMetric>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -314,12 +330,17 @@ class EquipmentRepositoryTest(
                         isWeightChangeable = getCol(row, 10)?.isNotBlank()
                         // todo: 여기까지
                     )
+
+                val metric = EquipmentEvaluatedMetric(equipment, 5f)
+
                 equipments.add(equipment)
                 hybrids.add(hybrid)
+                metrics.add(metric)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
         hybridRepository.saveAllAndFlush(hybrids)
+        equipmentEvaluatedMetricRepository.saveAllAndFlush(metrics)
 
         setSheetId("Utility", start, end, hybrids.map { it.id })
     }
@@ -340,6 +361,7 @@ class EquipmentRepositoryTest(
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
         val irons = mutableListOf<Iron>()
+        val metrics = mutableListOf<EquipmentEvaluatedMetric>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -395,12 +417,16 @@ class EquipmentRepositoryTest(
                         lieAngle = lieAngle
                     )
 
+                val metric = EquipmentEvaluatedMetric(equipment, 5f)
+
                 equipments.add(equipment)
                 irons.add(iron)
+                metrics.add(metric)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
         ironRepository.saveAllAndFlush(irons)
+        equipmentEvaluatedMetricRepository.saveAllAndFlush(metrics)
 
         setSheetId("Iron", start, end, irons.map { it.id })
     }
@@ -421,6 +447,7 @@ class EquipmentRepositoryTest(
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
         val wedges = mutableListOf<Wedge>()
+        val metrics = mutableListOf<EquipmentEvaluatedMetric>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -459,7 +486,7 @@ class EquipmentRepositoryTest(
                         if (loft.isBlank() || bounce[idx].isBlank()) {
                             ""
                         } else {
-                            "$loft.${bounce[idx]}"
+                            "$loft.${String.format("%02d", bounce[idx].toInt())}"
                         }
                     }
 
@@ -472,12 +499,17 @@ class EquipmentRepositoryTest(
                         bounce = bounce,
                         grind = grind
                     )
+
+                val metric = EquipmentEvaluatedMetric(equipment, 5f)
+
                 equipments.add(equipment)
                 wedges.add(wedge)
+                metrics.add(metric)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
         wedgeRepository.saveAllAndFlush(wedges)
+        equipmentEvaluatedMetricRepository.saveAllAndFlush(metrics)
 
         setSheetId("Wedge", start, end, wedges.map { it.id })
     }
@@ -499,6 +531,7 @@ class EquipmentRepositoryTest(
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
         val putters = mutableListOf<Putter>()
+        val metrics = mutableListOf<EquipmentEvaluatedMetric>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -524,12 +557,17 @@ class EquipmentRepositoryTest(
                         weight = getCol(row, 4),
                         neckShape = getCol(row, 8)
                     )
+
+                val metric = EquipmentEvaluatedMetric(equipment, 4f)
+
                 equipments.add(equipment)
                 putters.add(putter)
+                metrics.add(metric)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
         putterRepository.saveAllAndFlush(putters)
+        equipmentEvaluatedMetricRepository.saveAllAndFlush(metrics)
 
         setSheetId("Putter", start, end, putters.map { it.id })
     }
@@ -550,6 +588,7 @@ class EquipmentRepositoryTest(
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
         val shafts = mutableListOf<Shaft>()
+        val metrics = mutableListOf<EquipmentEvaluatedMetric>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -581,12 +620,17 @@ class EquipmentRepositoryTest(
                         spin = getCol(row, 9),
                         launch = getCol(row, 10)
                     )
+
+                val metric = EquipmentEvaluatedMetric(equipment, 3f)
+
                 equipments.add(equipment)
                 shafts.add(shaft)
+                metrics.add(metric)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
         shaftRepository.saveAllAndFlush(shafts)
+        equipmentEvaluatedMetricRepository.saveAllAndFlush(metrics)
 
         setSheetId("Shaft", start, end, shafts.map { it.id })
     }
@@ -607,6 +651,7 @@ class EquipmentRepositoryTest(
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
         val grips = mutableListOf<Grip>()
+        val metrics = mutableListOf<EquipmentEvaluatedMetric>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -636,12 +681,17 @@ class EquipmentRepositoryTest(
                         torque = getCol(row, 6),
                         diameter = getCol(row, 7)
                     )
+
+                val metric = EquipmentEvaluatedMetric(equipment, 3f)
+
                 equipments.add(equipment)
                 grips.add(grip)
+                metrics.add(metric)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
         gripRepository.saveAllAndFlush(grips)
+        equipmentEvaluatedMetricRepository.saveAllAndFlush(metrics)
 
         setSheetId("Grip", start, end, grips.map { it.id })
     }
@@ -662,6 +712,7 @@ class EquipmentRepositoryTest(
         val values = range.getValues() as List<List<String>>
         val equipments = mutableListOf<Equipment>()
         val balls = mutableListOf<Ball>()
+        val metrics = mutableListOf<EquipmentEvaluatedMetric>()
 
         println(values[0].mapIndexed { index, value -> "$index: $value" })
         println(values[0].size)
@@ -690,12 +741,17 @@ class EquipmentRepositoryTest(
                         dimple = getCol(row, 6),
                         texture = getCol(row, 7)
                     )
+
+                val metric = EquipmentEvaluatedMetric(equipment, 0f)
+
                 equipments.add(equipment)
                 balls.add(ball)
+                metrics.add(metric)
             }
 
         equipmentRepository.saveAllAndFlush(equipments)
         ballRepository.saveAllAndFlush(balls)
+        equipmentEvaluatedMetricRepository.saveAllAndFlush(metrics)
 
         setSheetId("Ball", start, end, balls.map { it.id })
     }

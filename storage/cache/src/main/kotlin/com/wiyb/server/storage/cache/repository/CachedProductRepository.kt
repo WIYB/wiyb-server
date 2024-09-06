@@ -11,6 +11,8 @@ interface CachedProductRepository :
 
     fun findTop10ByOrderByWeeklyViewCountDesc(): List<CachedProduct>
 
+    fun findTop100ByOrderByWeeklyViewCountDesc(): List<CachedProduct>
+
     fun findTop10ByTypeOrderByDailyViewCountDesc(type: String): List<CachedProduct>
 
     fun findTop10ByOrderByDailyViewCountDesc(): List<CachedProduct>

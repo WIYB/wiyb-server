@@ -6,6 +6,7 @@ import com.wiyb.server.storage.database.entity.golf.detail.Driver
 import com.wiyb.server.storage.database.entity.golf.detail.QDriver.driver
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentDto
+import com.wiyb.server.storage.database.entity.golf.dto.metric.QDriverMetric
 import com.wiyb.server.storage.database.repository.golf.detail.custom.DriverCustomRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository
@@ -22,12 +23,19 @@ class DriverCustomRepositoryImpl :
                     brand.name,
                     equipment.type,
                     equipment.name,
-                    equipment.evaluatedCount,
+                    equipment.evaluatedMetric.evaluatedCount,
                     driver,
                     equipment.releasedYear,
                     equipment.imageUrls,
                     equipment.viewCount,
-                    equipment.evaluationMetricTotal
+                    equipment.evaluatedMetric.evaluatedAverage,
+                    QDriverMetric(
+                        equipment.evaluatedMetric.forgivenessAverage,
+                        equipment.evaluatedMetric.distanceAverage,
+                        equipment.evaluatedMetric.accuracyAverage,
+                        equipment.evaluatedMetric.impactFeelAverage,
+                        equipment.evaluatedMetric.impactSoundAverage
+                    )
                 )
             ).leftJoin(driver.equipment, equipment)
             .leftJoin(equipment.brand, brand)

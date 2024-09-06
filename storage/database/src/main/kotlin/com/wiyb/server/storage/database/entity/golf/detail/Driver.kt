@@ -21,7 +21,8 @@ class Driver(
     volume: Float? = null,
     loftDegree: List<String>? = null,
     isLoftChangeable: Boolean? = null,
-    isWeightChangeable: Boolean? = null
+    isWeightChangeable: Boolean? = null,
+    isWeightMovable: Boolean? = null
 ) : BaseEntity(equipment.id),
     AbstractDriver {
     // 드라이버 체적
@@ -43,6 +44,10 @@ class Driver(
     // 무게추 변경 가능 여부
     @Column(name = "is_weight_changeable")
     var isWeightChangeable: Boolean? = isWeightChangeable
+        protected set
+
+    @Column(name = "is_weight_movable")
+    var isWeightMovable: Boolean? = isWeightMovable
         protected set
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)

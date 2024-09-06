@@ -92,8 +92,6 @@ create table if not exists equipments
     name                    varchar(255) not null,
     type                    varchar(255) not null,
     view_count              bigint       not null,
-    evaluated_count         bigint       not null,
-    evaluation_metric_total varchar(255) not null,
     released_year           varchar(255) null,
     image_urls              text         null,
     created_at              datetime(6)  not null,
@@ -104,6 +102,66 @@ create table if not exists equipments
     constraint fk_equipments_brands_brand_id foreign key (brand_id) references brands (id)
 );
 
+create table if not exists equipment_evaluated_metrics
+(
+    id               bigint      not null
+        primary key,
+    evaluated_count  bigint      not null,
+    evaluated_total  float       not null,
+    rating_weight    float       not null,
+    forgiveness      float       null,
+    distance         float       null,
+    accuracy         float       null,
+    impact_feel      float       null,
+    impact_sound     float       null,
+    backspin         float       null,
+    distance_control float       null,
+    stiffness        float       null,
+    weight           float       null,
+    trajectory       float       null,
+    touch            float       null,
+    grip_comfort     float       null,
+    durability       float       null,
+    created_at       datetime(6) not null,
+    updated_at       datetime(6) not null,
+    deleted_at       datetime(6) null,
+
+    evaluated_average float as (case when evaluated_count > 0 then (evaluated_total / rating_weight) / evaluated_count else 0 end) stored,
+    forgiveness_average float as (case when evaluated_count > 0 then forgiveness / evaluated_count else 0 end) stored,
+    distance_average float as (case when evaluated_count > 0 then distance / evaluated_count else 0 end) stored,
+    accuracy_average float as (case when evaluated_count > 0 then accuracy / evaluated_count else 0 end) stored,
+    impact_feel_average float as (case when evaluated_count > 0 then impact_feel / evaluated_count else 0 end) stored,
+    impact_sound_average float as (case when evaluated_count > 0 then impact_sound / evaluated_count else 0 end) stored,
+    backspin_average float as (case when evaluated_count > 0 then backspin / evaluated_count else 0 end) stored,
+    distance_control_average float as (case when evaluated_count > 0 then distance_control / evaluated_count else 0 end) stored,
+    stiffness_average float as (case when evaluated_count > 0 then stiffness / evaluated_count else 0 end) stored,
+    weight_average float as (case when evaluated_count > 0 then weight / evaluated_count else 0 end) stored,
+    trajectory_average float as (case when evaluated_count > 0 then trajectory / evaluated_count else 0 end) stored,
+    touch_average float as (case when evaluated_count > 0 then touch / evaluated_count else 0 end) stored,
+    grip_comfort_average float as (case when evaluated_count > 0 then grip_comfort / evaluated_count else 0 end) stored,
+    durability_average float as (case when evaluated_count > 0 then durability / evaluated_count else 0 end) stored,
+
+    -- Equipment fk
+    constraint fk_equipment_evaluated_metrics_equipments_id foreign key (id) references equipments (id),
+
+    -- Index
+    index idx_evaluated_count (evaluated_count),
+    index idx_evaluated_average (evaluated_average),
+    index idx_forgiveness_average (forgiveness_average),
+    index idx_distance_average (distance_average),
+    index idx_accuracy_average (accuracy_average),
+    index idx_impact_feel_average (impact_feel_average),
+    index idx_impact_sound_average (impact_sound_average),
+    index idx_backspin_average (backspin_average),
+    index idx_distance_control_average (distance_control_average),
+    index idx_stiffness_average (stiffness_average),
+    index idx_weight_average (weight_average),
+    index idx_trajectory_average (trajectory_average),
+    index idx_touch_average (touch_average),
+    index idx_grip_comfort_average (grip_comfort_average),
+    index idx_durability_average (durability_average)
+);
+
 create table if not exists drivers
 (
     id                   bigint       not null
@@ -112,6 +170,7 @@ create table if not exists drivers
     loft_degree          varchar(255) null,
     is_loft_changeable   boolean      null,
     is_weight_changeable boolean      null,
+    is_weight_movable    boolean      null,
     created_at           datetime(6)  not null,
     updated_at           datetime(6)  not null,
     deleted_at           datetime(6)  null,

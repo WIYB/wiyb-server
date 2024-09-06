@@ -2,7 +2,6 @@ package com.wiyb.server.storage.database.entity.golf.dto
 
 import com.querydsl.core.annotations.QueryProjection
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
-import com.wiyb.server.storage.database.entity.golf.dto.metric.BaseMetric
 
 data class EquipmentSimpleDto
     @QueryProjection
@@ -13,9 +12,7 @@ data class EquipmentSimpleDto
         val name: String,
         val viewCount: Long,
         val reviewCount: Long,
-        private val evaluationMetricTotal: List<Float>? = null,
+        val averageScore: Float,
         val releasedYear: String?,
         val imageUrls: List<String>?
-    ) {
-        val score: Float? = evaluationMetricTotal?.let { BaseMetric.average(type, reviewCount, evaluationMetricTotal) }
-    }
+    )

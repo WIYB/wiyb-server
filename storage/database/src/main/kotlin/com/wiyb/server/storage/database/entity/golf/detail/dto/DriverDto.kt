@@ -10,4 +10,5 @@ data class DriverDto(
     val loftDegree: String? = equipment.loftDegree?.joinToString(separator = ", ") { "$it°" }
     val isLoftChangeable: Boolean? = equipment.isLoftChangeable
     val isWeightChangeable: Boolean? = equipment.isWeightChangeable
+    val isWeightMovable: Boolean? = equipment.isWeightMovable
 }

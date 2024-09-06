@@ -16,6 +16,7 @@ class ProductMapper {
                 type = from.type,
                 name = from.name,
                 reviewCount = from.reviewCount,
+                averageScore = from.averageScore,
                 viewCount = from.viewCount,
                 detail = from.detail,
                 releasedYear = from.releasedYear,

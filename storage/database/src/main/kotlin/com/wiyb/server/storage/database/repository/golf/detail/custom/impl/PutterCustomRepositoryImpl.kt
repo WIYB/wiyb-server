@@ -6,6 +6,7 @@ import com.wiyb.server.storage.database.entity.golf.detail.Putter
 import com.wiyb.server.storage.database.entity.golf.detail.QPutter.putter
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import com.wiyb.server.storage.database.entity.golf.dto.QEquipmentDto
+import com.wiyb.server.storage.database.entity.golf.dto.metric.QPutterMetric
 import com.wiyb.server.storage.database.repository.golf.detail.custom.PutterCustomRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository
@@ -22,12 +23,18 @@ class PutterCustomRepositoryImpl :
                     brand.name,
                     equipment.type,
                     equipment.name,
-                    equipment.evaluatedCount,
+                    equipment.evaluatedMetric.evaluatedCount,
                     putter,
                     equipment.releasedYear,
                     equipment.imageUrls,
                     equipment.viewCount,
-                    equipment.evaluationMetricTotal
+                    equipment.evaluatedMetric.evaluatedAverage,
+                    QPutterMetric(
+                        equipment.evaluatedMetric.forgivenessAverage,
+                        equipment.evaluatedMetric.accuracyAverage,
+                        equipment.evaluatedMetric.distanceControlAverage,
+                        equipment.evaluatedMetric.impactFeelAverage
+                    )
                 )
             ).leftJoin(putter.equipment, equipment)
             .leftJoin(equipment.brand, brand)

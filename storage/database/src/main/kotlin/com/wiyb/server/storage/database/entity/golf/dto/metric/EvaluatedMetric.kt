@@ -17,7 +17,7 @@ interface EvaluatedMetric {
     val impactSound: Float?
 
     // 어느정도의 백스핀을 만들어 주는가 (백스핀)
-    val backSpin: Float?
+    val backspin: Float?
 
     // 거리를 쉽게 예측할 수 있는가 (거리감)
     val distanceControl: Float?
