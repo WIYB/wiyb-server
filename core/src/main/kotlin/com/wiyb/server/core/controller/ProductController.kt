@@ -1,6 +1,7 @@
 package com.wiyb.server.core.controller
 
 import TimeRange
+import com.wiyb.server.core.domain.product.PopularProductByMetricQuery
 import com.wiyb.server.core.domain.product.PostProductReviewDto
 import com.wiyb.server.core.domain.product.ProductDetailDto
 import com.wiyb.server.core.domain.product.ProductDetailParameterDto
@@ -41,6 +42,17 @@ class ProductController(
                 range = query.range?.let { TimeRange.fromCode(it) } ?: TimeRange.WEEKLY
             )
         )
+
+    @GetMapping("/popular/all")
+    fun getPopularAll(): ResponseEntity<List<EquipmentSimpleDto>> =
+        ResponseEntity.ok().body(
+            productViewFacade.getPopularAllProduct()
+        )
+
+    @GetMapping("/popular/metric")
+    fun getPopularByMetric(
+        @Valid query: PopularProductByMetricQuery
+    ): ResponseEntity<List<EquipmentSimpleDto>> = ResponseEntity.ok().body(productFacade.getPopularProductByScore(query))
 
     @GetMapping("/{productId}/{productType}")
     fun getProductDetail(

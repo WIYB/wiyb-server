@@ -2,8 +2,10 @@ package com.wiyb.server.core.service
 
 import com.wiyb.server.core.domain.exception.CommonException
 import com.wiyb.server.core.domain.exception.ErrorCode
+import com.wiyb.server.core.domain.product.PopularProductByMetricQuery
 import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.golf.Equipment
+import com.wiyb.server.storage.database.entity.golf.EquipmentEvaluatedMetric
 import com.wiyb.server.storage.database.entity.golf.EquipmentReview
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
@@ -11,9 +13,11 @@ import com.wiyb.server.storage.database.entity.golf.dto.EquipmentReviewDto
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentSimpleDto
 import com.wiyb.server.storage.database.entity.golf.dto.ReviewPaginationDto
 import com.wiyb.server.storage.database.entity.golf.dto.SearchParameterDto
+import com.wiyb.server.storage.database.entity.golf.dto.metric.constant.EvaluationType
 import com.wiyb.server.storage.database.entity.user.User
 import com.wiyb.server.storage.database.entity.user.UserEquipmentBookmark
 import com.wiyb.server.storage.database.entity.user.UserEquipmentReviewLike
+import com.wiyb.server.storage.database.repository.golf.EquipmentEvaluatedMetricRepository
 import com.wiyb.server.storage.database.repository.golf.EquipmentRepository
 import com.wiyb.server.storage.database.repository.golf.EquipmentReviewRepository
 import com.wiyb.server.storage.database.repository.golf.detail.wrapper.EquipmentDetailRepositoryWrapper
@@ -27,7 +31,8 @@ class EquipmentService(
     private val equipmentReviewRepository: EquipmentReviewRepository,
     private val equipmentDetailRepositoryWrapper: EquipmentDetailRepositoryWrapper,
     private val userEquipmentReviewLikeRepository: UserEquipmentReviewLikeRepository,
-    private val userEquipmentBookmarkRepository: UserEquipmentBookmarkRepository
+    private val userEquipmentBookmarkRepository: UserEquipmentBookmarkRepository,
+    private val equipmentEvaluatedMetricRepository: EquipmentEvaluatedMetricRepository
 ) {
     fun findSimpleById(id: Long): EquipmentSimpleDto =
         equipmentRepository.findSimpleById(id) ?: throw CommonException(ErrorCode.PRODUCT_NOT_FOUND)
@@ -36,6 +41,18 @@ class EquipmentService(
         equipmentRepository.findById(id).orElseThrow {
             CommonException(ErrorCode.PRODUCT_NOT_FOUND)
         }
+
+    fun findByIdWithMetric(id: Long): Equipment =
+        equipmentRepository.findByIdWithMetric(id).orElseThrow {
+            CommonException(ErrorCode.PRODUCT_NOT_FOUND)
+        }
+
+    fun findPopularByMetric(query: PopularProductByMetricQuery): List<EquipmentSimpleDto> =
+        equipmentRepository.findTopScoreByMetric(
+            EquipmentType.fromCode(query.type),
+            EvaluationType.fromCode(query.metric),
+            query.size
+        )
 
     fun findReviewCounts(id: List<Long>): List<Long> = equipmentRepository.findReviewCounts(id)
 
@@ -90,6 +107,10 @@ class EquipmentService(
 
     fun saveEquipment(equipment: Equipment) {
         equipmentRepository.save(equipment)
+    }
+
+    fun saveEquipmentEvaluatedMetric(metric: EquipmentEvaluatedMetric) {
+        equipmentEvaluatedMetricRepository.save(metric)
     }
 
     fun postProductReview(equipmentReview: EquipmentReview) {
