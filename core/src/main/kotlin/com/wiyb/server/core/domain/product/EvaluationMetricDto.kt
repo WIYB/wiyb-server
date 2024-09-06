@@ -18,7 +18,7 @@ data class EvaluationMetricDto(
     @field:Range(min = 1, max = 5)
     val impactSound: Float? = null,
     @field:Range(min = 1, max = 5)
-    val backSpin: Float? = null,
+    val backspin: Float? = null,
     @field:Range(min = 1, max = 5)
     val distanceControl: Float? = null,
     @field:Range(min = 1, max = 5)
@@ -42,7 +42,7 @@ data class EvaluationMetricDto(
                 BaseMetric.listPad(forgiveness!!, distance!!, accuracy!!, impactFeel!!, impactSound!!)
 
             EquipmentType.IRON, EquipmentType.WEDGE ->
-                BaseMetric.listPad(forgiveness!!, distance!!, accuracy!!, impactFeel!!, backSpin!!)
+                BaseMetric.listPad(forgiveness!!, distance!!, accuracy!!, impactFeel!!, backspin!!)
 
             EquipmentType.PUTTER ->
                 BaseMetric.listPad(forgiveness!!, accuracy!!, distanceControl!!, impactFeel!!)
@@ -65,7 +65,7 @@ data class EvaluationMetricDto(
                     listOf(forgiveness, distance, accuracy, impactFeel, impactSound).any { it == null }
 
                 EquipmentType.IRON, EquipmentType.WEDGE ->
-                    listOf(forgiveness, distance, accuracy, impactFeel, backSpin).any { it == null }
+                    listOf(forgiveness, distance, accuracy, impactFeel, backspin).any { it == null }
 
                 EquipmentType.PUTTER ->
                     listOf(forgiveness, accuracy, distanceControl, impactFeel).any { it == null }
