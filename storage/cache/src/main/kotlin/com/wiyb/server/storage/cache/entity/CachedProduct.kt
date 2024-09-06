@@ -16,6 +16,7 @@ data class CachedProduct(
     @Indexed
     val name: String,
     var reviewCount: Long = 0,
+    var averageScore: Float = 0f,
     val releasedYear: String?,
     val imageUrls: List<String>?,
     @Indexed

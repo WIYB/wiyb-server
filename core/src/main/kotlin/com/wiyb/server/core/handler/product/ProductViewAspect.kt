@@ -1,10 +1,10 @@
 package com.wiyb.server.core.handler.product
 
+import com.wiyb.server.core.domain.product.ProductDetailDto
 import com.wiyb.server.core.domain.product.mapper.EquipmentCacheMapper
 import com.wiyb.server.core.service.ProductService
 import com.wiyb.server.core.service.UserService
 import com.wiyb.server.storage.cache.entity.CachedProduct
-import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
 import org.aspectj.lang.annotation.AfterReturning
 import org.aspectj.lang.annotation.Aspect
 import org.springframework.http.ResponseEntity
@@ -21,7 +21,7 @@ class ProductViewAspect(
         pointcut = "execution(* com.wiyb.server.core.controller.ProductController.getProductDetail(..))",
         returning = "response"
     )
-    fun cacheProductViewCount(response: ResponseEntity<EquipmentDto>) {
+    fun cacheProductViewCount(response: ResponseEntity<ProductDetailDto>) {
         val result = response.body ?: return
 
         val sessionId: String = SecurityContextHolder.getContext().authentication.name

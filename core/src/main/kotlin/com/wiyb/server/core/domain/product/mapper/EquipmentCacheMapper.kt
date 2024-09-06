@@ -1,6 +1,7 @@
 package com.wiyb.server.core.domain.product.mapper
 
 import TimeRange
+import com.wiyb.server.core.domain.product.ProductDetailDto
 import com.wiyb.server.storage.cache.entity.CachedProduct
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
@@ -15,6 +16,19 @@ class EquipmentCacheMapper {
                 dto.type.toString(),
                 dto.name,
                 dto.reviewCount,
+                dto.averageScore,
+                dto.releasedYear,
+                dto.imageUrls
+            )
+
+        fun to(dto: ProductDetailDto): CachedProduct =
+            CachedProduct(
+                dto.id.toLong(),
+                dto.brand,
+                dto.type.toString(),
+                dto.name,
+                dto.reviewCount,
+                dto.averageScore,
                 dto.releasedYear,
                 dto.imageUrls
             )
@@ -26,6 +40,7 @@ class EquipmentCacheMapper {
                 dto.type.toString(),
                 dto.name,
                 dto.reviewCount,
+                dto.averageScore,
                 dto.releasedYear,
                 dto.imageUrls
             )
@@ -41,6 +56,7 @@ class EquipmentCacheMapper {
                 name = dto.name,
                 viewCount = if (range == TimeRange.WEEKLY) dto.weeklyViewCount else dto.dailyViewCount,
                 reviewCount = dto.reviewCount,
+                averageScore = dto.averageScore,
                 releasedYear = dto.releasedYear,
                 imageUrls = dto.imageUrls
             )
