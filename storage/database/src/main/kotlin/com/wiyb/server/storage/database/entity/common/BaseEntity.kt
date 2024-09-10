@@ -37,7 +37,7 @@ abstract class BaseEntity(
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    var updatedAt: LocalDateTime? = LocalDateTime.now()
+    var updatedAt: LocalDateTime = LocalDateTime.now()
         protected set
 
     @Column(name = "deleted_at")
