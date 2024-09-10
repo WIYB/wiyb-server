@@ -9,5 +9,11 @@ class StringListConverter : AttributeConverter<List<String>, String> {
 
     override fun convertToDatabaseColumn(attribute: List<String>?): String? = attribute?.joinToString(separator)
 
-    override fun convertToEntityAttribute(data: String?): List<String> = listOf(*data?.split(separator)?.toTypedArray() ?: emptyArray())
+    override fun convertToEntityAttribute(data: String?): List<String> {
+        if (data.isNullOrBlank()) {
+            return emptyList()
+        }
+
+        return data.split(separator).toList()
+    }
 }
