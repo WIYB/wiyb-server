@@ -6,6 +6,7 @@ import com.wiyb.server.core.domain.exception.ErrorCode
 import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.community.Comment
 import com.wiyb.server.storage.database.entity.community.Post
+import com.wiyb.server.storage.database.entity.community.dto.CommentDto
 import com.wiyb.server.storage.database.entity.community.dto.PostDto
 import com.wiyb.server.storage.database.entity.community.dto.PostPaginationDto
 import com.wiyb.server.storage.database.repository.community.CommentRepository
@@ -17,6 +18,21 @@ class CommunityService(
     private val postRepository: PostRepository,
     private val commentRepository: CommentRepository
 ) {
+    fun unsafeCheckExistsComment(
+        commentId: Long,
+        postId: Long
+    ): Boolean = commentRepository.countByIdAndPostIdWithDeleted(commentId, postId) > 0
+
+    fun isAuthor(
+        postId: Long,
+        authorId: Long
+    ): Boolean = postRepository.countByIdAndAuthorId(postId, authorId) > 0
+
+    fun isCommentAuthor(
+        commentId: Long,
+        authorId: Long
+    ): Boolean = commentRepository.countByIdAndAuthorId(commentId, authorId) > 0
+
     fun getPostDetail(id: Long): PostDto = postRepository.findDetailById(id).orElseThrow { CommonException(ErrorCode.POST_NOT_FOUND) }
 
     fun getPost(id: Long): Post = postRepository.findById(id).orElseThrow { CommonException(ErrorCode.POST_NOT_FOUND) }
@@ -27,8 +43,10 @@ class CommunityService(
 
     fun deletePost(id: Long) = postRepository.deleteById(id)
 
+    fun getComments(postId: Long): List<CommentDto> = commentRepository.findByPostId(postId)
+
     fun getComment(path: CommentIdPath): Comment =
-        commentRepository.findByIdAndPostId(path.commentId, path.postId).orElseThrow {
+        commentRepository.findByIdAndPostIdAndDeletedAtNull(path.commentId, path.postId).orElseThrow {
             CommonException(ErrorCode.COMMENT_NOT_FOUND)
         }
 

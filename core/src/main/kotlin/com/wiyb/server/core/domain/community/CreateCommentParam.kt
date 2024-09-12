@@ -12,7 +12,7 @@ data class CreateCommentParam(
     @Length(max = 500)
     val content: String,
     @field:Positive
-    val replyId: Long? = null
+    val replyTo: Long? = null
 ) {
     fun to(
         userProfile: UserProfile,
@@ -21,7 +21,7 @@ data class CreateCommentParam(
         Comment(
             userProfile = userProfile,
             post = post,
-            content = content,
-            replyId = replyId
+            replyTo = replyTo,
+            content = content
         )
 }

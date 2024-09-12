@@ -14,6 +14,7 @@ import com.wiyb.server.storage.database.entity.community.dto.CommentDto
 import com.wiyb.server.storage.database.entity.community.dto.PostDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -41,17 +42,20 @@ class CommunityController(
         @Valid path: PostIdPath
     ): ResponseEntity<PostDetailDto> = ResponseEntity.ok(communityFacade.getPostDetail(path.postId))
 
+    @Secured("ROLE_USER")
     @PostMapping("/post")
     fun createPost(
         @Valid @RequestBody body: CreatePostParam
     ): ResponseEntity<PostDto> = ResponseEntity.ok(communityFacade.createPost(body))
 
+    @Secured("ROLE_USER")
     @PatchMapping("/post/{postId}")
     fun updatePost(
         @Valid path: PostIdPath,
         @Valid @RequestBody body: UpdatePostParam
     ): ResponseEntity<PostDto> = ResponseEntity.ok(communityFacade.updatePost(path.postId, body))
 
+    @Secured("ROLE_USER")
     @DeleteMapping("/post/{postId}")
     fun deletePost(
         @Valid path: PostIdPath
@@ -61,18 +65,21 @@ class CommunityController(
      * Comment
      */
 
+    @Secured("ROLE_USER")
     @PostMapping("/post/{postId}/comment")
     fun createComment(
         @Valid path: PostIdPath,
         @Valid @RequestBody body: CreateCommentParam
     ): ResponseEntity<CommentDto> = ResponseEntity.ok(communityFacade.createComment(path.postId, body))
 
+    @Secured("ROLE_USER")
     @PatchMapping("/post/{postId}/comment/{commentId}")
     fun updateComment(
         @Valid path: CommentIdPath,
         @Valid @RequestBody body: UpdateCommentParam
     ): ResponseEntity<CommentDto> = ResponseEntity.ok(communityFacade.updateComment(path, body))
 
+    @Secured("ROLE_USER")
     @DeleteMapping("/post/{postId}/comment/{commentId}")
     fun deleteComment(
         @Valid path: CommentIdPath
