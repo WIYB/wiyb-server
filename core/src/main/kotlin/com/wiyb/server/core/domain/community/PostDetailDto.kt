@@ -16,7 +16,7 @@ data class PostDetailDto(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val author: UserSimpleProfileDto,
-    val comments: List<CommentDetailDto>
+    val comments: List<CommentDetailDto>? = null
 ) {
     companion object {
         fun from(dto: PostDto): PostDetailDto =
@@ -26,12 +26,12 @@ data class PostDetailDto(
                 title = dto.title,
                 content = dto.content!!,
                 viewCount = dto.viewCount,
-                commentCount = dto.commentCount!!,
+                commentCount = dto.commentCount,
                 imageUrls = dto.imageUrls,
                 createdAt = dto.createdAt,
                 updatedAt = dto.updatedAt,
                 author = dto.author,
-                comments = CommentDetailDto.from(dto.comments!!)
+                comments = dto.comments?.let { CommentDetailDto.from(it) }
             )
     }
 }

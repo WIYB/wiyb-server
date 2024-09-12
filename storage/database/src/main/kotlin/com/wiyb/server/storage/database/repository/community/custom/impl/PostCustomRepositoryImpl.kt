@@ -1,7 +1,7 @@
 package com.wiyb.server.storage.database.repository.community.custom.impl
 
 import com.querydsl.core.BooleanBuilder
-import com.querydsl.core.group.GroupBy.list
+import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.JPQLQuery
 import com.wiyb.server.storage.database.entity.common.dto.PaginationResultDto
 import com.wiyb.server.storage.database.entity.community.Post
@@ -10,7 +10,6 @@ import com.wiyb.server.storage.database.entity.community.QPost.post
 import com.wiyb.server.storage.database.entity.community.constant.Category
 import com.wiyb.server.storage.database.entity.community.dto.PostDto
 import com.wiyb.server.storage.database.entity.community.dto.PostPaginationDto
-import com.wiyb.server.storage.database.entity.community.dto.QCommentDto
 import com.wiyb.server.storage.database.entity.community.dto.QPostDto
 import com.wiyb.server.storage.database.entity.user.dto.QUserSimpleProfileDto
 import com.wiyb.server.storage.database.repository.community.custom.PostCustomRepository
@@ -46,27 +45,12 @@ class PostCustomRepositoryImpl :
                             post.author.weight,
                             post.author.imageUrl
                         ),
-                        list(
-                            QCommentDto(
-                                comment.id.stringValue(),
-                                comment.content,
-                                comment.createdAt,
-                                comment.updatedAt,
-                                QUserSimpleProfileDto(
-                                    comment.author.id.stringValue(),
-                                    comment.author.nickname,
-                                    comment.author.handy,
-                                    comment.author.height,
-                                    comment.author.weight,
-                                    comment.author.imageUrl
-                                ),
-                                comment.replyId.stringValue()
-                            )
-                        )
+                        Expressions.nullExpression()
                     )
                 ).leftJoin(post.mutableComments, comment)
+                .leftJoin(comment.author)
                 .where(post.id.eq(id))
-                .fetchOne()
+                .fetchFirst()
 
         return Optional.ofNullable(post)
     }
@@ -89,7 +73,7 @@ class PostCustomRepositoryImpl :
                     post.id.stringValue(),
                     post.category,
                     post.title,
-                    null,
+                    Expressions.nullExpression(),
                     post.viewCount,
                     post.commentCount,
                     post.imageUrls,
@@ -103,7 +87,7 @@ class PostCustomRepositoryImpl :
                         post.author.weight,
                         post.author.imageUrl
                     ),
-                    null
+                    Expressions.nullExpression()
                 )
             ).where(categoryStrategy(parameter.category))
             .groupBy(post.id)

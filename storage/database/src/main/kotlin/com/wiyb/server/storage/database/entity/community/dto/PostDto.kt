@@ -13,14 +13,14 @@ data class PostDto
         val id: String,
         val category: Category,
         val title: String,
-        val content: String?,
+        val content: String? = null,
         val viewCount: Long,
-        val commentCount: Long?,
-        val imageUrls: List<String>?,
+        val commentCount: Long,
+        val imageUrls: List<String>? = null,
         val createdAt: LocalDateTime,
         val updatedAt: LocalDateTime,
         val author: UserSimpleProfileDto,
-        val comments: List<CommentDto>?
+        var comments: List<CommentDto>? = null
     ) {
         companion object {
             fun from(
@@ -33,7 +33,7 @@ data class PostDto
                     title = entity.title,
                     content = entity.content,
                     viewCount = entity.viewCount,
-                    commentCount = null,
+                    commentCount = entity.commentCount,
                     imageUrls = entity.imageUrls,
                     createdAt = entity.createdAt,
                     updatedAt = entity.updatedAt,
