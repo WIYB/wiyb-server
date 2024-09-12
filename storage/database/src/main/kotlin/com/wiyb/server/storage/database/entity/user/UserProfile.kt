@@ -23,7 +23,7 @@ class UserProfile(
     height: Int? = null,
     weight: Int? = null,
     imageUrl: String? = null
-) : BaseEntity() {
+) : BaseEntity(user.id) {
     @Column(name = "nickname", nullable = false)
     var nickname: String = nickname
         protected set
@@ -53,7 +53,7 @@ class UserProfile(
         protected set
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     var user: User = user
         protected set
 

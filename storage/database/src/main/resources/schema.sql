@@ -16,7 +16,6 @@ create table if not exists user_profiles
 (
     id         bigint       not null
         primary key,
-    user_id    bigint       not null,
     nickname   varchar(255) not null,
     gender     varchar(255) not null,
     birth      date         not null,
@@ -29,8 +28,7 @@ create table if not exists user_profiles
     deleted_at datetime(6)  null,
 
     -- User (1:1, uk, fk)
-    constraint uk_user_profiles_user_id unique (user_id),
-    constraint fk_user_profiles_users_user_id foreign key (user_id) references users (id)
+    constraint fk_user_profiles_users_user_id foreign key (id) references users (id)
 );
 
 -- ##############################
@@ -67,6 +65,47 @@ create table if not exists authorizations
     constraint fk_authorizations_users_user_id foreign key (user_id) references users (id)
 );
 
+-- ##############################
+-- #  Community
+-- ##############################
+
+create table if not exists posts
+(
+    id            bigint       not null
+        primary key,
+    author_id     bigint       not null,
+    category      varchar(255) not null,
+    title         varchar(255) not null,
+    content       text         not null,
+    view_count    bigint       not null,
+    comment_count bigint       not null,
+    image_urls    text         null,
+    created_at    datetime(6)  not null,
+    updated_at    datetime(6)  not null,
+    deleted_at    datetime(6)  null,
+
+    -- User fk
+    constraint fk_post_users_id foreign key (author_id) references users (id)
+);
+
+create table if not exists comments
+(
+    id         bigint       not null
+        primary key,
+    author_id  bigint       not null,
+    post_id    bigint       not null,
+    reply_to   bigint       null,
+    content    text         not null,
+    created_at datetime(6)  not null,
+    updated_at datetime(6)  not null,
+    deleted_at datetime(6)  null,
+
+    -- User fk
+    constraint fk_comment_users_id foreign key (author_id) references users (id),
+
+    -- Post fk
+    constraint fk_comment_posts_id foreign key (post_id) references posts (id)
+);
 
 -- ##############################
 -- #  Golf

@@ -39,5 +39,12 @@ enum class ErrorCode(
 
     // Product Bookmark
     ALREADY_BOOKMARKED(HttpStatus.BAD_REQUEST, 3200, "이미 북마크를 추가하셨습니다."),
-    NOT_BOOKMARKED(HttpStatus.BAD_REQUEST, 3201, "북마크를 추가하지 않았습니다.")
+    NOT_BOOKMARKED(HttpStatus.BAD_REQUEST, 3201, "북마크를 추가하지 않았습니다."),
+
+    // Community
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, 4000, "POST_NOT_FOUND"),
+    INSUFFICIENT_POST_AUTHORITY(HttpStatus.FORBIDDEN, 4001, "INSUFFICIENT_POST_AUTHORITY"),
+
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, 4100, "COMMENT_NOT_FOUND"),
+    COMMENT_REPLY_NOT_ALLOWED(HttpStatus.BAD_REQUEST, 4101, "COMMENT_REPLY_NOT_ALLOWED")
 }
