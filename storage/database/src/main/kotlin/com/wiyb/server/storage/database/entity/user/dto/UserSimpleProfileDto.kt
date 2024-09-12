@@ -14,14 +14,29 @@ data class UserSimpleProfileDto
         val imageUrl: String?
     ) {
         companion object {
-            fun from(userProfile: UserProfile): UserSimpleProfileDto =
-                UserSimpleProfileDto(
-                    id = userProfile.user.id.toString(),
+            fun from(userProfile: UserProfile? = null): UserSimpleProfileDto {
+                if (userProfile == null) {
+                    return deletedUser()
+                }
+
+                return UserSimpleProfileDto(
+                    id = userProfile.id.toString(),
                     nickname = userProfile.nickname,
                     handy = userProfile.handy,
                     height = userProfile.height,
                     weight = userProfile.weight,
                     imageUrl = userProfile.imageUrl
+                )
+            }
+
+            private fun deletedUser(id: String? = null): UserSimpleProfileDto =
+                UserSimpleProfileDto(
+                    id = id ?: "",
+                    nickname = "탈퇴한 사용자",
+                    handy = null,
+                    height = null,
+                    weight = null,
+                    imageUrl = null
                 )
         }
     }

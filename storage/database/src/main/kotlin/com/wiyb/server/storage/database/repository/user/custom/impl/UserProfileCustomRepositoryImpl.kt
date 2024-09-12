@@ -14,7 +14,9 @@ class UserProfileCustomRepositoryImpl :
     UserProfileCustomRepository {
     override fun findBySessionId(sessionId: String): UserProfile? =
         from(userProfile)
+            .select(userProfile)
             .innerJoin(userProfile.user, user)
+            .innerJoin(user.mutableAuthorizations, authorization)
             .where(authorization.sessionId.eq(sessionId))
             .fetchOne()
 }
