@@ -1,5 +1,4 @@
 spring.application.name: core
-spring.profiles.active: local
 
 spring:
   config:
@@ -63,3 +62,7 @@ spring.config.activate.on-profile: staging
 
 ---
 spring.config.activate.on-profile: prod
+
+
+---
+spring.config.activate.on-profile: test

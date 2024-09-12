@@ -9,23 +9,24 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import org.hibernate.annotations.SQLDelete
-import org.hibernate.annotations.SQLRestriction
 
+/**
+ * Comment Entity는 특수하게 deleted_at is not null 조건이 없음.
+ */
 @Entity(name = "comments")
-@SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE comments SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 class Comment(
     userProfile: UserProfile,
     post: Post,
-    content: String,
-    replyId: Long? = null
+    replyTo: Long? = null,
+    content: String
 ) : BaseEntity() {
-    @Column(name = "content", columnDefinition = "text", nullable = false)
-    var content: String = content
+    @Column(name = "reply_to")
+    var replyTo: Long? = replyTo
         protected set
 
-    @Column(name = "reply_id")
-    var replyId: Long? = replyId
+    @Column(name = "content", columnDefinition = "text", nullable = false)
+    var content: String = content
         protected set
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

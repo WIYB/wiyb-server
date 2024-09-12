@@ -10,22 +10,25 @@ data class CommentDto
     @QueryProjection
     constructor(
         val id: String,
+        val replyTo: String? = null,
         val content: String,
         val createdAt: LocalDateTime,
         val updatedAt: LocalDateTime,
-        val author: UserSimpleProfileDto,
-        val replyId: String? = null
+        val deletedAt: LocalDateTime?,
+        val author: UserSimpleProfileDto
     ) {
         companion object {
             fun from(
                 comment: Comment,
-                userProfile: UserProfile
+                userProfile: UserProfile?
             ): CommentDto =
                 CommentDto(
                     id = comment.id.toString(),
+                    replyTo = comment.replyTo?.toString(),
                     content = comment.content,
                     createdAt = comment.createdAt,
                     updatedAt = comment.updatedAt,
+                    deletedAt = comment.deletedAt,
                     author = UserSimpleProfileDto.from(userProfile)
                 )
         }
