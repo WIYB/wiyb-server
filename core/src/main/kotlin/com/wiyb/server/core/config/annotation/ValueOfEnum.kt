@@ -13,6 +13,7 @@ import kotlin.reflect.KClass
 @Constraint(validatedBy = [EnumValidator::class])
 annotation class ValueOfEnum(
     val enumClass: KClass<out Enum<*>>,
+    val excludes: Array<String> = [],
     val message: String = "",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = []

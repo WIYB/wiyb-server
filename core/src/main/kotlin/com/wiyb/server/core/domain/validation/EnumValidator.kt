@@ -14,6 +14,7 @@ class EnumValidator : ConstraintValidator<ValueOfEnum, CharSequence> {
             constraintAnnotation.enumClass.java
                 .enumConstants
                 .map { it.name }
+                .filter { it !in constraintAnnotation.excludes }
         )
     }
 

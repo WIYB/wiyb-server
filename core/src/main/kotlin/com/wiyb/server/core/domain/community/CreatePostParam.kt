@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length
 
 data class CreatePostParam(
     @field:NotBlank
-    @field:ValueOfEnum(enumClass = Category::class)
+    @field:ValueOfEnum(enumClass = Category::class, excludes = ["ALL"])
     val category: String,
     @field:NotBlank
     @field:Length(max = 100)
