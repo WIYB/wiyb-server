@@ -164,20 +164,20 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.DRIVER,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 4),
-                        imageUrls = getCol(row, 5)?.split(",")
+                        releasedYear = getCol(row, 3),
+                        imageUrls = getCol(row, 4)?.split(",")
                     )
                 val driver =
                     Driver(
                         equipment,
-                        volume = getCol(row, 6)?.toFloat(),
-                        loftDegree = getCol(row, 3)?.split(",") ?: emptyList(),
-                        isLoftChangeable = getCol(row, 8) == "O",
-                        isWeightChangeable = getCol(row, 9) == "O",
-                        isWeightMovable = getCol(row, 7) == "O"
+                        volume = getCol(row, 5)?.toFloat(),
+                        loftDegree = getCol(row, 2)?.split(",") ?: emptyList(),
+                        isLoftChangeable = getCol(row, 7) == "O",
+                        isWeightChangeable = getCol(row, 8) == "O",
+                        isWeightMovable = getCol(row, 6) == "O"
                     )
                 val metric = EquipmentEvaluatedMetric(equipment, 5f)
-
+                "TaylorMade"
                 equipments.add(equipment)
                 drivers.add(driver)
                 metrics.add(metric)
@@ -227,13 +227,13 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.WOOD,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 4),
-                        imageUrls = getCol(row, 5)?.split(",")
+                        releasedYear = getCol(row, 3),
+                        imageUrls = getCol(row, 4)?.split(",")
                     )
 
-                val primitiveNumber = getCol(row, 6)?.split(",")
-                val primitiveLoftDegree = getCol(row, 3)?.split(",")
-                val primitiveLieAngle = getCol(row, 7)?.split(",")
+                val primitiveNumber = getCol(row, 5)?.split(",")
+                val primitiveLoftDegree = getCol(row, 2)?.split(",")
+                val primitiveLieAngle = getCol(row, 6)?.split(",")
 
                 val maxSize =
                     maxOf(
@@ -252,8 +252,8 @@ class EquipmentRepositoryTest(
                         loftDegree = loftDegree,
                         // todo: 나중에 시트 업데이트되면 한 번 더 확인 필요!!
                         lieAngle = lieAngle,
-                        isLoftChangeable = getCol(row, 8)?.isNotBlank(),
-                        isWeightChangeable = getCol(row, 9)?.isNotBlank()
+                        isLoftChangeable = getCol(row, 7)?.isNotBlank(),
+                        isWeightChangeable = getCol(row, 8)?.isNotBlank()
                         // todo: 여기까지
                     )
 
@@ -303,13 +303,13 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.HYBRID,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 5),
-                        imageUrls = getCol(row, 6)?.split(",")
+                        releasedYear = getCol(row, 3),
+                        imageUrls = getCol(row, 4)?.split(",")
                     )
 
-                val primitiveNumber = getCol(row, 7)?.split(",")
-                val primitiveLoftDegree = getCol(row, 4)?.split(",")
-                val primitiveLieAngle = getCol(row, 8)?.split(",")
+                val primitiveNumber = getCol(row, 5)?.split(",")
+                val primitiveLoftDegree = getCol(row, 2)?.split(",")
+                val primitiveLieAngle = getCol(row, 6)?.split(",")
 
                 val maxSize =
                     maxOf(
@@ -328,8 +328,8 @@ class EquipmentRepositoryTest(
                         loftDegree = loftDegree,
                         // todo: 나중에 시트 업데이트되면 한 번 더 확인 필요!!
                         lieAngle = lieAngle,
-                        isLoftChangeable = getCol(row, 9)?.isNotBlank(),
-                        isWeightChangeable = getCol(row, 10)?.isNotBlank()
+                        isLoftChangeable = getCol(row, 7)?.isNotBlank(),
+                        isWeightChangeable = getCol(row, 8)?.isNotBlank()
                         // todo: 여기까지
                     )
 
@@ -379,12 +379,12 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.IRON,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 6),
-                        imageUrls = getCol(row, 7)?.split(",")
+                        releasedYear = getCol(row, 5),
+                        imageUrls = getCol(row, 6)?.split(",")
                     )
-                val primitiveNumber = getCol(row, 8)?.split(",")
-                val primitiveLoftDegree = getCol(row, 5)?.split(",")
-                val primitiveLieAngle = getCol(row, 11)?.split(",")
+                val primitiveNumber = getCol(row, 7)?.split(",")
+                val primitiveLoftDegree = getCol(row, 4)?.split(",")
+                val primitiveLieAngle = getCol(row, 10)?.split(",")
 
                 val maxSize =
                     maxOf(
@@ -396,8 +396,8 @@ class EquipmentRepositoryTest(
                 val numbers = primitiveNumber ?: List(maxSize) { "" }
                 val loftDegree = primitiveLoftDegree?.toMutableList() ?: MutableList(maxSize) { "" }
                 val lieAngle = primitiveLieAngle ?: List(maxSize) { "" }
-                val loft7Degree = getCol(row, 9) ?: ""
-                val loftPDegree = getCol(row, 10) ?: ""
+                val loft7Degree = getCol(row, 8) ?: ""
+                val loftPDegree = getCol(row, 9) ?: ""
 
                 if (numbers.isNotEmpty()) {
                     loftDegree.forEachIndexed { idx, elem ->
@@ -412,8 +412,8 @@ class EquipmentRepositoryTest(
                 val iron =
                     Iron(
                         equipment,
-                        produceType = getCol(row, 3),
-                        designType = getCol(row, 4),
+                        produceType = getCol(row, 2),
+                        designType = getCol(row, 3),
                         numbers = numbers,
                         loftDegree = loftDegree,
                         lieAngle = lieAngle
@@ -465,13 +465,13 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.WEDGE,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 5),
-                        imageUrls = getCol(row, 6)?.split(",")
+                        releasedYear = getCol(row, 4),
+                        imageUrls = getCol(row, 5)?.split(",")
                     )
 
-                val primitiveLoftDegree = getCol(row, 4)?.split(",")
-                val primitiveBounce = getCol(row, 7)?.split(",")
-                val primitiveGrind = getCol(row, 8)?.split(",")
+                val primitiveLoftDegree = getCol(row, 3)?.split(",")
+                val primitiveBounce = getCol(row, 6)?.split(",")
+                val primitiveGrind = getCol(row, 7)?.split(",")
 
                 val maxSize =
                     maxOf(
@@ -488,14 +488,14 @@ class EquipmentRepositoryTest(
                         if (loft.isBlank() || bounce[idx].isBlank()) {
                             ""
                         } else {
-                            "$loft.${String.format("%02d", bounce[idx].toInt())}"
+                            "$loft.${bounce[idx]}"
                         }
                     }
 
                 val wedge =
                     Wedge(
                         equipment,
-                        produceType = getCol(row, 3),
+                        produceType = getCol(row, 2),
                         model = model,
                         loftDegree = loftDegree,
                         bounce = bounce,
@@ -549,15 +549,15 @@ class EquipmentRepositoryTest(
                         brand = brands[getCol(row, 0)]!!,
                         type = EquipmentType.PUTTER,
                         name = getCol(row, 1)!!,
-                        releasedYear = getCol(row, 6),
-                        imageUrls = getCol(row, 7)?.split(",")
+                        releasedYear = getCol(row, 4),
+                        imageUrls = getCol(row, 5)?.split(",")
                     )
                 val putter =
                     Putter(
                         equipment,
-                        loftDegree = getCol(row, 5),
-                        weight = getCol(row, 4),
-                        neckShape = getCol(row, 8)
+                        loftDegree = getCol(row, 7),
+                        weight = getCol(row, 3),
+                        neckShape = getCol(row, 6)
                     )
 
                 val metric = EquipmentEvaluatedMetric(equipment, 4f)
@@ -613,10 +613,10 @@ class EquipmentRepositoryTest(
                     Shaft(
                         equipment,
                         weight = getCol(row, 6),
-                        strength = getCol(row, 3),
-                        kickPoint = getCol(row, 4),
-                        torque = getCol(row, 5),
-                        texture = getCol(row, 6),
+                        strength = getCol(row, 2),
+                        kickPoint = getCol(row, 3),
+                        torque = getCol(row, 4),
+                        texture = getCol(row, 5),
                         tipDiameter = getCol(row, 7),
                         buttDiameter = getCol(row, 8),
                         spin = getCol(row, 9),
