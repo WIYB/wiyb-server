@@ -11,7 +11,7 @@ import java.util.Optional
 interface CommentRepository :
     JpaRepository<Comment, Long>,
     CommentCustomRepository {
-    @Query("SELECT COUNT(c.id) FROM comments c WHERE c.id = :commentId AND c.post.id = :postId")
+    @Query("SELECT COUNT(c.id) FROM comments c WHERE c.id = :commentId AND c.post.id = :postId AND c.replyTo IS NULL")
     fun countByIdAndPostIdWithDeleted(
         commentId: Long,
         postId: Long
