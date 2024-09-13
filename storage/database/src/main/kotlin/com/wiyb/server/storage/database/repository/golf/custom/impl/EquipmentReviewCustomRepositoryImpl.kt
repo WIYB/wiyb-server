@@ -40,7 +40,7 @@ class EquipmentReviewCustomRepositoryImpl :
     override fun findSimpleByEquipmentId(id: Long): List<EquipmentReviewDto> =
         findByEquipmentIdBase(id)
             .limit(3)
-            .orderBy(equipmentReview.createdAt.desc())
+            .orderBy(equipmentReview.id.desc())
             .fetch()
 
     private fun findByEquipmentIdBase(id: Long): JPQLQuery<EquipmentReviewDto> =

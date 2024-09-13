@@ -91,7 +91,7 @@ class PostCustomRepositoryImpl :
                 )
             ).where(categoryStrategy(parameter.category))
             .groupBy(post.id)
-            .orderBy(post.createdAt.desc())
+            .orderBy(post.id.desc())
             .offset(pageRequest.offset)
             .limit(pageRequest.pageSize.toLong())
 
