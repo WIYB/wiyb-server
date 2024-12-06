@@ -8,9 +8,12 @@ data class EquipmentReviewDto
     @QueryProjection
     constructor(
         val id: String,
+        val likeCount: Int,
         val content: String,
         val imageUrls: List<String>?,
         val createdAt: LocalDateTime,
         val updatedAt: LocalDateTime,
         val user: UserSimpleProfileDto
-    )
+    ) {
+        var isLiked: Boolean = false
+    }

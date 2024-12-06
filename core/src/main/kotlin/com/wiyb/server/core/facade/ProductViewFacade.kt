@@ -45,6 +45,8 @@ class ProductViewFacade(
         }
     }
 
+    fun getPopularAllProduct() = EquipmentCacheMapper.toList(productService.findWeeklyTop100Product(), TimeRange.WEEKLY)
+
     //    @Transactional
     fun increaseAllProductViewCount() {
 //        val products = productService.findAll()

@@ -1,6 +1,7 @@
 package com.wiyb.server.core.domain.product.mapper
 
 import TimeRange
+import com.wiyb.server.core.domain.product.ProductDetailDto
 import com.wiyb.server.storage.cache.entity.CachedProduct
 import com.wiyb.server.storage.database.entity.golf.constant.EquipmentType
 import com.wiyb.server.storage.database.entity.golf.dto.EquipmentDto
@@ -15,6 +16,19 @@ class EquipmentCacheMapper {
                 dto.type.toString(),
                 dto.name,
                 dto.reviewCount,
+                dto.averageScore,
+                dto.releasedYear,
+                dto.imageUrls
+            )
+
+        fun to(dto: ProductDetailDto): CachedProduct =
+            CachedProduct(
+                dto.id.toLong(),
+                dto.brand,
+                dto.type.toString(),
+                dto.name,
+                dto.reviewCount,
+                dto.averageScore,
                 dto.releasedYear,
                 dto.imageUrls
             )
@@ -26,6 +40,7 @@ class EquipmentCacheMapper {
                 dto.type.toString(),
                 dto.name,
                 dto.reviewCount,
+                dto.averageScore,
                 dto.releasedYear,
                 dto.imageUrls
             )
@@ -35,14 +50,15 @@ class EquipmentCacheMapper {
             range: TimeRange
         ): EquipmentSimpleDto =
             EquipmentSimpleDto(
-                dto.id.toString(),
-                dto.brand,
-                EquipmentType.fromCode(dto.type),
-                dto.name,
-                if (range == TimeRange.WEEKLY) dto.weeklyViewCount else dto.dailyViewCount,
-                dto.reviewCount,
-                dto.releasedYear,
-                dto.imageUrls
+                id = dto.id.toString(),
+                brand = dto.brand,
+                type = EquipmentType.fromCode(dto.type),
+                name = dto.name,
+                viewCount = if (range == TimeRange.WEEKLY) dto.weeklyViewCount else dto.dailyViewCount,
+                reviewCount = dto.reviewCount,
+                averageScore = dto.averageScore,
+                releasedYear = dto.releasedYear,
+                imageUrls = dto.imageUrls
             )
 
         fun toList(dtoList: List<EquipmentSimpleDto>): List<CachedProduct> = dtoList.map { to(it) }

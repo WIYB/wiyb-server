@@ -32,5 +32,19 @@ enum class ErrorCode(
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, 3000, "PRODUCT_NOT_FOUND"),
 
     // Product Review
-    ALREADY_REVIEWED(HttpStatus.BAD_REQUEST, 3100, "이미 리뷰를 작성하셨습니다.")
+    ALREADY_REVIEWED(HttpStatus.BAD_REQUEST, 3100, "이미 리뷰를 작성하셨습니다."),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, 3101, "존재하지 않는 리뷰입니다."),
+    ALREADY_LIKED_REVIEW(HttpStatus.BAD_REQUEST, 3102, "이미 좋아요를 누른 리뷰입니다."),
+    NOT_LIKED_REVIEW(HttpStatus.BAD_REQUEST, 3103, "좋아요를 누르지 않은 리뷰입니다."),
+
+    // Product Bookmark
+    ALREADY_BOOKMARKED(HttpStatus.BAD_REQUEST, 3200, "이미 북마크를 추가하셨습니다."),
+    NOT_BOOKMARKED(HttpStatus.BAD_REQUEST, 3201, "북마크를 추가하지 않았습니다."),
+
+    // Community
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, 4000, "POST_NOT_FOUND"),
+    INSUFFICIENT_POST_AUTHORITY(HttpStatus.FORBIDDEN, 4001, "INSUFFICIENT_POST_AUTHORITY"),
+
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, 4100, "COMMENT_NOT_FOUND"),
+    COMMENT_REPLY_NOT_ALLOWED(HttpStatus.BAD_REQUEST, 4101, "COMMENT_REPLY_NOT_ALLOWED")
 }

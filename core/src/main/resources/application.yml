@@ -1,5 +1,4 @@
 spring.application.name: core
-spring.profiles.active: local
 
 spring:
   config:
@@ -8,6 +7,7 @@ spring:
       client: ${CLIENT_ORIGIN:http://localhost:3000}
       server: ${SERVER_ORIGIN:http://localhost:8080}
       root-domain: ${ROOT_DOMAIN:localhost}
+      static: ${STATIC_ORIGIN}
     import:
       - storage-cache.yml
       - storage-database.yml
@@ -20,6 +20,8 @@ spring:
       file-size-threshold: 0B
       max-file-size: 10MB
       max-request-size: 100MB
+  jackson:
+    default-property-inclusion: non_null
 
 server:
   tomcat:
@@ -39,6 +41,9 @@ cloud:
     region:
       static: ap-northeast-2
 
+youtube:
+  api:
+    key: ${YOUTUBE_API_KEY}
 
 ---
 spring.config.activate.on-profile: local
@@ -58,3 +63,7 @@ spring.config.activate.on-profile: staging
 
 ---
 spring.config.activate.on-profile: prod
+
+
+---
+spring.config.activate.on-profile: test

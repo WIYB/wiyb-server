@@ -39,6 +39,8 @@ class ProductService(
             else -> cachedProductRepository.findTop10ByTypeOrderByWeeklyViewCountDesc(type)
         }
 
+    fun findWeeklyTop100Product() = cachedProductRepository.findTop100ByOrderByWeeklyViewCountDesc()
+
     fun findDailyProductByType(type: String? = null) =
         when (type) {
             null -> cachedProductRepository.findTop10ByOrderByDailyViewCountDesc()

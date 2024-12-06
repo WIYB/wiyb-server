@@ -12,6 +12,7 @@ data class EquipmentSimpleDto
         val name: String,
         val viewCount: Long,
         val reviewCount: Long,
+        val averageScore: Float,
         val releasedYear: String?,
         val imageUrls: List<String>?
     )

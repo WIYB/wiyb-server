@@ -22,17 +22,22 @@ import org.hibernate.annotations.SQLRestriction
 class EquipmentReview(
     user: User,
     equipment: Equipment,
-    content: String,
-    evaluationMetric: List<Float>? = null,
+    likeCount: Int? = 0,
+    evaluationMetric: List<Float>,
+    content: String? = null,
     imageUrls: List<String>? = null
 ) : BaseEntity() {
-    @Column(name = "content", columnDefinition = "text", nullable = false)
-    var content: String = content
+    @Convert(converter = FloatListConverter::class)
+    @Column(name = "evaluation_metric", nullable = false)
+    var evaluationMetric: List<Float> = evaluationMetric
         protected set
 
-    @Convert(converter = FloatListConverter::class)
-    @Column(name = "evaluation_metric")
-    var evaluationMetric: List<Float>? = evaluationMetric
+    @Column(name = "like_count", nullable = false)
+    var likeCount: Int = likeCount!!
+        protected set
+
+    @Column(name = "content", columnDefinition = "text")
+    var content: String? = content
         protected set
 
     @Convert(converter = StringListConverter::class)
@@ -49,4 +54,12 @@ class EquipmentReview(
     @JoinColumn(name = "equipment_id", nullable = false)
     var equipment: Equipment = equipment
         protected set
+
+    fun increaseLikeCount() {
+        likeCount++
+    }
+
+    fun decreaseLikeCount() {
+        likeCount--
+    }
 }

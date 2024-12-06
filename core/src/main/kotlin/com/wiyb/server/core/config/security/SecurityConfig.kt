@@ -5,6 +5,7 @@ import com.wiyb.server.core.filter.TokenExceptionFilter
 import com.wiyb.server.core.handler.auth.CustomAccessDeniedHandler
 import com.wiyb.server.core.handler.auth.CustomAuthenticationFailureHandler
 import com.wiyb.server.core.handler.auth.CustomAuthenticationSuccessHandler
+import com.wiyb.server.core.handler.auth.CustomAuthorizationRequestResolver
 import com.wiyb.server.core.handler.auth.CustomLogoutSuccessHandler
 import com.wiyb.server.core.service.CustomOAuth2UserService
 import com.wiyb.server.core.service.CustomOidcUserService
@@ -64,8 +65,6 @@ class SecurityConfig(
                 .withDefaultRolePrefix()
                 .role("ADMIN")
                 .implies("USER")
-                .role("USER")
-                .implies("GUEST")
                 .build()
 
         @Bean

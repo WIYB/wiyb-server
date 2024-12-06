@@ -32,26 +32,53 @@ class UserCustomRepositoryImpl :
 
     override fun findUserProfileDtoById(userId: Long): UserProfileDto? =
         from(user)
-            .select(QUserProfileDto(user, userProfile))
-            .leftJoin(user.userProfile, userProfile)
-            .fetchJoin()
+            .select(
+                QUserProfileDto(
+                    user.id.stringValue(),
+                    userProfile.nickname,
+                    userProfile.gender,
+                    userProfile.birth,
+                    userProfile.handy,
+                    userProfile.height,
+                    userProfile.weight,
+                    userProfile.imageUrl,
+                    userProfile.createdAt
+                )
+            ).leftJoin(user.userProfile, userProfile)
             .where(user.id.eq(userId))
             .fetchOne()
 
     override fun findUserProfileDtoBySessionId(sessionId: String): UserProfileDto? =
         from(user)
-            .select(QUserProfileDto(user, userProfile))
-            .leftJoin(user.mutableAuthorizations, authorization)
+            .select(
+                QUserProfileDto(
+                    user.id.stringValue(),
+                    userProfile.nickname,
+                    userProfile.gender,
+                    userProfile.birth,
+                    userProfile.handy,
+                    userProfile.height,
+                    userProfile.weight,
+                    userProfile.imageUrl,
+                    userProfile.createdAt
+                )
+            ).leftJoin(user.mutableAuthorizations, authorization)
             .leftJoin(user.userProfile, userProfile)
-            .fetchJoin()
             .where(authorization.sessionId.eq(sessionId))
             .fetchOne()
 
     override fun findUserSimpleProfileDtoByNameKeyword(keyword: String): List<UserSimpleProfileDto> =
         from(user)
-            .select(QUserSimpleProfileDto(user, userProfile))
-            .leftJoin(user.userProfile, userProfile)
-            .fetchJoin()
+            .select(
+                QUserSimpleProfileDto(
+                    user.id.stringValue(),
+                    userProfile.nickname,
+                    userProfile.handy,
+                    userProfile.height,
+                    userProfile.weight,
+                    userProfile.imageUrl
+                )
+            ).leftJoin(user.userProfile, userProfile)
             .where(userProfile.nickname.containsIgnoreCase(keyword))
             .fetch()
 

@@ -16,6 +16,7 @@ data class CachedProduct(
     @Indexed
     val name: String,
     var reviewCount: Long = 0,
+    var averageScore: Float = 0f,
     val releasedYear: String?,
     val imageUrls: List<String>?,
     @Indexed
@@ -30,8 +31,8 @@ data class CachedProduct(
     }
 
     fun applyWeeklyCount(): Long {
-        val erasedCount = weeklyChart.removeLast()
-        weeklyChart.addFirst(dailyViewCount)
+        val erasedCount = weeklyChart.removeFirst()
+        weeklyChart.add(dailyViewCount)
         dailyViewCount = 0
         weeklyViewCount -= erasedCount
         return erasedCount

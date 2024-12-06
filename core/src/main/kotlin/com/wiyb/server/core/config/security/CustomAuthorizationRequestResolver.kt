@@ -16,6 +16,16 @@ class CustomAuthorizationRequestResolver(
 
     private val defaultResolver = DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository, authorizationRequestBaseUri)
 
+//    override fun resolve(
+//        request: HttpServletRequest?,
+//        clientRegistrationId: String?
+//    ): OAuth2AuthorizationRequest? = defaultResolver.resolve(request, clientRegistrationId)
+//
+//    private fun resolveInternal(request: HttpServletRequest?): OAuth2AuthorizationRequest {
+//        val provider = request?.getParameter("provider")?.lowercase() ?: "google"
+//        return defaultResolver.resolve(request, provider)
+//    }
+
     override fun resolve(request: HttpServletRequest): OAuth2AuthorizationRequest? {
 //        request?.session?.setAttribute(
 //            "org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository.AUTHORIZATION_REQUEST",

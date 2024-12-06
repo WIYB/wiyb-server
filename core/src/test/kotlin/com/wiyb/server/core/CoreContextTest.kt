@@ -2,11 +2,11 @@ package com.wiyb.server.core
 
 import org.junit.jupiter.api.Tag
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.TestConstructor
 
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 @Tag("context")
 @SpringBootTest
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@ComponentScan(basePackages = ["com.wiyb.server.storage.database", "com.wiyb.server.storage.cache"])
 abstract class CoreContextTest

@@ -9,6 +9,7 @@ import com.wiyb.server.core.facade.UserFacade
 import com.wiyb.server.storage.database.entity.user.dto.UserProfileDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,9 +24,10 @@ class UserController(
     private val userFacade: UserFacade,
     private val authFacade: AuthFacade
 ) {
+    @Secured("ROLE_GUEST")
     @PostMapping
     fun createUser(
-        @RequestBody createUserProfileDto: CreateUserProfileDto
+        @Valid @RequestBody createUserProfileDto: CreateUserProfileDto
     ): ResponseEntity<UserProfileDto> {
         val userProfileDto = userFacade.createProfile(createUserProfileDto)
         val tokenDto = authFacade.refreshToken()
@@ -53,7 +55,7 @@ class UserController(
 
     @PutMapping("/profile")
     fun updateUserProfile(
-        @RequestBody updateUserProfileDto: UpdateUserProfileDto
+        @Valid @RequestBody updateUserProfileDto: UpdateUserProfileDto
     ): ResponseEntity<UserProfileDto> {
         val userProfileDto = userFacade.updateProfile(updateUserProfileDto)
         return ResponseEntity.ok().body(userProfileDto)

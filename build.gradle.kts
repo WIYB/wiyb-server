@@ -87,8 +87,14 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-test") {
             exclude(group = "com.vaadin.external.google", module = "android-json")
         }
-        testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+
+        testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
         testImplementation("org.mockito:mockito-core:5.12.0")
+
+        testImplementation("org.testcontainers:testcontainers:1.20.1")
+        testImplementation("org.testcontainers:junit-jupiter:1.20.1")
+        testImplementation("org.testcontainers:mysql:1.20.1")
+        testImplementation("org.testcontainers:jdbc:1.20.1")
 
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }

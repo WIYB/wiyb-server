@@ -13,4 +13,6 @@ interface EquipmentReviewRepository :
         equipmentId: Long,
         userId: Long
     ): Boolean
+
+    fun findFirstById(id: Long): EquipmentReview?
 }

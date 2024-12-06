@@ -1,6 +1,6 @@
 package com.wiyb.server.core.service
 
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 class AuthorizationServiceTest {
     @Test
